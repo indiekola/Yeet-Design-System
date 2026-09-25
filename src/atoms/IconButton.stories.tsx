@@ -19,6 +19,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 
 export const Variants: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Все варианты',
   render: () => (
     <Matrix
@@ -30,6 +31,7 @@ export const Variants: Story = {
 };
 
 export const InFlow: Story = {
+  parameters: { controls: { disable: true } },
   name: 'В флоу',
   render: () => (
     <UsageGrid min={170}>

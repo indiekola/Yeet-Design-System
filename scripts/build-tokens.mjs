@@ -46,7 +46,10 @@ const dampingRatio = ({ mass, stiffness, damping }) => damping / (2 * Math.sqrt(
 /* ─── CSS ─────────────────────────────────────────────────────────────── */
 
 function css() {
-  const L = [`/* ${HEADER} */`, '', ':root {'];
+  const L = [`/* ${HEADER} */`, ''];
+  for (const f of Object.values(t.font))
+    L.push(`@font-face { font-family: '${f.family}'; src: url('../../tokens/fonts/${f.file}') format('truetype'); font-weight: 100 900; font-style: normal; font-display: swap; }`);
+  L.push('', ':root {');
   for (const [k, v] of Object.entries(t.primitive)) L.push(`  --yeet-${k}: ${cssColor(v)};`);
   for (const [k, v] of Object.entries(t.item)) L.push(`  --yeet-item-${k}: ${cssColor(v.value)};`);
   L.push('');
@@ -89,7 +92,7 @@ function css() {
 
 function swift() {
   const hexA = (v) => { const c = rgba(v); return `0x${c.hex}, alpha: ${num(c.a)}`; };
-  const L = [`// ${HEADER}`, '// SwiftUI. Цвета меняются со светлой / тёмной темой системы автоматически.', '', 'import SwiftUI', 'import UIKit', ''];
+  const L = [`// ${HEADER}`, '// SwiftUI. Цвета меняются со светлой / тёмной темой системы автоматически.', `// Шрифты: добавьте в проект tokens/fonts/${Object.values(t.font).map((f) => f.file).join(', ')} и перечислите их в Info.plist → UIAppFonts.`, '', 'import SwiftUI', 'import UIKit', ''];
   L.push('private extension UIColor {', '    convenience init(hex: UInt32, alpha: CGFloat = 1) {', '        self.init(red: CGFloat((hex >> 16) & 0xFF) / 255, green: CGFloat((hex >> 8) & 0xFF) / 255, blue: CGFloat(hex & 0xFF) / 255, alpha: alpha)', '    }', '}', '');
   L.push('private func dynamic(_ light: UIColor, _ dark: UIColor) -> Color {', '    Color(UIColor { $0.userInterfaceStyle == .dark ? dark : light })', '}', '');
   L.push('public enum YeetColor {');
@@ -113,7 +116,7 @@ function swift() {
   L.push('public struct YeetTextStyle {', '    public let font: Font', '    public let lineHeight: CGFloat', '    public let tracking: CGFloat', '    public let size: CGFloat', '}', '', 'public enum YeetType {');
   for (const [k, s] of Object.entries(t.typography)) {
     const f = t.font[s.font];
-    L.push(`    /// ${s.use}`, `    public static let ${k} = YeetTextStyle(font: .custom("${f.ios}", size: ${s.size}).weight(Font.Weight(${s.weight})), lineHeight: ${s.lineHeight}, tracking: ${s.letterSpacing}, size: ${s.size})`);
+    L.push(`    /// ${s.use}`, `    public static let ${k} = YeetTextStyle(font: .custom("${f.family}", size: ${s.size}).weight(Font.Weight(${s.weight})), lineHeight: ${s.lineHeight}, tracking: ${s.letterSpacing}, size: ${s.size})`);
   }
   L.push('}', '', 'private extension Font.Weight {', '    init(_ css: Int) {', '        switch css {', '        case ..<350: self = .light', '        case ..<450: self = .regular', '        case ..<550: self = .medium', '        default: self = .semibold', '        }', '    }', '}', '');
   L.push('public extension View {', '    /// Применяет текстовый стиль: шрифт, межстрочный интервал и трекинг.', '    func yeetText(_ style: YeetTextStyle) -> some View {', '        font(style.font).lineSpacing(style.lineHeight - style.size).tracking(style.tracking)', '    }', '}', '');
@@ -135,7 +138,7 @@ function kotlin() {
   const names = Object.keys(colors).map(camel);
   const L = [`// ${HEADER}`, '// Jetpack Compose. Схемы light / dark — выбирать по isSystemInDarkTheme().', '', 'package design.yeet.tokens', '',
     'import androidx.compose.animation.core.CubicBezierEasing', 'import androidx.compose.animation.core.FiniteAnimationSpec', 'import androidx.compose.animation.core.spring', 'import androidx.compose.animation.core.tween',
-    'import androidx.compose.ui.graphics.Color', 'import androidx.compose.ui.text.TextStyle', 'import androidx.compose.ui.text.font.FontFamily', 'import androidx.compose.ui.text.font.FontWeight', 'import androidx.compose.ui.unit.dp', 'import androidx.compose.ui.unit.sp', ''];
+    'import androidx.annotation.FontRes', 'import androidx.compose.ui.graphics.Color', 'import androidx.compose.ui.text.ExperimentalTextApi', 'import androidx.compose.ui.text.TextStyle', 'import androidx.compose.ui.text.font.Font', 'import androidx.compose.ui.text.font.FontFamily', 'import androidx.compose.ui.text.font.FontVariation', 'import androidx.compose.ui.text.font.FontWeight', 'import androidx.compose.ui.unit.dp', 'import androidx.compose.ui.unit.sp', ''];
   L.push('data class YeetColorScheme(');
   for (const [group, entries] of Object.entries(t.color)) { L.push(`    // ${group}`); for (const [k, v] of Object.entries(entries)) L.push(`    /** ${v.role} · Figma ${v.figma} */`, `    val ${camel(k)}: Color,`); }
   L.push(')', '');
@@ -151,9 +154,12 @@ function kotlin() {
   L.push(`    val screenGutter = ${t.layout['screen-gutter']}.dp`, '}', '', 'object YeetRadius {');
   for (const [k, v] of Object.entries(t.radius)) L.push(`    /** ${v.use} */`, `    val ${k} = ${v.value}.dp`);
   L.push('}', '');
-  L.push('/** Передайте семейства из res/font: display — Roboto Slab, text — Inter. */', 'class YeetTypography(display: FontFamily, text: FontFamily) {');
+  L.push('/** Семейство из переменного шрифта (Google Fonts): по одному Font на каждый нужный вес. */', '@OptIn(ExperimentalTextApi::class)', 'fun yeetFontFamily(@FontRes res: Int, vararg weights: Int) = FontFamily(', '    weights.map { Font(res, FontWeight(it), variationSettings = FontVariation.Settings(FontVariation.weight(it))) }', ')', '');
+  const fontRes = Object.values(t.font).map((f) => `res/font/${f.android}.ttf ← tokens/fonts/${f.file}`).join(', ');
+  L.push(`/** Шрифты: ${fontRes}. */`, 'class YeetTypography(display: FontFamily, text: FontFamily) {');
   for (const [k, s] of Object.entries(t.typography))
     L.push(`    /** ${s.use} */`, `    val ${k} = TextStyle(fontFamily = ${s.font}, fontWeight = FontWeight(${s.weight}), fontSize = ${s.size}.sp, lineHeight = ${s.lineHeight}.sp, letterSpacing = (${s.letterSpacing}).sp)`);
+  L.push('', '    companion object {', '        /** YeetTypography.fromResources(R.font.' + t.font.display.android + ', R.font.' + t.font.text.android + ') */', '        fun fromResources(@FontRes display: Int, @FontRes text: Int) = YeetTypography(', `            display = yeetFontFamily(display, ${t.font.display.weights.join(', ')}),`, `            text = yeetFontFamily(text, ${t.font.text.weights.join(', ')}),`, '        )', '    }');
   L.push('}', '', 'object YeetMotion {');
   for (const [k, tr] of Object.entries(t.motion.transition)) {
     if (tr.spring) { const s = t.motion.spring[tr.spring]; L.push(`    /** ${tr.use} · Figma Smart Animate ${s.figma} */`, `    fun <T> ${k}(): FiniteAnimationSpec<T> = spring(dampingRatio = ${num(dampingRatio(s))}f, stiffness = ${s.stiffness}f)`); }

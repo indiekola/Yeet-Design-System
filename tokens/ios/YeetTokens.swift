@@ -1,5 +1,6 @@
 // Сгенерировано scripts/build-tokens.mjs из tokens/tokens.json — не редактировать вручную.
 // SwiftUI. Цвета меняются со светлой / тёмной темой системы автоматически.
+// Шрифты: добавьте в проект tokens/fonts/RobotoSlab-Variable.ttf, Inter-Variable.ttf и перечислите их в Info.plist → UIAppFonts.
 
 import SwiftUI
 import UIKit
@@ -149,11 +150,11 @@ public struct YeetTextStyle {
 
 public enum YeetType {
     /// Заголовки экранов
-    public static let h1 = YeetTextStyle(font: .custom("RobotoSlab-Regular", size: 32).weight(Font.Weight(380)), lineHeight: 36, tracking: -1, size: 32)
+    public static let h1 = YeetTextStyle(font: .custom("Roboto Slab", size: 32).weight(Font.Weight(380)), lineHeight: 36, tracking: -1, size: 32)
     /// Секции, пустые состояния, числа
-    public static let h2 = YeetTextStyle(font: .custom("RobotoSlab-Regular", size: 24).weight(Font.Weight(400)), lineHeight: 28, tracking: -0.4, size: 24)
+    public static let h2 = YeetTextStyle(font: .custom("Roboto Slab", size: 24).weight(Font.Weight(400)), lineHeight: 28, tracking: -0.4, size: 24)
     /// Заголовки sheet, диалогов, карточек
-    public static let h3 = YeetTextStyle(font: .custom("RobotoSlab-Regular", size: 19).weight(Font.Weight(400)), lineHeight: 24, tracking: -0.3, size: 19)
+    public static let h3 = YeetTextStyle(font: .custom("Roboto Slab", size: 19).weight(Font.Weight(400)), lineHeight: 24, tracking: -0.3, size: 19)
     /// Текст, кнопки, пункты списков
     public static let body = YeetTextStyle(font: .custom("Inter", size: 14).weight(Font.Weight(500)), lineHeight: 20, tracking: 0, size: 14)
     /// Подписи, мета-данные, бейджи

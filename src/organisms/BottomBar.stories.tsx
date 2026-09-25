@@ -18,6 +18,7 @@ type Story = StoryObj<Args>;
 export const Playground: Story = {};
 
 export const InFlow: Story = {
+  parameters: { controls: { disable: true } },
   name: 'В флоу',
   decorators: [],
   render: () => (

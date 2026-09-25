@@ -1,5 +1,8 @@
 /* Сгенерировано scripts/build-tokens.mjs из tokens/tokens.json — не редактировать вручную. */
 
+@font-face { font-family: 'Roboto Slab'; src: url('../../tokens/fonts/RobotoSlab-Variable.ttf') format('truetype'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('../../tokens/fonts/Inter-Variable.ttf') format('truetype'); font-weight: 100 900; font-style: normal; font-display: swap; }
+
 :root {
   --yeet-blue-500: #0100f4;
   --yeet-blue-300: #5b5bff;

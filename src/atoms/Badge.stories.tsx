@@ -18,11 +18,13 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 
 export const Variants: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Все варианты',
   render: () => <div style={{ display: 'flex', gap: 12 }}>{variants.map((v) => <Badge key={v} variant={v}>{v}</Badge>)}</div>,
 };
 
 export const InFlow: Story = {
+  parameters: { controls: { disable: true } },
   name: 'В флоу',
   render: () => (
     <UsageGrid min={170}>

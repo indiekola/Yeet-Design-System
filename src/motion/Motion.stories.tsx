@@ -8,7 +8,7 @@ import './motion.css';
 
 const meta = {
   title: 'Foundations/Анимации',
-  parameters: { layout: 'centered' },
+  parameters: { layout: 'centered', controls: { disable: true }, options: { showPanel: false } },
 } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -47,6 +47,7 @@ function CurvePlot({ i }: { i: number }) {
 }
 
 export const Curves: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Кривые',
   render: () => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 24, width: 'min(920px, 90vw)' }}>

@@ -33,6 +33,7 @@ export const Playground: Story = {
 };
 
 export const InFlow: Story = {
+  parameters: { controls: { disable: true } },
   name: 'В флоу',
   render: () => (
     <UsageGrid min={200}>

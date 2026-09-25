@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = { args: { onClose: () => {} } };
 
 export const InFlow: Story = {
+  parameters: { controls: { disable: true } },
   name: 'В флоу',
   decorators: [],
   render: () => (

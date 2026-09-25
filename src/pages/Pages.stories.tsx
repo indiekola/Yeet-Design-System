@@ -8,7 +8,7 @@ import { Grid, Row, Screen } from '../templates';
 const meta = {
   title: 'Pages/Экраны флоу',
   parameters: {
-    layout: 'centered',
+    layout: 'centered', controls: { disable: true }, options: { showPanel: false },
     docs: { description: { component: 'Экраны флоу, собранные **только** из компонентов системы. Названия — как в Figma (`Раздел / Экран / Состояние`).' } },
   },
 } satisfies Meta;
@@ -18,6 +18,7 @@ type Story = StoryObj<typeof meta>;
 const grid: Garment[] = ['top', 'container', 'bottom', 'shoe', 'outerwear', 'accessories', 'top', 'bottom'];
 
 export const OnboardingWelcome: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Onboarding / Welcome',
   render: () => (
     <Screen bottom={<BottomBar label="Начать бесплатно" />}>
@@ -29,6 +30,7 @@ export const OnboardingWelcome: Story = {
 };
 
 export const SignIn: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Auth / Sign In',
   render: () => (
     <Screen header={<Header type="back" title="Вход и регистрация" />}>
@@ -45,6 +47,7 @@ export const SignIn: Story = {
 };
 
 export const Today: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Outfits / Everyday / Sunny',
   render: () => (
     <Screen header={<Header type="large" title="Твои образы" subtitle="на каждый день" />} bottom={<BottomNav active="today" />}>
@@ -59,6 +62,7 @@ export const Today: Story = {
 };
 
 export const Wardrobe: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Wardrobe / Items / Populated',
   render: () => {
     const [tab, setTab] = useState('items');
@@ -77,6 +81,7 @@ export const Wardrobe: Story = {
 };
 
 export const WardrobeEmpty: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Wardrobe / Items / Empty',
   render: () => (
     <Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />}>
@@ -89,6 +94,7 @@ export const WardrobeEmpty: Story = {
 };
 
 export const ItemDetails: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Wishlist / Item Details',
   render: () => (
     <Screen header={<Header type="bar" actions={[{ icon: 'more', label: 'Ещё' }]} />} bottom={<BottomBar label="Переместить в гардероб" secondary={{ icon: 'external-link', label: 'Открыть в магазине' }} />} flush>
@@ -104,6 +110,7 @@ export const ItemDetails: Story = {
 };
 
 export const OutfitDetails: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Wardrobe / Outfit Details / Scrolled',
   render: () => (
     <Screen header={<Header type="bar" actions={[{ icon: 'pen', label: 'Редактировать' }, { icon: 'more', label: 'Ещё' }]} />} flush>
@@ -120,6 +127,7 @@ export const OutfitDetails: Story = {
 };
 
 export const SearchResults: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Search / Text / Results',
   render: () => (
     <Screen header={<Header type="search" query="Белые кроссовки" filters={[{ label: 'Сортировка' }, { label: 'Цена' }]} />}>
@@ -133,6 +141,7 @@ export const SearchResults: Story = {
 };
 
 export const SearchEmpty: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Search / Text / No Results Filtered',
   render: () => (
     <Screen header={<Header type="search" query="asdasd" filters={[{ label: 'Сначала дешевле', selected: true }, { label: 'до 60 000 ₽', selected: true }]} />} center>
@@ -142,6 +151,7 @@ export const SearchEmpty: Story = {
 };
 
 export const NewItem: Story = {
+  parameters: { controls: { disable: true } },
   name: 'New Item / Removing Background',
   render: () => (
     <Screen header={<Header type="bar" titleChip="Новая вещь" />} bottom={<BottomBar label="Добавить" disabled />}>
@@ -154,6 +164,7 @@ export const NewItem: Story = {
 };
 
 export const Canvas: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Outfit Creation / Canvas / Gesture Hint',
   render: () => (
     <Screen header={<Header type="bar" actions={[{ icon: 'arrows-shuffle', label: 'Перемешать' }]} />} floating={<Hint>Перемещай и масштабируй вещи</Hint>} floatingOffset={120} bottom={<BottomBar label="Сохранить образ" />}>
@@ -163,6 +174,7 @@ export const Canvas: Story = {
 };
 
 export const Stylist: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Stylist / Assistant',
   render: () => (
     <Screen header={<Header type="large" title="Стилист" />} bottom={<div style={{ padding: '0 20px 20px' }}><InputBar placeholder="Спроси у стилиста" trailing={{ icon: 'arrow-up', label: 'Отправить', variant: 'primary' }} /></div>}>
@@ -175,6 +187,7 @@ export const Stylist: Story = {
 };
 
 export const FilterSheet: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Wardrobe / Items / Sheet / Category',
   render: () => (
     <Screen
@@ -195,6 +208,7 @@ export const FilterSheet: Story = {
 };
 
 export const ClearTrash: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Trash / Items / Dialog / Clear',
   render: () => (
     <Screen header={<Header type="bar" titleChip="Корзина вещей" />} overlay={<Overlay><Dialog tone="destructive" title="Очистить корзину?" description="Все вещи из корзины удаляются навсегда, их уже не вернуть" cancel="Отмена" confirm="Очистить" /></Overlay>}>
@@ -204,6 +218,7 @@ export const ClearTrash: Story = {
 };
 
 export const Toast: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Wardrobe / Item / Toast',
   render: () => (
     <Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />} floating={<Snackbar onClose={() => {}}>Перемещено в архив</Snackbar>}>
@@ -215,6 +230,7 @@ export const Toast: Story = {
 /* ─── Добавлено при синхронизации с флоу ─────────────────────────────── */
 
 export const Splash: Story = {
+  parameters: { controls: { disable: true } },
   name: 'App / Splash',
   render: () => (
     <div style={{ width: 'var(--screen-width)', height: 'var(--screen-height)', borderRadius: 48, overflow: 'hidden', background: 'var(--color-accent)', color: 'var(--color-text-on-accent)', display: 'flex', flexDirection: 'column' }}>
@@ -225,6 +241,7 @@ export const Splash: Story = {
 };
 
 export const SearchDiscover: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Search / Discover',
   render: () => (
     <Screen header={<Header type="large" title="Поиск в сторах" subtitle="Нашли классную вещь? Покажем, где купить такую же или похожую." />} bottom={<BottomNav active="search" />}>
@@ -239,6 +256,7 @@ export const SearchDiscover: Story = {
 };
 
 export const StylistHome: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Stylist / Home',
   render: () => (
     <Screen header={<Header type="large" title="Стилист" />} bottom={<BottomNav active="stylist" />}>
@@ -255,6 +273,7 @@ export const StylistHome: Story = {
 const tripArt = (a: Garment, b: Garment, c: Garment) => [{ kind: a, x: 70, y: 28, size: 44 }, { kind: b, x: 28, y: 62, size: 72 }, { kind: c, x: 74, y: 66, size: 64 }];
 
 export const Trips: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Stylist / Trips / List',
   render: () => (
     <Screen header={<Header type="bar" titleChip="Все для поездок" actions={[{ icon: 'info', label: 'Как это работает' }]} />}>
@@ -271,6 +290,7 @@ export const Trips: Story = {
 };
 
 export const TripDetails: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Stylist / Trip Details / Outfits Tab',
   render: () => (
     <Screen header={<Header type="bar" titleChip="Бразилиа · 8–13 сент" actions={[{ icon: 'more', label: 'Ещё' }]} />}>
@@ -282,6 +302,7 @@ export const TripDetails: Story = {
 };
 
 export const Settings: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Settings / Main',
   render: () => (
     <Screen header={<Header type="bar" titleChip="Настройки" />}>
@@ -309,6 +330,7 @@ export const Settings: Story = {
 };
 
 export const ProfileAnalytics: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Profile / Overview / Analytics',
   render: () => (
     <Screen header={<Header type="large" title="Профиль" />} bottom={<BottomNav active="profile" />}>
@@ -345,6 +367,7 @@ export const ProfileAnalytics: Story = {
 const shoes = ['Nike Air Force 1 ’07', 'Nike Ava Edge', 'Nike Ava Edge', 'Nike Ava Edge'];
 
 export const Wishlist: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Wishlist / Items / Populated',
   render: () => (
     <Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />}>
@@ -360,6 +383,7 @@ export const Wishlist: Story = {
 };
 
 export const Archive: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Archive / Items / Populated',
   render: () => (
     <Screen header={<Header type="bar" titleChip="Архив вещей" />}>
@@ -376,6 +400,7 @@ const creationSteps = (step: string) => (
 );
 
 export const OutfitCriteria: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Outfit Creation / Criteria / Default',
   render: () => (
     <Screen header={<Header type="bar" center={creationSteps('info')} />} bottom={<BottomBar label="Создать образ" />}>
@@ -390,6 +415,7 @@ export const OutfitCriteria: Story = {
 };
 
 export const OutfitItems: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Outfit Creation / Item Selection / Ready to Continue',
   render: () => (
     <Screen header={<Header type="bar" center={creationSteps('items')} actions={[{ icon: 'arrows-shuffle', label: 'Перемешать' }]} />} bottom={<BottomBar label="Далее" />}>
@@ -413,6 +439,7 @@ export const OutfitItems: Story = {
 };
 
 export const ProfileEdit: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Profile / Edit / No Avatar',
   render: () => (
     <Screen header={<Header type="bar" titleChip="Редактирование профиля" />}>

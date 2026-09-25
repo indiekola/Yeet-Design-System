@@ -7,9 +7,13 @@ import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.annotation.FontRes
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -148,7 +152,13 @@ object YeetRadius {
     val full = 999.dp
 }
 
-/** Передайте семейства из res/font: display — Roboto Slab, text — Inter. */
+/** Семейство из переменного шрифта (Google Fonts): по одному Font на каждый нужный вес. */
+@OptIn(ExperimentalTextApi::class)
+fun yeetFontFamily(@FontRes res: Int, vararg weights: Int) = FontFamily(
+    weights.map { Font(res, FontWeight(it), variationSettings = FontVariation.Settings(FontVariation.weight(it))) }
+)
+
+/** Шрифты: res/font/roboto_slab_variable.ttf ← tokens/fonts/RobotoSlab-Variable.ttf, res/font/inter_variable.ttf ← tokens/fonts/Inter-Variable.ttf. */
 class YeetTypography(display: FontFamily, text: FontFamily) {
     /** Заголовки экранов */
     val h1 = TextStyle(fontFamily = display, fontWeight = FontWeight(380), fontSize = 32.sp, lineHeight = 36.sp, letterSpacing = (-1).sp)
@@ -160,6 +170,14 @@ class YeetTypography(display: FontFamily, text: FontFamily) {
     val body = TextStyle(fontFamily = text, fontWeight = FontWeight(500), fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = (0).sp)
     /** Подписи, мета-данные, бейджи */
     val caption = TextStyle(fontFamily = text, fontWeight = FontWeight(400), fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = (0).sp)
+
+    companion object {
+        /** YeetTypography.fromResources(R.font.roboto_slab_variable, R.font.inter_variable) */
+        fun fromResources(@FontRes display: Int, @FontRes text: Int) = YeetTypography(
+            display = yeetFontFamily(display, 380, 400),
+            text = yeetFontFamily(text, 400, 500),
+        )
+    }
 }
 
 object YeetMotion {

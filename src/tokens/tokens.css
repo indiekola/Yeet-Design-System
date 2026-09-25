@@ -4,13 +4,14 @@
  * Значения живут в tokens/tokens.json — единый источник для web, iOS и Android.
  * `npm run tokens` генерирует tokens.generated.css, tokens/ios/YeetTokens.swift и tokens/android/YeetTokens.kt.
  *
+ * Шрифты — Inter и Roboto Slab из Google Fonts, лежат в tokens/fonts (variable TTF, OFL / Apache 2.0).
+ *
  * Три слоя, каждый ссылается только на слой ниже:
  *   1. Primitives  (--yeet-*)      палитра и шкалы. В компонентах не используются.
  *   2. Semantic    (--color-*, …)  роль значения. Тема меняет только этот слой.
  *   3. Component   (--button-*, …) решения конкретного компонента из семантики.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Roboto+Slab:wght@380;400&display=swap');
 @import './tokens.generated.css';
 
 *, *::before, *::after { box-sizing: border-box; }

@@ -25,12 +25,14 @@ export const Playground: Story = {
 };
 
 export const TabBars: Story = {
+  parameters: { controls: { disable: true } },
   name: 'TabBar · все вкладки',
   decorators: [],
   render: () => <div style={{ display: 'grid', gap: 12, width: 353 }}>{tabs.map((t) => <TabBar key={t} active={t} />)}</div>,
 };
 
 export const InFlow: Story = {
+  parameters: { controls: { disable: true } },
   name: 'В флоу',
   decorators: [],
   render: () => (

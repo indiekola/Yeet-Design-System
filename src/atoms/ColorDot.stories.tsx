@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 
 export const Palette: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Все цвета вещей',
   render: () => (
     <UsageGrid min={120}>

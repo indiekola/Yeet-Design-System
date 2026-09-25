@@ -13,6 +13,7 @@ const meta = {
 export default meta;
 export const Playground: StoryObj<typeof meta> = {};
 export const Dialogue: StoryObj<typeof meta> = {
+  parameters: { controls: { disable: true } },
   name: 'Диалог',
   render: () => (<div style={{ display: 'grid', gap: 8 }}><ChatBubble>Привет! Я твой ИИ-стилист. Спрашивай про образы, сочетания и что надеть сегодня</ChatBubble><ChatBubble from="user">Что надеть на свидание?</ChatBubble></div>),
 };

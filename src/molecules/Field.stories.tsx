@@ -31,6 +31,7 @@ export const Playground: Story = {};
 export const TextInput: Story = { name: 'Ввод текста', args: { label: 'Название', value: undefined, trailingIcon: undefined, input: { placeholder: 'Название' } } };
 
 export const InFlow: Story = {
+  parameters: { controls: { disable: true } },
   name: 'В флоу',
   decorators: [],
   render: () => (

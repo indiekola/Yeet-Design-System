@@ -20,6 +20,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = { render: (args) => <ItemCard {...args} discount={args.discount || undefined} label={args.label || undefined} /> };
 
 export const InFlow: Story = {
+  parameters: { controls: { disable: true } },
   name: 'В флоу',
   decorators: [],
   render: () => (

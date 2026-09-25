@@ -20,6 +20,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 
 export const Scale: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Все стили',
   render: () => (
     <Column gap={12}>

@@ -23,6 +23,7 @@ export const Playground: Story = {
 };
 
 export const Sizes: Story = {
+  parameters: { controls: { disable: true } },
   name: 'Все варианты',
   decorators: [],
   render: () => (
@@ -37,6 +38,7 @@ export const Sizes: Story = {
 };
 
 export const InFlow: Story = {
+  parameters: { controls: { disable: true } },
   name: 'В флоу',
   decorators: [],
   render: () => (

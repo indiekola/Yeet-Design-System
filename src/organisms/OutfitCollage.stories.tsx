@@ -23,6 +23,7 @@ type Story = StoryObj<Args>;
 export const Playground: Story = {};
 
 export const Thumbnail: Story = {
+  parameters: { controls: { disable: true } },
   name: 'OutfitThumbnail',
   decorators: [],
   render: () => (
