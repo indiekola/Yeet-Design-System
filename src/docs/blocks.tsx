@@ -2,12 +2,13 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Icon } from '../atoms';
 import { icons, type IconName } from '../icons/icons';
 import { itemColors, radii, semanticColors, spaces, textStyles } from '../tokens/tokens';
+import tokenSource from '../../tokens/tokens.json';
 import { registry, type Level } from './registry';
 import { motions } from '../motion/motion';
 import '../tokens/tokens.css';
 
 const mono: CSSProperties = { font: '400 12px/16px ui-monospace, SFMono-Regular, Menlo, monospace' };
-const cap: CSSProperties = { font: '400 12px/16px var(--font-text)', color: '#777' };
+const cap: CSSProperties = { font: '400 12px/16px var(--font-text)', color: '#6E6E6E' };
 
 /** Таблица документации: заголовки + строки ячеек. Единый стиль для реестров и спецификаций. */
 function DocTable({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
@@ -221,3 +222,26 @@ export function MotionTable() {
 
 /** «11 · 17 · 16» — число атомов, молекул и организмов из реестра. */
 export const levelCounts = () => (['Atoms', 'Molecules', 'Organisms'] as const).map((l) => byLevel(l).length).join(' · ');
+
+/** Хаптика из tokens.json → motion.haptic: событие, iOS, Android. */
+export function HapticTable() {
+  const ios = (v: string) => {
+    const [kind, style] = v.split(':');
+    return kind === 'selection' ? 'UISelectionFeedbackGenerator' : kind === 'impact' ? `UIImpactFeedbackGenerator(.${style})` : `UINotificationFeedbackGenerator(.${style})`;
+  };
+  return (
+    <DocTable
+      head={['Событие', 'Когда', 'iOS', 'Android', 'Токен']}
+      rows={Object.entries(tokenSource.motion.haptic).map(([k, h]) => {
+        const hh = h as typeof h & { androidMin?: number; androidFallback?: string };
+        return [
+          <span style={{ fontWeight: 500 }}>{k}</span>,
+          <span>{h.when}<div style={cap}>{h.use}</div></span>,
+          <Code>{ios(h.ios)}</Code>,
+          <span><Code>{h.android}</Code>{hh.androidMin && <div style={cap}>API {hh.androidMin}+, ниже — {hh.androidFallback}</div>}</span>,
+          <Muted>YeetHaptic.{k}</Muted>,
+        ];
+      })}
+    />
+  );
+}

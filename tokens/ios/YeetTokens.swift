@@ -31,24 +31,26 @@ public enum YeetColor {
     /// Основной текст и иконки · Figma ui-colors/black
     public static let textPrimary = dynamic(UIColor(hex: 0x000000, alpha: 1), UIColor(hex: 0xF5F5F7, alpha: 1))
     /// Вторичный текст, лейблы, подписи · Figma ui-colors/grey
-    public static let textSecondary = dynamic(UIColor(hex: 0x777777, alpha: 1), UIColor(hex: 0x8E8E93, alpha: 1))
+    public static let textSecondary = dynamic(UIColor(hex: 0x6E6E6E, alpha: 1), UIColor(hex: 0x8E8E93, alpha: 1))
     /// Текст на inverse-поверхности · Figma ui-colors/white
     public static let textInverse = dynamic(UIColor(hex: 0xFFFFFF, alpha: 1), UIColor(hex: 0x0F0F11, alpha: 1))
     /// Текст и иконки на accent / danger · Figma ui-colors/on-accent
     public static let textOnAccent = dynamic(UIColor(hex: 0xFFFFFF, alpha: 1), UIColor(hex: 0xFFFFFF, alpha: 1))
-    /// Акцентный текст, выбранное · Figma ui-colors/blue
-    public static let textAccent = dynamic(UIColor(hex: 0x0100F4, alpha: 1), UIColor(hex: 0x5B5BFF, alpha: 1))
-    /// Ошибки, деструктивные действия · Figma ui-colors/red
-    public static let textDanger = dynamic(UIColor(hex: 0xFF4230, alpha: 1), UIColor(hex: 0xFF5A4A, alpha: 1))
+    /// Текст на danger (бейдж скидки) — белый в любом бренде · Figma ui-colors/white
+    public static let textOnDanger = dynamic(UIColor(hex: 0xFFFFFF, alpha: 1), UIColor(hex: 0xFFFFFF, alpha: 1))
+    /// Акцентный текст, выбранное · Figma ui-colors/blue-text
+    public static let textAccent = dynamic(UIColor(hex: 0x0100F4, alpha: 1), UIColor(hex: 0x8A8AFF, alpha: 1))
+    /// Ошибки, деструктивные действия · Figma ui-colors/red-text
+    public static let textDanger = dynamic(UIColor(hex: 0xCC291B, alpha: 1), UIColor(hex: 0xFF6B5C, alpha: 1))
     // Акцент, обратная связь, линии
     /// Главное действие, выбранное, фокус · Figma ui-colors/blue
-    public static let accent = dynamic(UIColor(hex: 0x0100F4, alpha: 1), UIColor(hex: 0x5B5BFF, alpha: 1))
+    public static let accent = dynamic(UIColor(hex: 0x0100F4, alpha: 1), UIColor(hex: 0x4B4BFF, alpha: 1))
     /// Фон выбранного чипса (Soft) · Figma ui-colors/blue-10%
-    public static let accentSoft = dynamic(UIColor(hex: 0x0100F4, alpha: 0.1), UIColor(hex: 0x5B5BFF, alpha: 0.2))
+    public static let accentSoft = dynamic(UIColor(hex: 0x0100F4, alpha: 0.1), UIColor(hex: 0x4B4BFF, alpha: 0.2))
     /// Удаление, ошибка, бейдж скидки · Figma ui-colors/red
-    public static let danger = dynamic(UIColor(hex: 0xFF4230, alpha: 1), UIColor(hex: 0xFF5A4A, alpha: 1))
+    public static let danger = dynamic(UIColor(hex: 0xCC291B, alpha: 1), UIColor(hex: 0xCC291B, alpha: 1))
     /// Фон Destructive-кнопки · Figma ui-colors/red-10%
-    public static let dangerSoft = dynamic(UIColor(hex: 0xFF4230, alpha: 0.1), UIColor(hex: 0xFF5A4A, alpha: 0.18))
+    public static let dangerSoft = dynamic(UIColor(hex: 0xFF4230, alpha: 0.1), UIColor(hex: 0xFF6B5C, alpha: 0.18))
     /// Обводки свотчей, гистограмма, фон неактивных точек · Figma ui-colors/black-10%
     public static let borderSubtle = dynamic(UIColor(hex: 0x000000, alpha: 0.1), UIColor(hex: 0xF5F5F7, alpha: 0.12))
     /// Разделители строк в input-group и list-group · Figma divider (black @5%)
@@ -196,6 +198,72 @@ public enum YeetMotion {
     public static let stamp = Animation.interpolatingSpring(mass: 1, stiffness: 600, damping: 15)
     /// Смена образа: превью ↔ коллаж · Figma Smart Animate Gentle
     public static let swap = Animation.interpolatingSpring(mass: 1, stiffness: 100, damping: 15)
+    /// Выбор: фон чипса, вкладки, строки, цвет лайка
+    public static let select = Animation.timingCurve(0.2, 0, 0, 1, duration: 0.15)
+    /// Подъём под пальцем: вещь на холсте, карточка при перетаскивании · Figma Smart Animate Quick
+    public static let lift = Animation.interpolatingSpring(mass: 1, stiffness: 300, damping: 20)
+    /// Бросок в цель: вещь встаёт на место, соседи раздвигаются · Figma Smart Animate Quick
+    public static let drop = Animation.interpolatingSpring(mass: 1, stiffness: 300, damping: 20)
+    /// Отмена перетаскивания: вещь возвращается туда, откуда взяли · Figma Smart Animate Gentle
+    public static let return = Animation.interpolatingSpring(mass: 1, stiffness: 100, damping: 15)
+    /// Появление: snackbar, подсказка, диалог
+    public static let appear = Animation.timingCurve(0.2, 0, 0, 1, duration: 0.24)
+    /// Исчезновение: быстрее появления, чтобы не мешать
+    public static let exit = Animation.timingCurve(0.2, 0, 0, 1, duration: 0.15)
+}
+
+/// Параметры жестов и микро-анимаций (Storybook → Foundations/Анимации → Микро-анимации).
+public enum YeetGesture {
+    /// Нажатие кнопки, чипса, иконки
+    public static let pressScale: CGFloat = 0.97
+    /// Нажатие карточки: чем больше объект, тем меньше сжатие
+    public static let pressScaleCard: CGFloat = 0.98
+    /// Нажатие штампа
+    public static let pressScaleStamp: CGFloat = 0.94
+    /// Поднятый предмет при перетаскивании
+    public static let liftScale: CGFloat = 1.04
+    /// Цель под перетаскиваемым предметом
+    public static let targetScale: CGFloat = 1.02
+    /// Долгое нажатие до подъёма (перетаскивание в сетке)
+    public static let longPress: TimeInterval = 0.4
+    /// Задержка нажатого состояния внутри скролла, чтобы скролл не мигал кнопками
+    public static let pressDelay: TimeInterval = 0.08
+    /// Сдвиг пальца, после которого нажатие отменяется и начинается жест
+    public static let touchSlop: CGFloat = 10
+    /// Доля ширины: свайп дальше — страница перелистывается
+    public static let swipeDistance: CGFloat = 0.3
+    /// Скорость броска, после которой свайп засчитан при любой дистанции
+    public static let swipeVelocity: CGFloat = 500
+    /// Сопротивление за границей: скролл, масштаб 40–300 на холсте
+    public static let rubberBand: CGFloat = 0.55
+    /// Время показа snackbar без действия (с действием — 6000)
+    public static let snackbar: TimeInterval = 4
+}
+
+/// Хаптика: вызывать при смене состояния, не на каждое касание. Для подъёма вызывать prepare() на touch-down.
+public enum YeetHaptic {
+    /// Смена выбора: чипс, сегмент, вкладка, радио, шаг слайдера цены. Каждый шаг — один тик, не чаще 1 раза в 50 мс
+    public static func select() { UISelectionFeedbackGenerator().selectionChanged() }
+    /// Переключатель, лайк, галочка вещи в режиме выбора. И при включении, и при выключении
+    public static func toggle() { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+    /// Подъём: долгое нажатие сработало, вещь на холсте взята. В момент подъёма, одновременно с scale 1.04
+    public static func lift() { UIImpactFeedbackGenerator(style: .medium).impactOccurred() }
+    /// Перетаскиваемая вещь зашла на новую цель или корзину. Только при входе в цель, не при движении внутри
+    public static func target() { UISelectionFeedbackGenerator().selectionChanged() }
+    /// Бросок в цель: вещь встала на место. На отпускании пальца
+    public static func drop() { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+    /// Жест перешёл порог: свайп перелистнёт, sheet закроется, pull-to-refresh, масштаб упёрся в 40 / 300 %. Один раз при пересечении порога; обратно — без вибрации
+    public static func threshold() { UIImpactFeedbackGenerator(style: .rigid).impactOccurred() }
+    /// Штамп «Надеть» — образ отмечен. В пик пружины bouncy (~120 мс после нажатия)
+    public static func stamp() { UINotificationFeedbackGenerator().notificationOccurred(.success) }
+    /// Штамп «Перемешать», смена образа. На нажатии
+    public static func shuffle() { UIImpactFeedbackGenerator(style: .soft).impactOccurred() }
+    /// Вещь брошена в корзину, подтверждено удаление. На отпускании над корзиной
+    public static func delete() { UINotificationFeedbackGenerator().notificationOccurred(.warning) }
+    /// Ошибка: неверный пароль, не загрузилось фото. Вместе с появлением текста ошибки
+    public static func error() { UINotificationFeedbackGenerator().notificationOccurred(.error) }
+    /// Долгая операция завершилась по действию пользователя: вещь распознана, образ сохранён. Не для фоновых событий
+    public static func success() { UINotificationFeedbackGenerator().notificationOccurred(.success) }
 }
 
 public extension View {

@@ -2,6 +2,7 @@
 
 /* Status bar (system, mockups only) */
 .y-status-bar { height: var(--status-bar-height); display: flex; align-items: center; justify-content: space-between; padding: 21px 24px 19px; color: var(--color-text-primary); font: 600 17px/22px -apple-system, 'SF Pro Text', var(--font-text); }
+.y-status-bar--on-accent { color: var(--color-text-on-accent); }
 .y-status-bar__icons { display: inline-flex; gap: 7px; align-items: center; }
 
 /* Header — fixed chrome with solid surface + fade edge below */
@@ -122,7 +123,7 @@
 
 /* OutfitCanvas */
 .y-canvas { touch-action: none; user-select: none; }
-.y-canvas__item { cursor: grab; border-radius: var(--radius-md); transition: box-shadow var(--motion-fade); }
+.y-canvas__item { cursor: grab; border-radius: var(--radius-md); }
 .y-canvas__item:active { cursor: grabbing; }
 .y-canvas__item.is-selected { box-shadow: 0 0 0 1.5px var(--color-accent); }
 .y-canvas__hint { position: absolute; left: var(--space-16); right: var(--space-16); bottom: var(--space-16); }
@@ -132,3 +133,23 @@
 .y-bottom-nav > .y-bottom-nav__fab,
 .y-bottom-bar > .y-button,
 .y-bottom-bar > .y-icon-button { position: relative; z-index: 1; }
+
+/* ─── Микро-анимации (правила: Foundations/Анимации → Микро-анимации) ─── */
+/* Нажатие карточки: сжатие меньше, чем у кнопки — объект крупнее */
+.y-item-card, .y-photo-tile, .y-prompt-card, .y-trip-card, .y-outfit-thumb {
+  transition: transform var(--motion-press); -webkit-tap-highlight-color: transparent;
+}
+.y-item-card:active, .y-photo-tile:active, .y-prompt-card:active, .y-trip-card:active, .y-outfit-thumb:active { transform: scale(var(--gesture-press-scale-card)); }
+/* Строка списка не сжимается — подсвечивается фоном */
+.y-list-group > button.y-list-item { transition: background-color var(--motion-select); }
+.y-list-group > button.y-list-item:active { background-color: var(--color-border-subtle); }
+/* Галочка выбора появляется на пружине, а не мгновенно */
+.y-item-card--selected .y-item-card__check { animation: y-pop var(--motion-drop) both; }
+@keyframes y-pop { from { transform: scale(0.4); opacity: 0; } }
+/* Snackbar: появление снизу; уход быстрее появления */
+@keyframes y-appear { from { transform: translateY(16px); opacity: 0; } }
+.y-snackbar { animation: y-appear var(--motion-appear) both; }
+/* Перетаскивание на холсте: подъём под пальцем */
+.y-canvas__item { transition: box-shadow var(--motion-fade), scale var(--motion-lift); }
+.y-canvas__item:active { scale: var(--gesture-lift-scale); box-shadow: var(--shadow-floating); }
+.y-canvas__item.is-selected:active { box-shadow: 0 0 0 1.5px var(--color-accent), var(--shadow-floating); }

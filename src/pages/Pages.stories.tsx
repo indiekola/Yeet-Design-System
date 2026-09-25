@@ -258,7 +258,7 @@ export const Splash: Story = {
   name: 'App / Splash',
   render: () => (
     <div style={{ width: 'var(--screen-width)', height: 'var(--screen-height)', borderRadius: 48, overflow: 'hidden', background: 'var(--color-accent)', color: 'var(--color-text-on-accent)', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ color: 'var(--color-text-on-accent)' }}><StatusBar /></div>
+      <StatusBar onAccent />
       <div style={{ flex: 1, display: 'grid', placeItems: 'center' }}><Logo height={56} /></div>
     </div>
   ),

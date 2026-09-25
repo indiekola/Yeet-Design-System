@@ -16,21 +16,25 @@
   cursor: pointer;
   background: var(--y-bg);
   color: var(--y-fg);
-  transition: transform var(--motion-press), opacity var(--motion-press);
+  transition: transform var(--motion-press), opacity var(--motion-press), background-color var(--motion-select), color var(--motion-select);
   -webkit-tap-highlight-color: transparent;
 }
 .y-button:active,
-.y-icon-button:active { transform: scale(0.97); }
+.y-icon-button:active { transform: scale(var(--gesture-press-scale)); }
 .y-button:disabled,
 .y-icon-button:disabled { opacity: 0.4; cursor: default; transform: none; }
 .y-button:focus-visible,
 .y-icon-button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
+/* Кнопка не сжимается во flex-контейнере: высота всегда по размеру (в колонке её сплющивало до 20px) */
+.y-button, .y-icon-button { flex-shrink: 0; }
 .y-button--XL { height: 56px; padding: 0 var(--space-24); gap: var(--space-12); }
 .y-button--L  { height: 52px; padding: 0 var(--space-20); gap: var(--space-12); }
 .y-button--M  { height: 48px; padding: 0 var(--space-16); gap: var(--space-8); }
 .y-button--S  { height: 40px; padding: 0 var(--space-12); gap: var(--space-8); }
-.y-button--full { width: 100%; flex: 1 1 0%; min-width: 0; }
+.y-button--full { width: 100%; min-width: 0; }
+/* В рядах кнопки на всю ширину делят место поровну; в колонке — просто на всю ширину */
+:where(.y-bottom-bar, .y-row, .y-sheet__footer, .y-bottom-nav) > .y-button--full { flex: 1 1 0%; }
 .y-button--floating,
 .y-icon-button--floating { box-shadow: var(--shadow-floating); }
 
@@ -54,7 +58,7 @@
   background: var(--y-bg); color: var(--y-fg);
 }
 .y-badge--primary   { --y-bg: var(--color-accent);      --y-fg: var(--color-text-on-accent); }
-.y-badge--danger    { --y-bg: var(--color-danger);      --y-fg: var(--color-text-on-accent); }
+.y-badge--danger    { --y-bg: var(--color-danger);      --y-fg: var(--color-text-on-danger); }
 .y-badge--secondary { --y-bg: var(--color-bg-inverse);  --y-fg: var(--color-text-inverse); }
 .y-badge--muted     { --y-bg: var(--color-text-secondary); --y-fg: var(--color-bg-canvas); }
 .y-badge--tertiary  { --y-bg: var(--color-bg-subtle);   --y-fg: var(--color-text-primary); }
@@ -115,7 +119,7 @@
   transition: opacity var(--motion-fade), transform var(--motion-stamp);
 }
 .y-stamp__done { opacity: 0; transform: scale(0.6); }
-.y-stamp:active .y-stamp__shape { transform: scale(0.94); }
+.y-stamp:active .y-stamp__shape { transform: scale(var(--gesture-press-scale-stamp)); }
 .y-stamp:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: 50%; }
 /* done: 148 → 78 (×0.53), поворот −60°, текст → × */
 .y-stamp--done .y-stamp__shape { transform: scale(0.53) rotate(-60deg); }

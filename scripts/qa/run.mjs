@@ -210,7 +210,7 @@ for (const story of stories) {
     current = { story: story.id, theme };
     await page.goto(`${origin}/iframe.html?id=${encodeURIComponent(story.id)}&viewMode=story&globals=theme:${theme}`, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
-    await page.addStyleTag({ content: '*,*::before,*::after{animation-play-state:paused!important;animation-delay:-0.0001s!important;transition:none!important;caret-color:transparent!important}' });
+    await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}' });
     await page.waitForTimeout(80);
     const state = await page.evaluate(() => ({
       error: document.body.classList.contains('sb-show-errordisplay') ? document.querySelector('#error-message')?.textContent : null,

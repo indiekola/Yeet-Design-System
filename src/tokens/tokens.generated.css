@@ -5,12 +5,16 @@
 
 :root {
   --yeet-blue-500: #0100f4;
+  --yeet-blue-400: #4b4bff;
   --yeet-blue-300: #5b5bff;
+  --yeet-blue-200: #8a8aff;
+  --yeet-red-600: #cc291b;
   --yeet-red-500: #ff4230;
-  --yeet-red-400: #ff5a4a;
+  --yeet-red-400: #ff6b5c;
   --yeet-neutral-0: #ffffff;
   --yeet-neutral-50: #f7f7f7;
   --yeet-neutral-500: #777777;
+  --yeet-neutral-600: #6e6e6e;
   --yeet-neutral-1000: #000000;
   --yeet-graphite-50: #f5f5f7;
   --yeet-graphite-400: #8e8e93;
@@ -80,11 +84,30 @@
   --motion-nav: var(--spring-quick-duration) var(--spring-quick); /* Таб-бар уступает место FAB */
   --motion-stamp: var(--spring-bouncy-duration) var(--spring-bouncy); /* Штамп «Надеть» → отмечено */
   --motion-swap: var(--spring-gentle-duration) var(--spring-gentle); /* Смена образа: превью ↔ коллаж */
+  --motion-select: var(--motion-fast) var(--ease-standard); /* Выбор: фон чипса, вкладки, строки, цвет лайка */
+  --motion-lift: var(--spring-quick-duration) var(--spring-quick); /* Подъём под пальцем: вещь на холсте, карточка при перетаскивании */
+  --motion-drop: var(--spring-quick-duration) var(--spring-quick); /* Бросок в цель: вещь встаёт на место, соседи раздвигаются */
+  --motion-return: var(--spring-gentle-duration) var(--spring-gentle); /* Отмена перетаскивания: вещь возвращается туда, откуда взяли */
+  --motion-appear: var(--motion-base) var(--ease-standard); /* Появление: snackbar, подсказка, диалог */
+  --motion-exit: var(--motion-fast) var(--ease-standard); /* Исчезновение: быстрее появления, чтобы не мешать */
+  --gesture-press-scale: 0.97; /* Нажатие кнопки, чипса, иконки */
+  --gesture-press-scale-card: 0.98; /* Нажатие карточки: чем больше объект, тем меньше сжатие */
+  --gesture-press-scale-stamp: 0.94; /* Нажатие штампа */
+  --gesture-lift-scale: 1.04; /* Поднятый предмет при перетаскивании */
+  --gesture-target-scale: 1.02; /* Цель под перетаскиваемым предметом */
+  --gesture-long-press: 400ms; /* Долгое нажатие до подъёма (перетаскивание в сетке) */
+  --gesture-press-delay: 80ms; /* Задержка нажатого состояния внутри скролла, чтобы скролл не мигал кнопками */
+  --gesture-touch-slop: 10px; /* Сдвиг пальца, после которого нажатие отменяется и начинается жест */
+  --gesture-swipe-distance: 0.3; /* Доля ширины: свайп дальше — страница перелистывается */
+  --gesture-swipe-velocity: 500; /* Скорость броска, после которой свайп засчитан при любой дистанции */
+  --gesture-rubber-band: 0.55; /* Сопротивление за границей: скролл, масштаб 40–300 на холсте */
+  --gesture-snackbar: 4000ms; /* Время показа snackbar без действия (с действием — 6000) */
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --motion-press: 1ms linear; --motion-fade: 1ms linear; --motion-collapse: 1ms linear; --motion-page: 1ms linear; --motion-nav: 1ms linear; --motion-stamp: 1ms linear; --motion-swap: 1ms linear;
+    --motion-press: 1ms linear; --motion-fade: 1ms linear; --motion-collapse: 1ms linear; --motion-page: 1ms linear; --motion-nav: 1ms linear; --motion-stamp: 1ms linear; --motion-swap: 1ms linear; --motion-select: 1ms linear; --motion-lift: 1ms linear; --motion-drop: 1ms linear; --motion-return: 1ms linear; --motion-appear: 1ms linear; --motion-exit: 1ms linear;
+    --gesture-lift-scale: 1; --gesture-target-scale: 1;
   }
 }
 
@@ -97,14 +120,15 @@
   --color-bg-inverse: var(--yeet-neutral-1000); /* ui-colors/black */
   --color-bg-overlay: rgb(0 0 0 / 0.4); /* ui-colors/overlay */
   --color-text-primary: var(--yeet-neutral-1000); /* ui-colors/black */
-  --color-text-secondary: var(--yeet-neutral-500); /* ui-colors/grey */
+  --color-text-secondary: var(--yeet-neutral-600); /* ui-colors/grey */
   --color-text-inverse: var(--yeet-neutral-0); /* ui-colors/white */
   --color-text-on-accent: var(--yeet-neutral-0); /* ui-colors/on-accent */
-  --color-text-accent: var(--yeet-blue-500); /* ui-colors/blue */
-  --color-text-danger: var(--yeet-red-500); /* ui-colors/red */
+  --color-text-on-danger: var(--yeet-neutral-0); /* ui-colors/white */
+  --color-text-accent: var(--yeet-blue-500); /* ui-colors/blue-text */
+  --color-text-danger: var(--yeet-red-600); /* ui-colors/red-text */
   --color-accent: var(--yeet-blue-500); /* ui-colors/blue */
   --color-accent-soft: rgb(1 0 244 / 0.1); /* ui-colors/blue-10% */
-  --color-danger: var(--yeet-red-500); /* ui-colors/red */
+  --color-danger: var(--yeet-red-600); /* ui-colors/red */
   --color-danger-soft: rgb(255 66 48 / 0.1); /* ui-colors/red-10% */
   --color-border-subtle: rgb(0 0 0 / 0.1); /* ui-colors/black-10% */
   --color-divider: rgb(0 0 0 / 0.05); /* divider (black @5%) */
@@ -123,19 +147,58 @@
   --color-text-secondary: var(--yeet-graphite-400); /* ui-colors/grey */
   --color-text-inverse: var(--yeet-graphite-950); /* ui-colors/white */
   --color-text-on-accent: var(--yeet-neutral-0); /* ui-colors/on-accent */
-  --color-text-accent: var(--yeet-blue-300); /* ui-colors/blue */
-  --color-text-danger: var(--yeet-red-400); /* ui-colors/red */
-  --color-accent: var(--yeet-blue-300); /* ui-colors/blue */
-  --color-accent-soft: rgb(91 91 255 / 0.2); /* ui-colors/blue-10% */
-  --color-danger: var(--yeet-red-400); /* ui-colors/red */
-  --color-danger-soft: rgb(255 90 74 / 0.18); /* ui-colors/red-10% */
+  --color-text-on-danger: var(--yeet-neutral-0); /* ui-colors/white */
+  --color-text-accent: var(--yeet-blue-200); /* ui-colors/blue-text */
+  --color-text-danger: var(--yeet-red-400); /* ui-colors/red-text */
+  --color-accent: var(--yeet-blue-400); /* ui-colors/blue */
+  --color-accent-soft: rgb(75 75 255 / 0.2); /* ui-colors/blue-10% */
+  --color-danger: var(--yeet-red-600); /* ui-colors/red */
+  --color-danger-soft: rgb(255 107 92 / 0.18); /* ui-colors/red-10% */
   --color-border-subtle: rgb(245 245 247 / 0.12); /* ui-colors/black-10% */
   --color-divider: rgb(245 245 247 / 0.08); /* divider (black @5%) */
   --color-pattern-dot: rgb(245 245 247 / 0.23); /* pattern (black @23%) */
   --shadow-floating: 0px 8px 40px rgb(0 0 0 / 0.5);
 }
 
-:root {
+/* Бренд «Лайм»: light */
+[data-brand='lime']:not([data-theme='dark']) {
+  --color-bg-canvas: #fbf8f1;
+  --color-bg-elevated: #fffdf8;
+  --color-bg-subtle: #f1ebdd;
+  --color-bg-inverse: #1c1b17;
+  --color-text-primary: #1c1b17;
+  --color-text-secondary: #6b665c;
+  --color-text-inverse: #fbf8f1;
+  --color-text-on-accent: #1c1b17;
+  --color-text-accent: #4f5a12;
+  --color-accent: #c9de5b;
+  --color-accent-soft: rgb(201 222 91 / 0.35);
+  --color-border-subtle: rgb(28 27 23 / 0.1);
+  --color-divider: rgb(28 27 23 / 0.06);
+  --color-pattern-dot: rgb(28 27 23 / 0.2);
+}
+
+/* Бренд «Лайм»: dark */
+[data-brand='lime'][data-theme='dark'] {
+  --color-bg-canvas: #12110e;
+  --color-bg-elevated: #1c1b17;
+  --color-bg-subtle: #27251f;
+  --color-bg-inverse: #f4eddc;
+  --color-text-primary: #f4eddc;
+  --color-text-secondary: #a8a18f;
+  --color-text-inverse: #12110e;
+  --color-text-on-accent: #1c1b17;
+  --color-text-accent: #d4e86a;
+  --color-accent: #d4e86a;
+  --color-accent-soft: rgb(212 232 106 / 0.16);
+  --color-border-subtle: rgb(244 237 220 / 0.12);
+  --color-divider: rgb(244 237 220 / 0.08);
+  --color-pattern-dot: rgb(244 237 220 / 0.2);
+}
+
+:root,
+[data-theme],
+[data-brand] {
   --button-primary-bg: var(--color-accent);
   --button-primary-fg: var(--color-text-on-accent);
   --button-secondary-bg: var(--color-bg-inverse);

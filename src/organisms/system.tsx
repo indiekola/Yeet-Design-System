@@ -2,10 +2,10 @@
 
 /* ─── StatusBar (system) ────────────────────────────────────────────── */
 
-/** Статус-бар iOS — только для макетов и Storybook. */
-export function StatusBar() {
+/** Статус-бар iOS — только для макетов и Storybook. `onAccent` — светлый текст на акцентном фоне (сплэш). */
+export function StatusBar({ onAccent }: { onAccent?: boolean }) {
   return (
-    <div className="y-status-bar" aria-hidden>
+    <div className={onAccent ? 'y-status-bar y-status-bar--on-accent' : 'y-status-bar'} aria-hidden>
       <span>9:41</span>
       <span className="y-status-bar__icons">
         <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1" /><rect x="5" y="5.5" width="3" height="6.5" rx="1" /><rect x="10" y="3" width="3" height="9" rx="1" /><rect x="15" y="0" width="3" height="12" rx="1" /></svg>

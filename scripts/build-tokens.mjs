@@ -65,8 +65,10 @@ function css() {
   for (const [k, s] of Object.entries(m.spring)) L.push(`  --spring-${k}: ${springLinear(s)};`, `  --spring-${k}-duration: ${s.duration}ms;`);
   for (const [k, tr] of Object.entries(m.transition))
     L.push(`  --motion-${k}: ${tr.spring ? `var(--spring-${tr.spring}-duration) var(--spring-${tr.spring})` : `var(${durVar[tr.duration]}) var(--ease-${tr.easing})`}; /* ${tr.use} */`);
+  for (const [k, g] of Object.entries(m.gesture)) L.push(`  --gesture-${k}: ${g.value}${g.unit === 'ms' || g.unit === 'px' ? g.unit : ''}; /* ${g.use} */`);
   L.push('}', '', '@media (prefers-reduced-motion: reduce) {', '  :root {');
   L.push('    ' + Object.keys(m.transition).map((k) => `--motion-${k}: 1ms linear;`).join(' '));
+  L.push('    --gesture-lift-scale: 1; --gesture-target-scale: 1;');
   L.push('  }', '}', '');
   for (const theme of ['light', 'dark']) {
     L.push(theme === 'light' ? ":root,\n[data-theme='light'] {" : "[data-theme='dark'] {", `  color-scheme: ${theme};`);
@@ -77,7 +79,15 @@ function css() {
     for (const [k, s] of Object.entries(t.shadow)) { const x = s[theme]; L.push(`  --shadow-${k}: ${x.x}px ${x.y}px ${x.blur}px ${cssColor(x.color)};`); }
     L.push('}', '');
   }
-  L.push(':root {');
+  // Бренд-варианты: переопределяют семантические цвета поверх темы (data-brand на <html> или на обёртке)
+  for (const [id, b] of Object.entries(t.brand ?? {}))
+    for (const theme of ['light', 'dark']) {
+      L.push(`/* Бренд «${b.name}»: ${theme} */`, theme === 'light' ? `[data-brand='${id}']:not([data-theme='dark']) {` : `[data-brand='${id}'][data-theme='dark'] {`);
+      for (const [k, v] of Object.entries(b[theme])) L.push(`  --color-${k}: ${cssColor(v)};`);
+      L.push('}', '');
+    }
+  // Компонентные токены пересчитываются там, где меняется тема или бренд, а не только на :root
+  L.push(':root,\n[data-theme],\n[data-brand] {');
   for (const [k, v] of Object.entries(t.component)) {
     const m2 = /^\{(\w+)\.([\w-]+)\}$/.exec(v);
     L.push(`  --${k}: ${m2 ? `var(--${m2[1] === 'radius' ? 'radius' : 'color'}-${m2[2]})` : v};`);
@@ -125,6 +135,15 @@ function swift() {
     if (tr.spring) { const s = t.motion.spring[tr.spring]; L.push(`    /// ${tr.use} · Figma Smart Animate ${s.figma}`, `    public static let ${k} = Animation.interpolatingSpring(mass: ${s.mass}, stiffness: ${s.stiffness}, damping: ${s.damping})`); }
     else { const e = t.motion.easing[tr.easing], d = t.motion.duration[tr.duration]; L.push(`    /// ${tr.use}`, `    public static let ${k} = Animation.timingCurve(${e.join(', ')}, duration: ${d / 1000})`); }
   }
+  L.push('}', '', '/// Параметры жестов и микро-анимаций (Storybook → Foundations/Анимации → Микро-анимации).', 'public enum YeetGesture {');
+  for (const [k, g] of Object.entries(t.motion.gesture))
+    L.push(`    /// ${g.use}`, g.unit === 'ms' ? `    public static let ${camel(k)}: TimeInterval = ${g.value / 1000}` : `    public static let ${camel(k)}: CGFloat = ${g.value}`);
+  L.push('}', '', '/// Хаптика: вызывать при смене состояния, не на каждое касание. Для подъёма вызывать prepare() на touch-down.', 'public enum YeetHaptic {');
+  for (const [k, h] of Object.entries(t.motion.haptic)) {
+    const [kind, style] = h.ios.split(':');
+    const call = kind === 'selection' ? 'UISelectionFeedbackGenerator().selectionChanged()' : kind === 'impact' ? `UIImpactFeedbackGenerator(style: .${style}).impactOccurred()` : `UINotificationFeedbackGenerator().notificationOccurred(.${style})`;
+    L.push(`    /// ${h.when}. ${h.use}`, `    public static func ${k}() { ${call} }`);
+  }
   L.push('}', '');
   const sh = t.shadow.floating;
   L.push('public extension View {', `    /// ${sh.use}`, '    func yeetFloatingShadow() -> some View {', `        shadow(color: dynamic(UIColor(hex: ${hexA(sh.light.color)}), UIColor(hex: ${hexA(sh.dark.color)})), radius: ${sh.light.blur / 2}, x: ${sh.light.x}, y: ${sh.light.y})`, '    }', '}');
@@ -138,6 +157,7 @@ function kotlin() {
   const names = Object.keys(colors).map(camel);
   const L = [`// ${HEADER}`, '// Jetpack Compose. Схемы light / dark — выбирать по isSystemInDarkTheme().', '', 'package design.yeet.tokens', '',
     'import androidx.compose.animation.core.CubicBezierEasing', 'import androidx.compose.animation.core.FiniteAnimationSpec', 'import androidx.compose.animation.core.spring', 'import androidx.compose.animation.core.tween',
+    'import android.os.Build', 'import android.view.HapticFeedbackConstants', 'import android.view.View',
     'import androidx.annotation.FontRes', 'import androidx.compose.ui.graphics.Color', 'import androidx.compose.ui.text.ExperimentalTextApi', 'import androidx.compose.ui.text.TextStyle', 'import androidx.compose.ui.text.font.Font', 'import androidx.compose.ui.text.font.FontFamily', 'import androidx.compose.ui.text.font.FontVariation', 'import androidx.compose.ui.text.font.FontWeight', 'import androidx.compose.ui.unit.dp', 'import androidx.compose.ui.unit.sp', ''];
   L.push('data class YeetColorScheme(');
   for (const [group, entries] of Object.entries(t.color)) { L.push(`    // ${group}`); for (const [k, v] of Object.entries(entries)) L.push(`    /** ${v.role} · Figma ${v.figma} */`, `    val ${camel(k)}: Color,`); }
@@ -165,7 +185,17 @@ function kotlin() {
     if (tr.spring) { const s = t.motion.spring[tr.spring]; L.push(`    /** ${tr.use} · Figma Smart Animate ${s.figma} */`, `    fun <T> ${k}(): FiniteAnimationSpec<T> = spring(dampingRatio = ${num(dampingRatio(s))}f, stiffness = ${s.stiffness}f)`); }
     else { const e = t.motion.easing[tr.easing], d = t.motion.duration[tr.duration]; L.push(`    /** ${tr.use} */`, `    fun <T> ${k}(): FiniteAnimationSpec<T> = tween(durationMillis = ${d}, easing = CubicBezierEasing(${e.map((x) => num(x) + 'f').join(', ')}))`); }
   }
-  L.push('}', '');
+  L.push('}', '', '/** Параметры жестов и микро-анимаций (Storybook → Foundations/Анимации → Микро-анимации). */', 'object YeetGesture {');
+  for (const [k, g] of Object.entries(t.motion.gesture)) {
+    const name = camel(k);
+    L.push(`    /** ${g.use}${g.unit === 'px/s' ? ' (dp/с)' : ''} */`, g.unit === 'ms' ? `    const val ${name}Millis = ${g.value}L` : g.unit === 'px' ? `    val ${name} = ${g.value}.dp` : `    const val ${name} = ${g.value}f`);
+  }
+  L.push('}', '', '/** Хаптика: вызывать при смене состояния, не на каждое касание. view.yeetHaptic(YeetHaptic.drop); в Compose — LocalView.current. */', 'object YeetHaptic {');
+  for (const [k, h] of Object.entries(t.motion.haptic)) {
+    const c = (n) => `HapticFeedbackConstants.${n}`;
+    L.push(`    /** ${h.when}. ${h.use} */`, h.androidMin ? `    val ${k}: Int get() = if (Build.VERSION.SDK_INT >= ${h.androidMin}) ${c(h.android)} else ${c(h.androidFallback)}` : `    val ${k}: Int get() = ${c(h.android)}`);
+  }
+  L.push('}', '', 'fun View.yeetHaptic(type: Int): Boolean = performHapticFeedback(type)', '');
   const sh = t.shadow.floating;
   L.push(`/** ${sh.use}: y ${sh.light.y}, blur ${sh.light.blur}. В Compose — Modifier.shadow(elevation = ${sh.light.blur / 4}.dp, shape, ambientColor / spotColor = цвет ниже). */`, 'object YeetShadow {', `    val floatingLight = ${argb(sh.light.color)}`, `    val floatingDark = ${argb(sh.dark.color)}`, `    val floatingElevation = ${sh.light.blur / 4}.dp`, '}');
   return L.join('\n') + '\n';

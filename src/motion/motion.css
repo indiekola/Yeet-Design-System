@@ -57,3 +57,27 @@
 .y-pager__page { flex: none; width: 353px; }
 .y-pager__chips { padding: 16px 0 0; transition: transform var(--motion-page); }
 .y-pager__chips > * { flex-wrap: nowrap; overflow: visible; }
+
+/* ─── Перетаскивание (DragGrid) ─────────────────────────────────────── */
+.y-drag { width: 393px; padding: 20px; display: flex; flex-direction: column; gap: 16px; background: var(--color-bg-canvas); border-radius: 32px; }
+.y-drag__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.y-drag__cell { position: relative; touch-action: none; user-select: none; }
+.y-drag__cell .y-item-card { pointer-events: none; }
+.y-drag__lift { border-radius: var(--card-radius); transition: scale var(--motion-lift), box-shadow var(--motion-lift), opacity var(--motion-exit); }
+.y-drag__lift.is-pressed { scale: var(--gesture-press-scale-card); transition-duration: var(--gesture-long-press); }
+.y-drag__lift.is-lifted { scale: var(--gesture-lift-scale); box-shadow: var(--shadow-floating); cursor: grabbing; }
+.y-drag__lift.is-target { scale: var(--gesture-target-scale); box-shadow: 0 0 0 2px var(--color-accent); }
+.y-drag__lift.is-removing { scale: 0.6; opacity: 0; transition: scale var(--motion-exit), opacity var(--motion-exit); }
+.y-drag__trash {
+  height: 56px; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--radius-md);
+  background: var(--color-danger-soft); color: var(--color-text-danger); font: 500 14px/20px var(--font-text);
+  opacity: 0; translate: 0 8px; transition: opacity var(--motion-appear), translate var(--motion-appear), scale var(--motion-select), background-color var(--motion-select);
+}
+.y-drag__trash.is-visible { opacity: 1; translate: 0 0; }
+.y-drag__trash.is-target { scale: var(--gesture-target-scale); background: var(--color-danger); color: var(--color-text-on-danger); }
+.y-drag__undo { border: 0; background: none; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; padding: 8px 0; }
+
+/* ─── Галерея нажатий ───────────────────────────────────────────────── */
+.y-press-grid { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; max-width: 880px; }
+.y-press-grid figure { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.y-press-grid figcaption { font: 400 12px/16px var(--font-text); color: var(--color-text-secondary); }

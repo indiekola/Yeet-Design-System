@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useRef, useState, type CSSProperties, type PointerEvent } from 'react';
-import { IconButton, Stamp } from '../atoms';
-import { ChipGroup } from '../molecules';
-import { BottomNav, OutfitCollage, StatusBar, type CollageItem, type Tab } from '../organisms';
+import { Button, Icon, IconButton, Stamp } from '../atoms';
+import { ChipGroup, ListGroup, ListItem } from '../molecules';
+import { BottomNav, ItemCard, OutfitCollage, StatusBar, type CollageItem, type Tab } from '../organisms';
+import { DragGrid } from './DragGrid';
 import { curves, sample } from './motion';
 import './motion.css';
 
@@ -137,6 +138,32 @@ function CollapseDemo() {
   );
 }
 export const PhotoCollapse: Story = { name: 'Сворачивание фото', render: () => <CollapseDemo /> };
+
+/* ─── Микро-анимации: нажатие ───────────────────────────────────────── */
+
+function PressDemo() {
+  const [chips, setChips] = useState(['Офис']);
+  const [check, setCheck] = useState(true);
+  return (
+    <div className="y-press-grid">
+      <figure><Button size="M">Кнопка</Button><figcaption>scale 0.97 · press</figcaption></figure>
+      <figure><IconButton icon="plus" label="Добавить" variant="primary" /><figcaption>scale 0.97 · press</figcaption></figure>
+      <figure>
+        <ChipGroup chips={['Офис', 'Прогулка'].map((label) => ({ label, selected: chips.includes(label) }))} onToggle={(l) => setChips((c) => (c.includes(l) ? c.filter((x) => x !== l) : [...c, l]))} />
+        <figcaption>фон и цвет · select 150 мс</figcaption>
+      </figure>
+      <figure style={{ width: 120 }}><ItemCard kind="top" color="green" selected={check} onClick={() => setCheck((v) => !v)} /><figcaption>карточка 0.98 · галочка drop</figcaption></figure>
+      <figure style={{ width: 260 }}>
+        <ListGroup><ListItem label="Корзина вещей" trailing={<Icon name="chevron-right" />} onClick={() => {}} /></ListGroup>
+        <figcaption>строка — подсветка фона, без сжатия</figcaption>
+      </figure>
+      <figure><Stamp label="Надеть" size="S" /><figcaption>штамп 0.94 · stamp</figcaption></figure>
+    </div>
+  );
+}
+export const Press: Story = { name: 'Микро: нажатие', render: () => <PressDemo /> };
+
+export const DragDrop: Story = { name: 'Микро: перетаскивание', render: () => <DragGrid /> };
 
 /* ─── Листание поводов ──────────────────────────────────────────────── */
 

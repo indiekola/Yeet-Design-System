@@ -7,6 +7,9 @@ import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import android.os.Build
+import android.view.HapticFeedbackConstants
+import android.view.View
 import androidx.annotation.FontRes
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -39,9 +42,11 @@ data class YeetColorScheme(
     val textInverse: Color,
     /** Текст и иконки на accent / danger · Figma ui-colors/on-accent */
     val textOnAccent: Color,
-    /** Акцентный текст, выбранное · Figma ui-colors/blue */
+    /** Текст на danger (бейдж скидки) — белый в любом бренде · Figma ui-colors/white */
+    val textOnDanger: Color,
+    /** Акцентный текст, выбранное · Figma ui-colors/blue-text */
     val textAccent: Color,
-    /** Ошибки, деструктивные действия · Figma ui-colors/red */
+    /** Ошибки, деструктивные действия · Figma ui-colors/red-text */
     val textDanger: Color,
     // Акцент, обратная связь, линии
     /** Главное действие, выбранное, фокус · Figma ui-colors/blue */
@@ -67,14 +72,15 @@ val YeetLightColors = YeetColorScheme(
     bgInverse = Color(0xFF000000),
     bgOverlay = Color(0x66000000),
     textPrimary = Color(0xFF000000),
-    textSecondary = Color(0xFF777777),
+    textSecondary = Color(0xFF6E6E6E),
     textInverse = Color(0xFFFFFFFF),
     textOnAccent = Color(0xFFFFFFFF),
+    textOnDanger = Color(0xFFFFFFFF),
     textAccent = Color(0xFF0100F4),
-    textDanger = Color(0xFFFF4230),
+    textDanger = Color(0xFFCC291B),
     accent = Color(0xFF0100F4),
     accentSoft = Color(0x1A0100F4),
-    danger = Color(0xFFFF4230),
+    danger = Color(0xFFCC291B),
     dangerSoft = Color(0x1AFF4230),
     borderSubtle = Color(0x1A000000),
     divider = Color(0x0D000000),
@@ -91,12 +97,13 @@ val YeetDarkColors = YeetColorScheme(
     textSecondary = Color(0xFF8E8E93),
     textInverse = Color(0xFF0F0F11),
     textOnAccent = Color(0xFFFFFFFF),
-    textAccent = Color(0xFF5B5BFF),
-    textDanger = Color(0xFFFF5A4A),
-    accent = Color(0xFF5B5BFF),
-    accentSoft = Color(0x335B5BFF),
-    danger = Color(0xFFFF5A4A),
-    dangerSoft = Color(0x2EFF5A4A),
+    textOnDanger = Color(0xFFFFFFFF),
+    textAccent = Color(0xFF8A8AFF),
+    textDanger = Color(0xFFFF6B5C),
+    accent = Color(0xFF4B4BFF),
+    accentSoft = Color(0x334B4BFF),
+    danger = Color(0xFFCC291B),
+    dangerSoft = Color(0x2EFF6B5C),
     borderSubtle = Color(0x1FF5F5F7),
     divider = Color(0x14F5F5F7),
     patternDot = Color(0x3BF5F5F7),
@@ -199,7 +206,75 @@ object YeetMotion {
     fun <T> stamp(): FiniteAnimationSpec<T> = spring(dampingRatio = 0.3062f, stiffness = 600f)
     /** Смена образа: превью ↔ коллаж · Figma Smart Animate Gentle */
     fun <T> swap(): FiniteAnimationSpec<T> = spring(dampingRatio = 0.75f, stiffness = 100f)
+    /** Выбор: фон чипса, вкладки, строки, цвет лайка */
+    fun <T> select(): FiniteAnimationSpec<T> = tween(durationMillis = 150, easing = CubicBezierEasing(0.2f, 0f, 0f, 1f))
+    /** Подъём под пальцем: вещь на холсте, карточка при перетаскивании · Figma Smart Animate Quick */
+    fun <T> lift(): FiniteAnimationSpec<T> = spring(dampingRatio = 0.5774f, stiffness = 300f)
+    /** Бросок в цель: вещь встаёт на место, соседи раздвигаются · Figma Smart Animate Quick */
+    fun <T> drop(): FiniteAnimationSpec<T> = spring(dampingRatio = 0.5774f, stiffness = 300f)
+    /** Отмена перетаскивания: вещь возвращается туда, откуда взяли · Figma Smart Animate Gentle */
+    fun <T> return(): FiniteAnimationSpec<T> = spring(dampingRatio = 0.75f, stiffness = 100f)
+    /** Появление: snackbar, подсказка, диалог */
+    fun <T> appear(): FiniteAnimationSpec<T> = tween(durationMillis = 240, easing = CubicBezierEasing(0.2f, 0f, 0f, 1f))
+    /** Исчезновение: быстрее появления, чтобы не мешать */
+    fun <T> exit(): FiniteAnimationSpec<T> = tween(durationMillis = 150, easing = CubicBezierEasing(0.2f, 0f, 0f, 1f))
 }
+
+/** Параметры жестов и микро-анимаций (Storybook → Foundations/Анимации → Микро-анимации). */
+object YeetGesture {
+    /** Нажатие кнопки, чипса, иконки */
+    const val pressScale = 0.97f
+    /** Нажатие карточки: чем больше объект, тем меньше сжатие */
+    const val pressScaleCard = 0.98f
+    /** Нажатие штампа */
+    const val pressScaleStamp = 0.94f
+    /** Поднятый предмет при перетаскивании */
+    const val liftScale = 1.04f
+    /** Цель под перетаскиваемым предметом */
+    const val targetScale = 1.02f
+    /** Долгое нажатие до подъёма (перетаскивание в сетке) */
+    const val longPressMillis = 400L
+    /** Задержка нажатого состояния внутри скролла, чтобы скролл не мигал кнопками */
+    const val pressDelayMillis = 80L
+    /** Сдвиг пальца, после которого нажатие отменяется и начинается жест */
+    val touchSlop = 10.dp
+    /** Доля ширины: свайп дальше — страница перелистывается */
+    const val swipeDistance = 0.3f
+    /** Скорость броска, после которой свайп засчитан при любой дистанции (dp/с) */
+    const val swipeVelocity = 500f
+    /** Сопротивление за границей: скролл, масштаб 40–300 на холсте */
+    const val rubberBand = 0.55f
+    /** Время показа snackbar без действия (с действием — 6000) */
+    const val snackbarMillis = 4000L
+}
+
+/** Хаптика: вызывать при смене состояния, не на каждое касание. view.yeetHaptic(YeetHaptic.drop); в Compose — LocalView.current. */
+object YeetHaptic {
+    /** Смена выбора: чипс, сегмент, вкладка, радио, шаг слайдера цены. Каждый шаг — один тик, не чаще 1 раза в 50 мс */
+    val select: Int get() = HapticFeedbackConstants.CLOCK_TICK
+    /** Переключатель, лайк, галочка вещи в режиме выбора. И при включении, и при выключении */
+    val toggle: Int get() = HapticFeedbackConstants.CONTEXT_CLICK
+    /** Подъём: долгое нажатие сработало, вещь на холсте взята. В момент подъёма, одновременно с scale 1.04 */
+    val lift: Int get() = HapticFeedbackConstants.LONG_PRESS
+    /** Перетаскиваемая вещь зашла на новую цель или корзину. Только при входе в цель, не при движении внутри */
+    val target: Int get() = HapticFeedbackConstants.CLOCK_TICK
+    /** Бросок в цель: вещь встала на место. На отпускании пальца */
+    val drop: Int get() = if (Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.CONFIRM else HapticFeedbackConstants.VIRTUAL_KEY
+    /** Жест перешёл порог: свайп перелистнёт, sheet закроется, pull-to-refresh, масштаб упёрся в 40 / 300 %. Один раз при пересечении порога; обратно — без вибрации */
+    val threshold: Int get() = if (Build.VERSION.SDK_INT >= 34) HapticFeedbackConstants.GESTURE_THRESHOLD_ACTIVATE else HapticFeedbackConstants.CLOCK_TICK
+    /** Штамп «Надеть» — образ отмечен. В пик пружины bouncy (~120 мс после нажатия) */
+    val stamp: Int get() = if (Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.CONFIRM else HapticFeedbackConstants.LONG_PRESS
+    /** Штамп «Перемешать», смена образа. На нажатии */
+    val shuffle: Int get() = HapticFeedbackConstants.CONTEXT_CLICK
+    /** Вещь брошена в корзину, подтверждено удаление. На отпускании над корзиной */
+    val delete: Int get() = if (Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.REJECT else HapticFeedbackConstants.LONG_PRESS
+    /** Ошибка: неверный пароль, не загрузилось фото. Вместе с появлением текста ошибки */
+    val error: Int get() = if (Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.REJECT else HapticFeedbackConstants.LONG_PRESS
+    /** Долгая операция завершилась по действию пользователя: вещь распознана, образ сохранён. Не для фоновых событий */
+    val success: Int get() = if (Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.CONFIRM else HapticFeedbackConstants.VIRTUAL_KEY
+}
+
+fun View.yeetHaptic(type: Int): Boolean = performHapticFeedback(type)
 
 /** Tab-bar, FAB, hint, панель sheet: y 8, blur 40. В Compose — Modifier.shadow(elevation = 10.dp, shape, ambientColor / spotColor = цвет ниже). */
 object YeetShadow {

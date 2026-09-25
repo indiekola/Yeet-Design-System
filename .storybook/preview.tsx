@@ -4,9 +4,14 @@ import './preview.css';
 
 const withTheme: Decorator = (Story, context) => {
   const theme = (context.globals.theme as string) ?? 'light';
-  if (typeof document !== 'undefined') document.documentElement.dataset.theme = theme;
+  const brand = (context.globals.brand as string) ?? 'blue';
+  if (typeof document !== 'undefined') {
+    document.documentElement.dataset.theme = theme;
+    if (brand === 'blue') delete document.documentElement.dataset.brand;
+    else document.documentElement.dataset.brand = brand;
+  }
   return (
-    <div className="sb-canvas" data-theme={theme}>
+    <div className="sb-canvas" data-theme={theme} data-brand={brand === 'blue' ? undefined : brand}>
       <Story />
     </div>
   );
@@ -27,8 +32,20 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    brand: {
+      description: 'Бренд-палитра',
+      toolbar: {
+        title: 'Бренд',
+        icon: 'paintbrush',
+        items: [
+          { value: 'blue', title: 'Синий (текущий)' },
+          { value: 'lime', title: 'Лайм (вариант)' },
+        ],
+        dynamicTitle: true,
+      },
+    },
   },
-  initialGlobals: { theme: 'light' },
+  initialGlobals: { theme: 'light', brand: 'blue' },
   parameters: {
     layout: 'centered',
     controls: { expanded: true, sort: 'requiredFirst' },
