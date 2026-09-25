@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { Avatar, Button, Icon, IconButton, Logo } from '../atoms';
+import { Avatar, Button, Icon, IconButton, Logo, Stamp } from '../atoms';
 import { BarChart, Carousel, ChipGroup, EmptyState, ListGroup, PhotoTile, UsageMeter, Field, Hint, InputBar, InputGroup, List, ListItem, LoadingState, SegmentControl, Snackbar, StatRow, StatTile } from '../molecules';
 import { BottomBar, BottomNav, ChatBubble, StatusBar, StylistPromptCard, TripCard, Dialog, Header, ItemCard, OutfitCollage, Overlay, PhotoArea, ProductCard, Sheet, WeatherCard, type Garment } from '../organisms';
 import { Screen } from '../templates';
@@ -52,8 +52,8 @@ export const Today: Story = {
       <div style={{ position: 'relative' }}>
         <OutfitCollage items={[{ kind: 'top', x: 68, y: 32, color: 'green' }, { kind: 'bottom', x: 30, y: 58, size: 140, color: 'green' }, { kind: 'accessories', x: 32, y: 20, size: 64 }, { kind: 'shoe', x: 70, y: 76, size: 80, color: 'brown' }]} />
         <div style={{ position: 'absolute', top: -20, left: 16 }}><WeatherCard temp="20°" description="Солнечно, ветер 14 км/ч" /></div>
+        <div style={{ position: 'absolute', right: -8, bottom: -40 }}><Stamp label="Надеть" /></div>
       </div>
-      <Button size="XL" fullWidth>Надеть</Button>
     </Screen>
   ),
 };

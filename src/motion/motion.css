@@ -1,0 +1,59 @@
+/* Демо анимаций для Storybook. Все длительности и кривые — только из токенов --motion-*. */
+
+.y-motion-phone {
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  width: var(--screen-width); height: 720px; border-radius: 44px;
+  background: var(--color-bg-canvas); color: var(--color-text-primary);
+  box-shadow: 0 0 0 10px #111, 0 30px 80px rgb(0 0 0 / 0.25);
+}
+.y-motion-phone--short { height: 260px; }
+
+/* Кривые */
+.y-curve { margin: 0; display: grid; gap: 8px; padding: 16px; border-radius: 20px; background: var(--color-bg-subtle); }
+.y-curve svg { width: 100%; height: auto; overflow: visible; }
+.y-curve__grid { stroke: var(--color-border-subtle); stroke-dasharray: 2 3; }
+.y-curve__axis { stroke: var(--color-border-subtle); }
+.y-curve__line { fill: none; stroke: var(--color-accent); stroke-width: 2; stroke-linecap: round; }
+.y-curve__track { position: relative; height: 12px; border-radius: 6px; background: var(--color-bg-canvas); }
+.y-curve__dot {
+  position: absolute; top: 2px; left: 2px; width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent);
+  animation-name: y-curve-run; animation-iteration-count: infinite; animation-direction: alternate; animation-delay: 400ms;
+}
+@keyframes y-curve-run { from { left: 2px; } to { left: calc(100% - 10px); } }
+.y-curve figcaption { font: 400 12px/16px var(--font-text); color: var(--color-text-secondary); display: grid; gap: 2px; }
+.y-curve figcaption b { font-weight: 500; color: var(--color-text-primary); }
+.y-curve code { font: 400 12px/16px ui-monospace, Menlo, monospace; color: var(--color-text-accent); }
+
+/* Смена образа: текущий 353 по центру, соседние — превью 95 сверху и снизу */
+.y-swap { position: relative; flex: 1; cursor: pointer; }
+.y-swap__look {
+  position: absolute; left: 20px; top: 96px; width: 353px;
+  transform-origin: top center;
+  transition: transform var(--motion-swap), opacity var(--motion-fade);
+}
+.y-swap__look.is-current { transform: none; z-index: 1; }
+.y-swap__look.is-prev { transform: translateY(-84px) scale(0.27); opacity: 0.9; }
+.y-swap__look.is-next { transform: translateY(372px) scale(0.27); }
+.y-swap__stamp { position: absolute; right: 12px; top: 356px; z-index: 2; transition: transform var(--motion-swap); }
+
+/* Сворачивание фото в шапку */
+.y-collapse__bar { position: relative; z-index: 2; display: flex; justify-content: space-between; padding: 8px 20px; background: var(--color-bg-canvas); }
+.y-collapse__photo {
+  position: absolute; z-index: 3; left: 20px; top: 118px; width: 353px; transform-origin: top left;
+  transition: transform var(--motion-collapse);
+}
+.y-collapse.is-collapsed .y-collapse__photo { transform: translate(150px, -52px) scale(0.147); }
+.y-collapse__scroll { flex: 1; overflow-y: auto; scrollbar-width: none; }
+.y-collapse__panel {
+  display: flex; flex-direction: column; gap: 12px; margin-top: 380px; min-height: 900px; padding: 24px 20px;
+  background: var(--color-bg-elevated); border-radius: 32px 32px 0 0; box-shadow: var(--shadow-floating);
+  transition: margin var(--motion-collapse);
+}
+.y-collapse.is-collapsed .y-collapse__panel { margin-top: 8px; }
+
+/* Листание поводов */
+.y-pager { overflow: hidden; padding: 24px 20px 0; touch-action: pan-y; cursor: grab; }
+.y-pager__track { display: flex; gap: 20px; transition: transform var(--motion-page); }
+.y-pager__page { flex: none; width: 353px; }
+.y-pager__chips { padding: 16px 0 0; transition: transform var(--motion-page); }
+.y-pager__chips > * { flex-wrap: nowrap; overflow: visible; }

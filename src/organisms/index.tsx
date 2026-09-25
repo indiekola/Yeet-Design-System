@@ -128,13 +128,16 @@ export function TabBar({ active, initial = 'С', onChange }: { active: Tab; init
 /**
  * Нижняя навигация: TabBar (+ FAB «+» на экранах с добавлением) на подложке с затуханием сверху.
  * **Контексты:** все корневые вкладки; FAB — Гардероб и Вишлист.
+ * При переходе на вкладку с FAB таб-бар сжимается и уступает место кнопке — `--motion-nav` (quick, 744 мс).
  */
 export function BottomNav({ active, fab, onFab, onTabChange }: { active: Tab; fab?: boolean; onFab?: () => void; onTabChange?: (t: Tab) => void }) {
   return (
     <div className="y-bottom-nav">
       <ScrollEdge position="bottom" size={40} />
       <TabBar active={active} onChange={onTabChange} />
-      {fab && <IconButton icon="plus" label="Добавить" variant="primary" size="XL" floating onClick={onFab} />}
+      <span className={cx('y-bottom-nav__fab', fab && 'is-open')} aria-hidden={!fab}>
+        <IconButton icon="plus" label="Добавить" variant="primary" size="XL" floating onClick={onFab} tabIndex={fab ? undefined : -1} />
+      </span>
     </div>
   );
 }

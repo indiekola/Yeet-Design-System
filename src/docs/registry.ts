@@ -21,6 +21,7 @@ export const registry: Entry[] = [
   { code: 'Logo', figma: 'yeet', level: 'Atoms', section: '01 Foundations', story: 'Atoms/Basics' },
   { code: 'Button', figma: 'button', level: 'Atoms', section: '02 Actions', story: 'Atoms/Button' },
   { code: 'IconButton', figma: 'icon-button', level: 'Atoms', section: '02 Actions', story: 'Atoms/IconButton' },
+  { code: 'Stamp', figma: 'stamp', level: 'Atoms', section: '02 Actions', story: 'Atoms/Stamp', note: 'анимация --motion-stamp' },
   { code: 'Badge', figma: 'badge', level: 'Atoms', section: '02 Actions', story: 'Atoms/Basics' },
   { code: 'Avatar', figma: 'avatar', level: 'Atoms', section: '07 Content', story: 'Atoms/Basics' },
   { code: 'Divider', figma: 'divider', level: 'Atoms', section: '09 System', story: 'Atoms/Basics' },

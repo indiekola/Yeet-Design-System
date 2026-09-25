@@ -3,6 +3,7 @@ import { Icon } from '../atoms';
 import { icons, type IconName } from '../icons/icons';
 import { itemColors, radii, semanticColors, spaces, textStyles } from '../tokens/tokens';
 import { registry, type Level } from './registry';
+import { motions } from '../motion/motion';
 import '../tokens/tokens.css';
 
 const mono: CSSProperties = { font: '400 12px/16px ui-monospace, SFMono-Regular, Menlo, monospace' };
@@ -186,4 +187,29 @@ export function Stat({ value, label }: { value: ReactNode; label: string }) {
 
 export function Stats({ children }: { children: ReactNode }) {
   return <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 8, margin: '16px 0 24px' }}>{children}</div>;
+}
+
+/** Таблица семантических токенов движения. */
+export function MotionTable() {
+  const th: CSSProperties = { ...cap, textAlign: 'left', padding: '8px 12px', borderBottom: '1px solid rgba(0,0,0,.1)' };
+  const td: CSSProperties = { padding: '8px 12px', borderBottom: '1px solid rgba(0,0,0,.06)', verticalAlign: 'top' };
+  return (
+    <table style={{ borderCollapse: 'collapse', width: '100%', font: '400 13px/18px var(--font-text)' }}>
+      <thead>
+        <tr><th style={th}>Переход</th><th style={th}>Токен</th><th style={th}>Кривая</th><th style={th}>Что происходит</th><th style={th}>Где</th><th style={th}>Кадр Figma</th></tr>
+      </thead>
+      <tbody>
+        {motions.map((m) => (
+          <tr key={m.token}>
+            <td style={{ ...td, fontWeight: 500 }}>{m.name}<div style={cap}>{m.trigger}</div></td>
+            <td style={{ ...td, ...mono, color: '#0100F4' }}>{m.token}</td>
+            <td style={{ ...td, ...cap }}>{m.curve}</td>
+            <td style={td}>{m.what}</td>
+            <td style={{ ...td, ...cap }}>{m.where}</td>
+            <td style={{ ...td, ...cap }}>{m.figma}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 }
