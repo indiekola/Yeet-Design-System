@@ -1,6 +1,13 @@
 import type { Decorator, Preview } from '@storybook/react-vite';
 import '../src/tokens/tokens.css';
 import './preview.css';
+import tokens from '../tokens/tokens.json';
+
+// Пункты тулбара «Бренд» строятся из tokens.json → brand: новая палитра появится здесь сама
+const brandItems = [
+  { value: 'blue', title: 'Синий (текущий)' },
+  ...Object.entries(tokens.brand).map(([value, b]) => ({ value, title: b.name })),
+];
 
 const withTheme: Decorator = (Story, context) => {
   const theme = (context.globals.theme as string) ?? 'light';
@@ -37,10 +44,7 @@ const preview: Preview = {
       toolbar: {
         title: 'Бренд',
         icon: 'paintbrush',
-        items: [
-          { value: 'blue', title: 'Синий (текущий)' },
-          { value: 'lime', title: 'Лайм (вариант)' },
-        ],
+        items: brandItems,
         dynamicTitle: true,
       },
     },

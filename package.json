@@ -9,7 +9,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "node scripts/build-tokens.mjs && storybook build -o storybook-static && node scripts/postbuild.mjs",
     "typecheck": "tsc --noEmit",
-    "qa": "node scripts/qa/run.mjs"
+    "qa": "node scripts/qa/run.mjs",
+    "contrast": "node scripts/check-contrast.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",
