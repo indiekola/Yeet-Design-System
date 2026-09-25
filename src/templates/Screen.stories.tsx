@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Screen } from '.';
+import { Grid, Screen } from '.';
 import { BottomNav, Header, ItemCard, type Garment } from '../organisms';
 import { SegmentControl } from '../molecules';
 
@@ -30,7 +30,7 @@ export const Scroll: Story = {
     children: (
       <>
         <SegmentControl value="items" segments={[{ value: 'items', label: 'Вещи' }, { value: 'o', label: 'Образы' }, { value: 'w', label: 'Вишлист' }]} />
-        <div className="y-grid">{kinds.map((k, i) => <ItemCard key={i} kind={k} />)}</div>
+        <Grid>{kinds.map((k, i) => <ItemCard key={i} kind={k} />)}</Grid>
       </>
     ),
   },

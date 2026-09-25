@@ -12,17 +12,29 @@
 
 ```
 src/
-  tokens/      3 слоя токенов: примитивы → семантика → компонентные (CSS + метаданные)
-  icons/       линейные иконки из Figma
-  atoms/       Button, IconButton, Icon, Badge, Avatar, ColorDot, Divider, Text, ScrollEdge
-  molecules/   Field, InputGroup, InputBar, SegmentControl, ChipGroup, ListItem, StatTile, Hint,
-               Snackbar, EmptyState, LoadingState, PhotoTile
-  organisms/   Header, TabBar, BottomNav, BottomBar, Sheet, Dialog, ItemCard, ProductCard,
-               OutfitCollage, PhotoArea, WeatherCard, ChatBubble
-  templates/   Screen — каркас экрана со скроллом под навигацией
-  pages/       экраны флоу, собранные из компонентов (stories)
-  docs/        страницы документации Storybook (MDX)
+  tokens/      3 слоя токенов: примитивы → семантика → компонентные, + движение (--motion-*)
+  icons/       линейные иконки из Figma (icons.ts) и фирменная графика (brand.ts: логотип, звезда штампа)
+  atoms/       icon.tsx      Icon, Logo
+               button.tsx    Button, IconButton, Stamp
+               display.tsx   Badge, Avatar, Divider, ColorDot, ScrollEdge, Text
+  molecules/   inputs.tsx    Field, InputGroup, InputBar
+               selection.tsx SegmentControl, ChipGroup, ListItem, List, ListGroup
+               feedback.tsx  Hint, Snackbar, EmptyState, LoadingState, PhotoTile
+               data.tsx      StatTile, StatRow, Carousel, BarChart, UsageMeter
+  organisms/   system.tsx    StatusBar
+               navigation.tsx Header, TabBar, BottomNav, BottomBar
+               overlays.tsx  Sheet, Dialog, Overlay
+               cards.tsx     ItemCard, ProductCard, OutfitCollage, CollageLayer, PhotoArea, WeatherCard, ChatBubble
+               stylist.tsx   OutfitThumbnail, StylistPromptCard, TripCard
+  templates/   Screen — каркас экрана со скроллом под навигацией; Grid, Row — раскладка
+  pages/       экраны флоу, собранные только из компонентов (stories)
+  motion/      метаданные анимаций и интерактивные демо
+  docs/        страницы документации (MDX), registry.ts — реестр Figma ↔ код
+  utils/       cx, plural
 ```
+
+Каждый слой импортирует только слои ниже себя (атом не знает о молекуле). `index.tsx` слоя подключает CSS и реэкспортирует модули —
+импортировать компоненты всегда из папки слоя: `import { Button } from '../atoms'`.
 
 ## Запуск
 

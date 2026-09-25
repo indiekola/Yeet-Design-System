@@ -9,6 +9,27 @@ import '../tokens/tokens.css';
 const mono: CSSProperties = { font: '400 12px/16px ui-monospace, SFMono-Regular, Menlo, monospace' };
 const cap: CSSProperties = { font: '400 12px/16px var(--font-text)', color: '#777' };
 
+/** Таблица документации: заголовки + строки ячеек. Единый стиль для реестров и спецификаций. */
+function DocTable({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
+  const th: CSSProperties = { ...cap, textAlign: 'left', padding: '8px 12px', borderBottom: '1px solid rgba(0,0,0,.1)' };
+  const td: CSSProperties = { padding: '8px 12px', borderBottom: '1px solid rgba(0,0,0,.06)', verticalAlign: 'top' };
+  return (
+    <table style={{ borderCollapse: 'collapse', width: '100%', font: '400 13px/18px var(--font-text)' }}>
+      <thead>
+        <tr>{head.map((h) => <th key={h} style={th}>{h}</th>)}</tr>
+      </thead>
+      <tbody>
+        {rows.map((r, i) => (
+          <tr key={i}>{r.map((c, j) => <td key={j} style={td}>{c}</td>)}</tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+const Code = ({ children }: { children: ReactNode }) => <span style={{ ...mono, color: '#0100F4' }}>{children}</span>;
+const Muted = ({ children }: { children: ReactNode }) => <span style={cap}>{children}</span>;
+
 function Swatch({ token, theme }: { token: string; theme: 'light' | 'dark' }) {
   return (
     <div data-theme={theme} style={{ background: 'var(--color-bg-canvas)', padding: 6, borderRadius: 14 }}>
@@ -131,25 +152,17 @@ const levels: { level: string; what: string; rule: string; items: string[] }[] =
 
 /** Таблица соответствия Figma ↔ код из `registry.ts`. */
 export function ComponentRegistry() {
-  const th: CSSProperties = { ...cap, textAlign: 'left', padding: '8px 12px', borderBottom: '1px solid rgba(0,0,0,.1)' };
-  const td: CSSProperties = { padding: '8px 12px', borderBottom: '1px solid rgba(0,0,0,.06)', verticalAlign: 'top' };
   return (
-    <table style={{ borderCollapse: 'collapse', width: '100%', font: '400 13px/18px var(--font-text)' }}>
-      <thead>
-        <tr><th style={th}>Уровень</th><th style={th}>Код</th><th style={th}>Figma</th><th style={th}>Секция Figma</th><th style={th}>Storybook</th></tr>
-      </thead>
-      <tbody>
-        {registry.map((e) => (
-          <tr key={e.code}>
-            <td style={{ ...td, ...cap }}>{e.level}</td>
-            <td style={{ ...td, ...mono, color: '#0100F4' }}>{`<${e.code}>`}</td>
-            <td style={{ ...td, ...mono }}>{e.figma ?? '—'}{e.note && <div style={cap}>{e.note}</div>}</td>
-            <td style={{ ...td, ...cap }}>{e.section}</td>
-            <td style={{ ...td, ...cap }}>{e.story}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <DocTable
+      head={['Уровень', 'Код', 'Figma', 'Секция Figma', 'Storybook']}
+      rows={registry.map((e) => [
+        <Muted>{e.level}</Muted>,
+        <Code>{`<${e.code}>`}</Code>,
+        <span style={mono}>{e.figma ?? '—'}{e.note && <div style={cap}>{e.note}</div>}</span>,
+        <Muted>{e.section}</Muted>,
+        <Muted>{e.story}</Muted>,
+      ])}
+    />
   );
 }
 
@@ -191,25 +204,17 @@ export function Stats({ children }: { children: ReactNode }) {
 
 /** Таблица семантических токенов движения. */
 export function MotionTable() {
-  const th: CSSProperties = { ...cap, textAlign: 'left', padding: '8px 12px', borderBottom: '1px solid rgba(0,0,0,.1)' };
-  const td: CSSProperties = { padding: '8px 12px', borderBottom: '1px solid rgba(0,0,0,.06)', verticalAlign: 'top' };
   return (
-    <table style={{ borderCollapse: 'collapse', width: '100%', font: '400 13px/18px var(--font-text)' }}>
-      <thead>
-        <tr><th style={th}>Переход</th><th style={th}>Токен</th><th style={th}>Кривая</th><th style={th}>Что происходит</th><th style={th}>Где</th><th style={th}>Кадр Figma</th></tr>
-      </thead>
-      <tbody>
-        {motions.map((m) => (
-          <tr key={m.token}>
-            <td style={{ ...td, fontWeight: 500 }}>{m.name}<div style={cap}>{m.trigger}</div></td>
-            <td style={{ ...td, ...mono, color: '#0100F4' }}>{m.token}</td>
-            <td style={{ ...td, ...cap }}>{m.curve}</td>
-            <td style={td}>{m.what}</td>
-            <td style={{ ...td, ...cap }}>{m.where}</td>
-            <td style={{ ...td, ...cap }}>{m.figma}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <DocTable
+      head={['Переход', 'Токен', 'Кривая', 'Что происходит', 'Где', 'Кадр Figma']}
+      rows={motions.map((m) => [
+        <span style={{ fontWeight: 500 }}>{m.name}<div style={cap}>{m.trigger}</div></span>,
+        <Code>{m.token}</Code>,
+        <Muted>{m.curve}</Muted>,
+        m.what,
+        <Muted>{m.where}</Muted>,
+        <Muted>{m.figma}</Muted>,
+      ])}
+    />
   );
 }

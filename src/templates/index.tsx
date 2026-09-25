@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { StatusBar } from '../organisms';
 import { cx } from '../utils/cx';
 import './templates.css';
@@ -59,4 +59,19 @@ export function Screen({ header, bottom, overlay, floating, floatingOffset = 132
       {overlay}
     </div>
   );
+}
+
+/* ─── Layout primitives ─────────────────────────────────────────────── */
+
+/**
+ * Сетка карточек в 2 колонки по ширине экрана (173 + 7 + 173). Вещи, товары, поездки, карточки стилиста.
+ * `rowGap` — больше, если под карточкой есть подпись (товары в поиске).
+ */
+export function Grid({ rowGap, children }: { rowGap?: number; children: ReactNode }) {
+  return <div className="y-grid" style={rowGap ? { rowGap } : undefined}>{children}</div>;
+}
+
+/** Горизонтальный ряд: пара плиток фото, иконки-фильтры перед чипсами. */
+export function Row({ gap = 8, align, children }: { gap?: number; align?: CSSProperties['alignItems']; children: ReactNode }) {
+  return <div className="y-row" style={{ gap, alignItems: align }}>{children}</div>;
 }

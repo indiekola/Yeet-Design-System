@@ -217,10 +217,10 @@ Figma-файл: [YeetStyle 2.0](https://www.figma.com/design/1LAkot5WySMWhwiiFJq
 | Уровень | Что это | В коде (`src/`) | В Figma |
 |---|---|---|---|
 | Tokens | цвет, шрифт, отступ, радиус, тень | `tokens/` | коллекция «Yeet DS 2.0», стили |
-| Atoms | неделимые элементы | `atoms/` — Button, IconButton, Icon, Badge, Avatar, ColorDot, Divider, Text, ScrollEdge | 01–02 |
-| Molecules | связка атомов с одной задачей | `molecules/` — Field, InputGroup, InputBar, SegmentControl, ChipGroup, ListItem, StatTile, Hint, Snackbar, EmptyState, LoadingState, PhotoTile | 03–04, 08 |
-| Organisms | самостоятельный блок экрана | `organisms/` — Header, TabBar, BottomNav, BottomBar, Sheet, Dialog, карточки, PhotoArea, ChatBubble | 05–07 |
-| Templates | каркас экрана без данных, скролл и края | `templates/` — Screen | 10 Screen patterns |
+| Atoms | неделимые элементы | `atoms/` — Icon, Logo, Button, IconButton, Stamp, Badge, Avatar, ColorDot, Divider, Text, ScrollEdge | 01–02 |
+| Molecules | связка атомов с одной задачей | `molecules/` — Field, InputGroup, InputBar, SegmentControl, ChipGroup, ListItem, ListGroup, StatTile, Hint, Snackbar, EmptyState, LoadingState, PhotoTile, Carousel, BarChart, UsageMeter | 03–04, 07–08 |
+| Organisms | самостоятельный блок экрана | `organisms/` — Header, TabBar, BottomNav, BottomBar, Sheet, Dialog, карточки (Item, Product, Trip, StylistPrompt), OutfitCollage, OutfitThumbnail, PhotoArea, ChatBubble | 05–07 |
+| Templates | каркас экрана без данных, скролл и края | `templates/` — Screen, Grid, Row | 10 Screen patterns |
 | Pages | экран флоу с реальными текстами | `pages/` | New app design |
 
 **Контекст в компонентах.** Компонент описывает, *где* он живёт во флоу: в Figma — фреймы `usage / <component>` справа от компонента, в Storybook — история «В флоу» с названием экрана. Варианты выбираются по роли в контексте (например, `Header` = Large на корневых вкладках, Back на вложенных, Search в поиске), а не по вкусу.

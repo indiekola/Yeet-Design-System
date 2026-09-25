@@ -22,3 +22,7 @@
 .y-screen:not([data-edge-top]) .y-header .y-scroll-edge,
 .y-screen:not([data-edge-bottom]) .y-bottom-nav .y-scroll-edge,
 .y-screen:not([data-edge-bottom]) .y-bottom-bar .y-scroll-edge { opacity: 0; }
+
+/* Layout primitives */
+.y-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8) 7px; }
+.y-row { display: flex; }

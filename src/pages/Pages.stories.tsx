@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Avatar, Button, Icon, IconButton, Logo, Stamp } from '../atoms';
 import { BarChart, Carousel, ChipGroup, EmptyState, ListGroup, PhotoTile, UsageMeter, Field, Hint, InputBar, InputGroup, List, ListItem, LoadingState, SegmentControl, Snackbar, StatRow, StatTile } from '../molecules';
 import { BottomBar, BottomNav, ChatBubble, StatusBar, StylistPromptCard, TripCard, Dialog, Header, ItemCard, OutfitCollage, Overlay, PhotoArea, ProductCard, Sheet, WeatherCard, type Garment } from '../organisms';
-import { Screen } from '../templates';
+import { Grid, Row, Screen } from '../templates';
 
 const meta = {
   title: 'Pages/Экраны флоу',
@@ -65,12 +65,12 @@ export const Wardrobe: Story = {
     return (
       <Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />}>
         <SegmentControl value={tab} onChange={setTab} segments={[{ value: 'items', label: 'Вещи' }, { value: 'outfits', label: 'Образы' }, { value: 'wishlist', label: 'Вишлист' }]} />
-        <div style={{ display: 'flex', gap: 4 }}>
+        <Row gap={4}>
           <IconButton icon="search" label="Поиск" size="S" />
           <IconButton icon="archive" label="Архив" size="S" />
           <ChipGroup chips={[{ label: 'Категория', dropdown: true }, { label: 'Сезон', dropdown: true }, { label: 'Теги', dropdown: true }]} />
-        </div>
-        <div className="y-grid">{grid.map((k, i) => <ItemCard key={i} kind={k} />)}</div>
+        </Row>
+        <Grid>{grid.map((k, i) => <ItemCard key={i} kind={k} />)}</Grid>
       </Screen>
     );
   },
@@ -97,7 +97,7 @@ export const ItemDetails: Story = {
         <p className="y-body y-text--secondary">10 000 ₽ · Sander · Чёрный<br />Аксессуары · Все сезоны</p>
         <p className="y-body" style={{ background: 'var(--color-bg-subtle)', borderRadius: 20, padding: '16px 20px' }}>Мягкая сумка округлой формы с логотипом и кожаным ремешком</p>
         <h3 className="y-h3">Образы с этой вещью</h3>
-        <div className="y-grid"><ItemCard kind="top" /><ItemCard kind="bottom" /></div>
+        <Grid><ItemCard kind="top" /><ItemCard kind="bottom" /></Grid>
       </Sheet>
     </Screen>
   ),
@@ -113,7 +113,7 @@ export const OutfitDetails: Story = {
         <h3 className="y-h3">Теги</h3>
         <ChipGroup wrap chips={[{ label: 'Тег #1' }, { label: 'Тег #2' }, { label: 'Тег #3' }, { label: 'Тег #4' }]} />
         <h3 className="y-h3">Вещи из образа</h3>
-        <div className="y-grid"><ItemCard kind="top" color="green" /><ItemCard kind="bottom" color="green" /><ItemCard kind="shoe" color="brown" /><ItemCard kind="accessories" /></div>
+        <Grid><ItemCard kind="top" color="green" /><ItemCard kind="bottom" color="green" /><ItemCard kind="shoe" color="brown" /><ItemCard kind="accessories" /></Grid>
       </Sheet>
     </Screen>
   ),
@@ -123,11 +123,11 @@ export const SearchResults: Story = {
   name: 'Search / Text / Results',
   render: () => (
     <Screen header={<Header type="search" query="Белые кроссовки" filters={[{ label: 'Сортировка' }, { label: 'Цена' }]} />}>
-      <div className="y-grid" style={{ rowGap: 16 }}>
+      <Grid rowGap={16}>
         {['Nike Air Force 1 ’07', 'Nike Ava Edge', 'Adidas Samba', 'New Balance 550', 'Puma Palermo', 'Vans Old Skool'].map((n, i) => (
           <ProductCard key={n} kind="shoe" name={n} price={`${(10400 + i * 1300).toLocaleString('ru-RU')} ₽`} discount={i % 2 ? undefined : '-10%'} liked={i === 1} />
         ))}
-      </div>
+      </Grid>
     </Screen>
   ),
 };
@@ -189,7 +189,7 @@ export const FilterSheet: Story = {
         </Overlay>
       }
     >
-      <div className="y-grid">{grid.map((k, i) => <ItemCard key={i} kind={k} />)}</div>
+      <Grid>{grid.map((k, i) => <ItemCard key={i} kind={k} />)}</Grid>
     </Screen>
   ),
 };
@@ -198,7 +198,7 @@ export const ClearTrash: Story = {
   name: 'Trash / Items / Dialog / Clear',
   render: () => (
     <Screen header={<Header type="bar" titleChip="Корзина вещей" />} overlay={<Overlay><Dialog tone="destructive" title="Очистить корзину?" description="Все вещи из корзины удаляются навсегда, их уже не вернуть" cancel="Отмена" confirm="Очистить" /></Overlay>}>
-      <div className="y-grid">{grid.slice(0, 4).map((k, i) => <ItemCard key={i} kind={k} />)}</div>
+      <Grid>{grid.slice(0, 4).map((k, i) => <ItemCard key={i} kind={k} />)}</Grid>
     </Screen>
   ),
 };
@@ -207,7 +207,7 @@ export const Toast: Story = {
   name: 'Wardrobe / Item / Toast',
   render: () => (
     <Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />} floating={<Snackbar onClose={() => {}}>Перемещено в архив</Snackbar>}>
-      <div className="y-grid">{grid.map((k, i) => <ItemCard key={i} kind={k} />)}</div>
+      <Grid>{grid.map((k, i) => <ItemCard key={i} kind={k} />)}</Grid>
     </Screen>
   ),
 };
@@ -228,10 +228,10 @@ export const SearchDiscover: Story = {
   name: 'Search / Discover',
   render: () => (
     <Screen header={<Header type="large" title="Поиск в сторах" subtitle="Нашли классную вещь? Покажем, где купить такую же или похожую." />} bottom={<BottomNav active="search" />}>
-      <div style={{ display: 'flex', gap: 8 }}>
+      <Row gap={8}>
         <PhotoTile source="gallery" />
         <PhotoTile source="camera" />
-      </div>
+      </Row>
       <InputBar placeholder="Белые кроссовки Nike" fieldIcon="search" />
       <ChipGroup wrap chips={['Nike', 'Crocs', 'Marine Serre', 'Белое платье с красными вкраплениями', 'JACQUEMUS', 'Обувь для бега'].map((label) => ({ label }))} />
     </Screen>
@@ -242,12 +242,12 @@ export const StylistHome: Story = {
   name: 'Stylist / Home',
   render: () => (
     <Screen header={<Header type="large" title="Стилист" />} bottom={<BottomNav active="stylist" />}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+      <Grid>
         <StylistPromptCard label="Образ дня" icon="ai" />
         <StylistPromptCard label="Конструктор" icon="collage" />
         <StylistPromptCard label="Для поездки" icon="bag-check" />
         <StylistPromptCard label="Чат со стилистом" icon="arrow-up" />
-      </div>
+      </Grid>
     </Screen>
   ),
 };
@@ -258,14 +258,14 @@ export const Trips: Story = {
   name: 'Stylist / Trips / List',
   render: () => (
     <Screen header={<Header type="bar" titleChip="Все для поездок" actions={[{ icon: 'info', label: 'Как это работает' }]} />}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+      <Grid>
         <TripCard add />
         <TripCard city="Самуй" items={12} outfits={8} art={tripArt('container', 'bottom', 'top')} />
         <TripCard city="Берлин" items={12} outfits={8} art={tripArt('accessories', 'bottom', 'top')} />
         <TripCard city="Бразилиа" items={4} outfits={1} art={tripArt('accessories', 'bottom', 'top')} />
         <TripCard city="Париж" items={12} outfits={8} art={tripArt('accessories', 'bottom', 'outerwear')} />
         <TripCard city="Торонто" items={12} outfits={8} art={tripArt('container', 'top', 'bottom')} />
-      </div>
+      </Grid>
     </Screen>
   ),
 };

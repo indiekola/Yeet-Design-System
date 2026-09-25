@@ -46,6 +46,7 @@ export const registry: Entry[] = [
   { code: 'BarChart', figma: 'bar-chart', level: 'Molecules', section: '07 Content', story: 'Molecules/Feedback & content' },
   { code: 'UsageMeter', figma: 'usage-meter', level: 'Molecules', section: '07 Content', story: 'Molecules/Feedback & content' },
 
+  { code: 'StatusBar', figma: 'system / status-bar', level: 'Organisms', section: '09 System', story: 'Templates/Screen', note: 'только для макетов' },
   { code: 'Header', figma: 'header', level: 'Organisms', section: '05 Navigation & scroll', story: 'Organisms/Navigation' },
   { code: 'TabBar', figma: 'tab-bar', level: 'Organisms', section: '05 Navigation & scroll', story: 'Organisms/Navigation' },
   { code: 'BottomNav', figma: 'bottom-nav', level: 'Organisms', section: '05 Navigation & scroll', story: 'Organisms/Navigation' },
@@ -63,5 +64,6 @@ export const registry: Entry[] = [
   { code: 'TripCard', figma: 'trip-card', level: 'Organisms', section: '07 Content', story: 'Organisms/Cards & media' },
 
   { code: 'Screen', figma: 'Screen patterns', level: 'Templates', section: '10 Screen patterns', story: 'Templates/Screen' },
-  { code: 'StatusBar', figma: 'system / status-bar', level: 'Templates', section: '09 System', story: 'Templates/Screen', note: 'только для макетов' },
+  { code: 'Grid', figma: 'auto layout 2 × 173, gap 8/7', level: 'Templates', section: '10 Screen patterns', story: 'Pages/Экраны флоу' },
+  { code: 'Row', figma: 'auto layout, horizontal', level: 'Templates', section: '10 Screen patterns', story: 'Pages/Экраны флоу' },
 ];
