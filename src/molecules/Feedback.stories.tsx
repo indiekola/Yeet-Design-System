@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { EmptyState, Hint, LoadingState, PhotoTile, Snackbar, StatRow, StatTile } from '.';
+import { BarChart, Carousel, EmptyState, Hint, UsageMeter, LoadingState, PhotoTile, Snackbar, StatRow, StatTile } from '.';
 import { Column, Usage, UsageGrid } from '../docs/helpers';
 
 const meta = {
@@ -74,5 +74,27 @@ export const PhotoTiles: Story = {
     <Column>
       <div style={{ display: 'flex', gap: 8 }}><PhotoTile source="gallery" /><PhotoTile source="camera" /></div>
     </Column>
+  ),
+};
+
+export const Analytics: Story = {
+  name: 'Аналитика: графики и лента',
+  render: () => (
+    <UsageGrid min={353}>
+      <Usage screen="Profile / Analytics" note="доля гардероба" width={353}><UsageMeter percent={11} /></Usage>
+      <Usage screen="Profile / Analytics" note="по категориям" width={353}>
+        <BarChart bars={[{ label: 'Верхняя одежда', icon: 'outerwear', value: 5 }, { label: 'Верх', icon: 'top', value: 50 }, { label: 'Обувь', icon: 'shoe', value: 10 }, { label: 'Аксессуары', icon: 'accessories', value: 30 }, { label: 'Низ', icon: 'bottom', value: 5 }]} />
+      </Usage>
+      <Usage screen="Profile / Analytics" note="по цветам" width={353}>
+        <BarChart height={180} bars={[{ label: 'Синий', color: 'blue', value: 13 }, { label: 'Чёрный', color: 'black', value: 62 }, { label: 'Коричневый', color: 'brown', value: 25 }]} />
+      </Usage>
+      <Usage screen="Profile / Analytics" note="лента карточек" width={353}>
+        <div style={{ width: 353, overflow: 'hidden', padding: '0 20px', boxSizing: 'content-box', marginLeft: -20 }}>
+          <Carousel title="Чаще всего надевалось" itemWidth={150}>
+            {[1, 2, 3].map((i) => <div key={i} style={{ height: 150, borderRadius: 20, background: 'var(--card-bg)' }} />)}
+          </Carousel>
+        </div>
+      </Usage>
+    </UsageGrid>
   ),
 };

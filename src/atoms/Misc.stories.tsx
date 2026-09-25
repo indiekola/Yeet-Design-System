@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Avatar, Badge, ColorDot, Divider, Text } from '.';
+import { Avatar, Badge, ColorDot, Divider, Logo, Text } from '.';
 import { Column, Usage, UsageGrid } from '../docs/helpers';
 import { itemColors } from '../tokens/tokens';
 
@@ -57,5 +57,19 @@ export const Typography: Story = {
       <Text variant="caption" tone="secondary">Продолжая, вы соглашаетесь с политикой конфиденциальности</Text>
       <Divider />
     </Column>
+  ),
+};
+
+export const LogoMark: Story = {
+  name: 'Logo',
+  render: () => (
+    <UsageGrid min={200}>
+      <Usage screen="App / Splash" note="on-accent на синем">
+        <div style={{ background: 'var(--color-accent)', color: 'var(--color-text-on-accent)', padding: '32px 40px', borderRadius: 20 }}><Logo height={48} /></div>
+      </Usage>
+      <Usage screen="Settings / Main" note="подвал, secondary">
+        <div style={{ color: 'var(--color-text-secondary)' }}><Logo height={28} /></div>
+      </Usage>
+    </UsageGrid>
   ),
 };

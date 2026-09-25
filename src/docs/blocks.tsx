@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Icon } from '../atoms';
 import { icons, type IconName } from '../icons/icons';
 import { itemColors, radii, semanticColors, spaces, textStyles } from '../tokens/tokens';
+import { registry, type Level } from './registry';
 import '../tokens/tokens.css';
 
 const mono: CSSProperties = { font: '400 12px/16px ui-monospace, SFMono-Regular, Menlo, monospace' };
@@ -116,14 +117,40 @@ export function IconGallery() {
   );
 }
 
+const byLevel = (l: Level) => registry.filter((e) => e.level === l).map((e) => e.code);
+
 const levels: { level: string; what: string; rule: string; items: string[] }[] = [
   { level: 'Tokens', what: 'Значения: цвет, шрифт, отступ, радиус, тень', rule: 'Примитивы → семантика → компонентные токены', items: ['--yeet-*', '--color-*', '--space-*', '--radius-*', '--button-*'] },
-  { level: 'Atoms', what: 'Неделимые элементы', rule: 'Используют только токены', items: ['Button', 'IconButton', 'Icon', 'Badge', 'Avatar', 'ColorDot', 'Divider', 'Text', 'ScrollEdge'] },
-  { level: 'Molecules', what: 'Небольшие связки атомов с одной задачей', rule: 'Собираются из атомов', items: ['Field', 'InputGroup', 'InputBar', 'SegmentControl', 'ChipGroup', 'ListItem', 'StatTile', 'Hint', 'Snackbar', 'EmptyState', 'LoadingState', 'PhotoTile'] },
-  { level: 'Organisms', what: 'Самостоятельные блоки интерфейса', rule: 'Молекулы + атомы', items: ['Header', 'TabBar', 'BottomNav', 'BottomBar', 'Sheet', 'Dialog', 'ItemCard', 'ProductCard', 'OutfitCollage', 'PhotoArea', 'WeatherCard', 'ChatBubble'] },
-  { level: 'Templates', what: 'Каркасы экранов без данных', rule: 'Расставляют организмы, задают скролл', items: ['Screen'] },
-  { level: 'Pages', what: 'Экраны флоу с реальными данными', rule: 'Шаблон + содержимое', items: ['Onboarding', 'Auth', 'Outfits', 'Wardrobe', 'Search', 'New Item', 'Stylist', '…'] },
+  { level: 'Atoms', what: 'Неделимые элементы', rule: 'Используют только токены', items: byLevel('Atoms') },
+  { level: 'Molecules', what: 'Небольшие связки атомов с одной задачей', rule: 'Собираются из атомов', items: byLevel('Molecules') },
+  { level: 'Organisms', what: 'Самостоятельные блоки интерфейса', rule: 'Молекулы + атомы', items: byLevel('Organisms') },
+  { level: 'Templates', what: 'Каркасы экранов без данных', rule: 'Расставляют организмы, задают скролл', items: byLevel('Templates') },
+  { level: 'Pages', what: 'Экраны флоу с реальными данными', rule: 'Шаблон + содержимое', items: ['Splash', 'Onboarding', 'Auth', 'Сегодня', 'Гардероб', 'Поиск', 'Стилист', 'Поездки', 'Профиль', 'Настройки', '…'] },
 ];
+
+/** Таблица соответствия Figma ↔ код из `registry.ts`. */
+export function ComponentRegistry() {
+  const th: CSSProperties = { ...cap, textAlign: 'left', padding: '8px 12px', borderBottom: '1px solid rgba(0,0,0,.1)' };
+  const td: CSSProperties = { padding: '8px 12px', borderBottom: '1px solid rgba(0,0,0,.06)', verticalAlign: 'top' };
+  return (
+    <table style={{ borderCollapse: 'collapse', width: '100%', font: '400 13px/18px var(--font-text)' }}>
+      <thead>
+        <tr><th style={th}>Уровень</th><th style={th}>Код</th><th style={th}>Figma</th><th style={th}>Секция Figma</th><th style={th}>Storybook</th></tr>
+      </thead>
+      <tbody>
+        {registry.map((e) => (
+          <tr key={e.code}>
+            <td style={{ ...td, ...cap }}>{e.level}</td>
+            <td style={{ ...td, ...mono, color: '#0100F4' }}>{`<${e.code}>`}</td>
+            <td style={{ ...td, ...mono }}>{e.figma ?? '—'}{e.note && <div style={cap}>{e.note}</div>}</td>
+            <td style={{ ...td, ...cap }}>{e.section}</td>
+            <td style={{ ...td, ...cap }}>{e.story}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
 
 export function AtomicMap() {
   return (

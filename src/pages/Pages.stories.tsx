@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { Button, IconButton } from '../atoms';
-import { ChipGroup, EmptyState, Field, Hint, InputBar, InputGroup, List, ListItem, LoadingState, SegmentControl, Snackbar, StatRow, StatTile } from '../molecules';
-import { BottomBar, BottomNav, ChatBubble, Dialog, Header, ItemCard, OutfitCollage, Overlay, PhotoArea, ProductCard, Sheet, WeatherCard, type Garment } from '../organisms';
+import { Avatar, Button, Icon, IconButton, Logo } from '../atoms';
+import { BarChart, Carousel, ChipGroup, EmptyState, ListGroup, PhotoTile, UsageMeter, Field, Hint, InputBar, InputGroup, List, ListItem, LoadingState, SegmentControl, Snackbar, StatRow, StatTile } from '../molecules';
+import { BottomBar, BottomNav, ChatBubble, StatusBar, StylistPromptCard, TripCard, Dialog, Header, ItemCard, OutfitCollage, Overlay, PhotoArea, ProductCard, Sheet, WeatherCard, type Garment } from '../organisms';
 import { Screen } from '../templates';
 
 const meta = {
@@ -208,6 +208,132 @@ export const Toast: Story = {
   render: () => (
     <Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />} floating={<Snackbar onClose={() => {}}>Перемещено в архив</Snackbar>}>
       <div className="y-grid">{grid.map((k, i) => <ItemCard key={i} kind={k} />)}</div>
+    </Screen>
+  ),
+};
+
+/* ─── Добавлено при синхронизации с флоу ─────────────────────────────── */
+
+export const Splash: Story = {
+  name: 'App / Splash',
+  render: () => (
+    <div style={{ width: 'var(--screen-width)', height: 'var(--screen-height)', borderRadius: 48, overflow: 'hidden', background: 'var(--color-accent)', color: 'var(--color-text-on-accent)', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ color: 'var(--color-text-on-accent)' }}><StatusBar /></div>
+      <div style={{ flex: 1, display: 'grid', placeItems: 'center' }}><Logo height={56} /></div>
+    </div>
+  ),
+};
+
+export const SearchDiscover: Story = {
+  name: 'Search / Discover',
+  render: () => (
+    <Screen header={<Header type="large" title="Поиск в сторах" subtitle="Нашли классную вещь? Покажем, где купить такую же или похожую." />} bottom={<BottomNav active="search" />}>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <PhotoTile source="gallery" />
+        <PhotoTile source="camera" />
+      </div>
+      <InputBar placeholder="Белые кроссовки Nike" fieldIcon="search" />
+      <ChipGroup wrap chips={['Nike', 'Crocs', 'Marine Serre', 'Белое платье с красными вкраплениями', 'JACQUEMUS', 'Обувь для бега'].map((label) => ({ label }))} />
+    </Screen>
+  ),
+};
+
+export const StylistHome: Story = {
+  name: 'Stylist / Home',
+  render: () => (
+    <Screen header={<Header type="large" title="Стилист" />} bottom={<BottomNav active="stylist" />}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        <StylistPromptCard label="Образ дня" icon="ai" />
+        <StylistPromptCard label="Конструктор" icon="collage" />
+        <StylistPromptCard label="Для поездки" icon="bag-check" />
+        <StylistPromptCard label="Чат со стилистом" icon="arrow-up" />
+      </div>
+    </Screen>
+  ),
+};
+
+const tripArt = (a: Garment, b: Garment, c: Garment) => [{ kind: a, x: 70, y: 28, size: 44 }, { kind: b, x: 28, y: 62, size: 72 }, { kind: c, x: 74, y: 66, size: 64 }];
+
+export const Trips: Story = {
+  name: 'Stylist / Trips / List',
+  render: () => (
+    <Screen header={<Header type="bar" titleChip="Все для поездок" actions={[{ icon: 'info', label: 'Как это работает' }]} />}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        <TripCard add />
+        <TripCard city="Самуй" items={12} outfits={8} art={tripArt('container', 'bottom', 'top')} />
+        <TripCard city="Берлин" items={12} outfits={8} art={tripArt('accessories', 'bottom', 'top')} />
+        <TripCard city="Бразилиа" items={4} outfits={1} art={tripArt('accessories', 'bottom', 'top')} />
+        <TripCard city="Париж" items={12} outfits={8} art={tripArt('accessories', 'bottom', 'outerwear')} />
+        <TripCard city="Торонто" items={12} outfits={8} art={tripArt('container', 'top', 'bottom')} />
+      </div>
+    </Screen>
+  ),
+};
+
+export const TripDetails: Story = {
+  name: 'Stylist / Trip Details / Outfits Tab',
+  render: () => (
+    <Screen header={<Header type="bar" titleChip="Бразилиа · 8–13 сент" actions={[{ icon: 'more', label: 'Ещё' }]} />}>
+      <SegmentControl value="outfits" segments={[{ value: 'outfits', label: 'Образы · 1' }, { value: 'items', label: 'Вещи · 4' }]} />
+      <OutfitCollage label="Прогулка" items={[{ kind: 'accessories', x: 34, y: 18, size: 56 }, { kind: 'top', x: 66, y: 34, color: 'green' }, { kind: 'bottom', x: 30, y: 60, size: 130, color: 'green' }, { kind: 'shoe', x: 72, y: 76, size: 72, color: 'brown' }]} />
+      <OutfitCollage label="Ужин" items={[{ kind: 'bottom', x: 28, y: 58, size: 140, color: 'black' }, { kind: 'top', x: 64, y: 40, color: 'brown' }, { kind: 'container', x: 76, y: 78, size: 64, color: 'black' }]} />
+    </Screen>
+  ),
+};
+
+export const Settings: Story = {
+  name: 'Settings / Main',
+  render: () => (
+    <Screen header={<Header type="bar" titleChip="Настройки" />}>
+      <ListGroup>
+        <ListItem label="Сима · sima@space.com" trailing={<IconButton icon="log-out" label="Выйти" variant="ghost" size="S" tabIndex={-1} />} icon={undefined} />
+      </ListGroup>
+      <ListGroup><ListItem label="Корзина вещей" trailing={<Icon name="chevron-right" />} /></ListGroup>
+      <ListGroup>
+        <ListItem label="Страна" trailing={<><span className="y-body">Россия</span><Icon name="chevron-up-down" /></>} />
+        <ListItem label="Валюта" trailing={<><span className="y-body">₽ · RUB</span><Icon name="chevron-up-down" /></>} />
+      </ListGroup>
+      <ListGroup>
+        <ListItem label="Язык" trailing={<Icon name="external-link" />} />
+        <ListItem label="Уведомления" trailing={<Icon name="external-link" />} />
+      </ListGroup>
+      <ListGroup>
+        {['Оценить приложение', 'Техническая поддержка', 'Идеи по доработке приложения', 'Сотрудничество'].map((l) => <ListItem key={l} label={l} trailing={<Icon name="external-link" />} />)}
+      </ListGroup>
+      <div style={{ display: 'grid', justifyItems: 'center', gap: 8, color: 'var(--color-text-secondary)', padding: '8px 0 24px' }}>
+        <Logo height={24} />
+        <span className="y-caption">Политика конфиденциальности</span>
+      </div>
+    </Screen>
+  ),
+};
+
+export const ProfileAnalytics: Story = {
+  name: 'Profile / Overview / Analytics',
+  render: () => (
+    <Screen header={<Header type="large" title="Профиль" />} bottom={<BottomNav active="profile" />}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Avatar size="M" initial="С" />
+        <Button variant="tertiary" size="S" rightIcon="chevron-up-down">За всё время</Button>
+      </div>
+      <UsageMeter percent={11} />
+      <StatRow>
+        <StatTile label="Вещи" value={43} />
+        <StatTile label="Образы" value={12} />
+        <StatTile label="Вишлист" value={4} />
+      </StatRow>
+      <Carousel title="Чаще всего надевалось" itemWidth={173}>
+        <ItemCard kind="top" color="green" label="30 раз" />
+        <ItemCard kind="top" color="brown" label="12 раз" />
+        <ItemCard kind="bottom" color="black" label="9 раз" />
+      </Carousel>
+      <BarChart bars={[{ label: 'Верхняя одежда', icon: 'outerwear', value: 5 }, { label: 'Верх', icon: 'top', value: 50 }, { label: 'Обувь', icon: 'shoe', value: 10 }, { label: 'Аксессуары', icon: 'accessories', value: 30 }, { label: 'Низ', icon: 'bottom', value: 5 }]} />
+      <h3 className="y-h3">Самый дорогой образ</h3>
+      <OutfitCollage
+        label="Ужин"
+        items={[{ kind: 'bottom', x: 28, y: 44, size: 130, color: 'black' }, { kind: 'top', x: 64, y: 30, color: 'brown' }, { kind: 'container', x: 78, y: 56, size: 56, color: 'black' }]}
+        footer={<><span><span className="y-h2" style={{ display: 'block' }}>120 640 ₽</span><span className="y-caption y-text--secondary">4 вещи</span></span><Icon name="chevron-right" /></>}
+      />
     </Screen>
   ),
 };

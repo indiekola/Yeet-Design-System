@@ -253,11 +253,12 @@ export function ItemArt({ kind, color, size = 88 }: { kind: Garment; color?: Ite
  * Карточка вещи 173×172 в сетке 2 колонки. Фото без фона на `--card-bg`.
  * **Контексты:** Гардероб (сетка), результаты поиска (`discount`), создание образа (`selected`).
  */
-export function ItemCard({ kind, color, discount, selected, onClick }: { kind: Garment; color?: ItemColor; discount?: string; selected?: boolean; onClick?: () => void }) {
+export function ItemCard({ kind, color, discount, label, selected, onClick }: { kind: Garment; color?: ItemColor; discount?: string; /** Метка-счётчик: «30 раз», «20 дней» (Профиль). */ label?: string; selected?: boolean; onClick?: () => void }) {
   return (
     <button type="button" className={cx('y-item-card', selected && 'y-item-card--selected')} onClick={onClick} aria-pressed={selected}>
       <ItemArt kind={kind} color={color} />
       {discount && <Badge variant="danger" className="y-item-card__badge">{discount}</Badge>}
+      {label && !discount && <Badge variant="secondary" className="y-item-card__badge">{label}</Badge>}
       {selected !== undefined && <span className="y-item-card__check">{selected ? <Icon name="check" /> : null}</span>}
     </button>
   );
@@ -282,9 +283,13 @@ export function ProductCard({ kind, name, price, discount, liked }: { kind: Garm
 }
 
 /** Коллаж образа 353×353: точечный фон, вещи раскладываются свободно (x, y в %). */
-export function OutfitCollage({ items }: { items: { kind: Garment; x: number; y: number; size?: number; color?: ItemColor }[] }) {
+export type CollageItem = { kind: Garment; x: number; y: number; size?: number; color?: ItemColor };
+
+export function OutfitCollage({ items, label, footer }: { items: CollageItem[]; /** Повод: «Прогулка», «Ужин». */ label?: string; /** Панель снизу: цена образа, переход. */ footer?: ReactNode }) {
   return (
     <div className="y-collage">
+      {label && <Badge variant="secondary" className="y-collage__label">{label}</Badge>}
+      {footer && <div className="y-collage__footer">{footer}</div>}
       {items.map((it, i) => (
         <span key={i} className="y-collage__item" style={{ left: `${it.x}%`, top: `${it.y}%` }}>
           <ItemArt kind={it.kind} color={it.color} size={it.size ?? 96} />
@@ -327,4 +332,78 @@ export function WeatherCard({ temp, description }: { temp: string; description: 
 /** Сообщение в чате со стилистом. `own` — сообщение пользователя. */
 export function ChatBubble({ own, children }: { own?: boolean; children: ReactNode }) {
   return <div className={cx('y-bubble', 'y-body', own && 'y-bubble--own')}>{children}</div>;
+}
+
+/* ─── Stylist & trips ───────────────────────────────────────────────── */
+
+/**
+ * Превью образа 138×138 (радиус 20) — несколько вещей на `--card-bg`.
+ * **Контексты:** «предыдущий / следующий образ» на экране Образов, списки образов в поездке.
+ */
+export function OutfitThumbnail({ items, size = 138, onClick }: { items: CollageItem[]; size?: number; onClick?: () => void }) {
+  return (
+    <button type="button" className="y-outfit-thumb" style={{ width: size, height: size }} onClick={onClick} aria-label="Открыть образ">
+      {items.map((it, i) => (
+        <span key={i} className="y-collage__item" style={{ left: `${it.x}%`, top: `${it.y}%` }}>
+          <ItemArt kind={it.kind} color={it.color} size={it.size ?? size * 0.4} />
+        </span>
+      ))}
+    </button>
+  );
+}
+
+/**
+ * Карточка-вход в сценарий стилиста 173×173, радиус 32: подпись снизу, иллюстрация сверху.
+ * **Контексты:** Стилист — «Образ дня», «Конструктор», «Для поездки», «Чат со стилистом».
+ */
+export function StylistPromptCard({ label, icon, onClick }: { label: string; icon?: IconName; onClick?: () => void }) {
+  return (
+    <button type="button" className="y-prompt-card" onClick={onClick}>
+      {icon && <Icon name={icon} size={40} strokeWidth={1} />}
+      <span className="y-body">{label}</span>
+    </button>
+  );
+}
+
+export type TripCardProps =
+  | { add: true; label?: string; onClick?: () => void }
+  | { add?: false; city: string; items: number; outfits: number; art?: CollageItem[]; onClick?: () => void };
+
+const plural = (n: number, [one, few, many]: [string, string, string]) => {
+  const m10 = n % 10, m100 = n % 100;
+  return `${n} ${m10 === 1 && m100 !== 11 ? one : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? few : many}`;
+};
+
+/**
+ * Карточка поездки в сетке 2 колонки: город H3, счётчики вещей и образов, вещи снизу.
+ * `add` — первая карточка «Собрать новый чемодан» с Primary-кнопкой «+».
+ * **Контексты:** Стилист / Поездки.
+ */
+export function TripCard(props: TripCardProps) {
+  if (props.add)
+    return (
+      <button type="button" className="y-trip-card y-trip-card--add" onClick={props.onClick}>
+        <IconButton icon="plus" label="Новая поездка" variant="primary" size="L" tabIndex={-1} />
+        <span className="y-body">{props.label ?? 'Собрать новый чемодан'}</span>
+      </button>
+    );
+  return (
+    <button type="button" className="y-trip-card" onClick={props.onClick}>
+      <span className="y-h3">{props.city}</span>
+      <span className="y-caption y-text--secondary">
+        {plural(props.items, ['вещь', 'вещи', 'вещей'])}
+        <br />
+        {plural(props.outfits, ['образ', 'образа', 'образов'])}
+      </span>
+      {props.art && (
+        <span className="y-trip-card__art">
+          {props.art.map((it, i) => (
+            <span key={i} className="y-collage__item" style={{ left: `${it.x}%`, top: `${it.y}%` }}>
+              <ItemArt kind={it.kind} color={it.color} size={it.size ?? 64} />
+            </span>
+          ))}
+        </span>
+      )}
+    </button>
+  );
 }

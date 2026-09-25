@@ -94,3 +94,4 @@
 .y-text--primary { color: var(--color-text-primary); }
 .y-text--accent { color: var(--color-text-accent); }
 .y-text--danger { color: var(--color-text-danger); }
+.y-logo { display: block; flex: none; width: auto; }
