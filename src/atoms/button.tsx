@@ -50,6 +50,8 @@ export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'chi
   variant?: ButtonStyle;
   size?: ControlSize;
   floating?: boolean;
+  /** Только вид кнопки внутри другой кнопки (карточка «+», зона фото): рендерится `<span aria-hidden>`, без вложенного интерактива. */
+  decorative?: boolean;
 };
 
 /**
@@ -58,13 +60,20 @@ export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'chi
  * **Контексты во флоу:** «Назад» и «Ещё» в шапке (Tertiary M), FAB «+» (Primary XL, floating),
  * «Отправить» в чате (Primary M), поделиться (Secondary XL), фильтры гардероба (Tertiary S).
  */
-export function IconButton({ icon, label, variant = 'tertiary', size = 'M', floating, className, ...rest }: IconButtonProps) {
+export function IconButton({ icon, label, variant = 'tertiary', size = 'M', floating, decorative, className, ...rest }: IconButtonProps) {
+  const cls = cx('y-icon-button', `y-icon-button--${size}`, `y-style--${variant}`, floating && 'y-icon-button--floating', className);
+  if (decorative)
+    return (
+      <span className={cls} aria-hidden>
+        <Icon name={icon} size={size === 'S' ? 20 : 24} />
+      </span>
+    );
   return (
     <button
       type="button"
       aria-label={label}
       title={label}
-      className={cx('y-icon-button', `y-icon-button--${size}`, `y-style--${variant}`, floating && 'y-icon-button--floating', className)}
+      className={cls}
       {...rest}
     >
       <Icon name={icon} size={size === 'S' ? 20 : 24} />

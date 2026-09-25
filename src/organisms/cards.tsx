@@ -35,14 +35,19 @@ export type ItemCardProps = {
   discount?: string;
   /** Метка-счётчик: «30 раз», «20 дней» (Профиль). */
   label?: string;
+  /** Название для скринридера: «Чёрная сумка». По умолчанию — категория по `kind`. */
+  name?: string;
   /** Режим выбора (создание образа): undefined — нет чекбокса. Figma: Selected. */
   selected?: boolean;
   onClick?: () => void;
 };
 
-export function ItemCard({ kind, color, image, discount, label, selected, onClick }: ItemCardProps) {
+const kindNames: Record<Garment, string> = { top: 'Верх', bottom: 'Низ', outerwear: 'Верхняя одежда', shoe: 'Обувь', accessories: 'Аксессуары', container: 'Сумка' };
+
+export function ItemCard({ kind, color, image, name, discount, label, selected, onClick }: ItemCardProps) {
+  const a11y = [name ?? kindNames[kind], discount && `скидка ${discount}`, label].filter(Boolean).join(', ');
   return (
-    <button type="button" className={cx('y-item-card', selected && 'y-item-card--selected')} onClick={onClick} aria-pressed={selected}>
+    <button type="button" className={cx('y-item-card', selected && 'y-item-card--selected')} onClick={onClick} aria-pressed={selected} aria-label={a11y}>
       <ItemArt kind={kind} color={color} src={image} size={image ? 138 : 88} />
       {discount && <Badge variant="danger" className="y-item-card__badge">{discount}</Badge>}
       {label && !discount && <Badge variant="secondary" className="y-item-card__badge">{label}</Badge>}
@@ -56,7 +61,7 @@ export function ProductCard({ kind, image, name, price, discount, liked, showLik
   return (
     <article className="y-product-card">
       <div style={{ position: 'relative' }}>
-        <ItemCard kind={kind} image={image} discount={discount} />
+        <ItemCard kind={kind} image={image} name={name} discount={discount} />
         {showLike && (
           <button type="button" className={cx('y-product-card__like', 'y-icon-button', liked && 'is-on')} aria-label={liked ? 'Убрать из вишлиста' : 'В вишлист'} aria-pressed={liked} onClick={onLike}>
             <Icon name="heart" />
@@ -109,7 +114,7 @@ export function PhotoArea({ kind, image, loading, onAdd, onRemove, children }: {
           </>
         ) : (
           <button type="button" className="y-photo-area__add" onClick={onAdd} disabled={loading}>
-            <IconButton icon="camera" label="Добавить фотографию" variant="primary" size="M" floating tabIndex={-1} />
+            <IconButton icon="camera" label="Добавить фотографию" variant="primary" size="M" floating decorative />
             Добавить фотографию
           </button>
         ))}

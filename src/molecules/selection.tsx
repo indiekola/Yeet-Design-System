@@ -80,6 +80,15 @@ export type ListItemProps = {
  * **radio** — одиночный выбор (год рождения, страна, пол).
  */
 export function ListItem({ type = 'action', label, icon, expanded, checked, trailing, onClick }: ListItemProps) {
+  // Строка без действия (например, с кнопкой «Выйти» в trailing) — не кнопка: вложенный интерактив ломает скринридеры
+  if (type === 'action' && !onClick)
+    return (
+      <div className="y-list-item">
+        {icon && <Icon name={icon} />}
+        <span className="y-list-item__label">{label}</span>
+        {trailing}
+      </div>
+    );
   return (
     <button
       type="button"

@@ -331,7 +331,7 @@ export const Settings: Story = {
   render: () => (
     <Screen header={<Header type="bar" titleChip="Настройки" />}>
       <ListGroup>
-        <ListItem label="Сима · sima@space.com" trailing={<IconButton icon="log-out" label="Выйти" variant="ghost" size="S" tabIndex={-1} />} icon={undefined} />
+        <ListItem label="Сима · sima@space.com" trailing={<IconButton icon="log-out" label="Выйти" variant="ghost" size="S" />} />
       </ListGroup>
       <ListGroup><ListItem label="Корзина вещей" trailing={<Icon name="chevron-right" />} /></ListGroup>
       <InputGroup>

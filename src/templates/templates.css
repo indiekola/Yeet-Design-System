@@ -13,6 +13,8 @@
   display: flex; flex-direction: column; gap: var(--space-16);
 }
 .y-screen__content::-webkit-scrollbar { display: none; }
+/* Контент скроллится, а не сжимается: иначе segment-control и кнопки сплющиваются по высоте */
+.y-screen__content > * { flex-shrink: 0; }
 .y-screen__content--center { justify-content: center; }
 .y-screen__content--flush { padding-left: 0; padding-right: 0; }
 .y-screen__floating { position: absolute; left: var(--screen-gutter); right: var(--screen-gutter); z-index: 4; display: flex; justify-content: center; }

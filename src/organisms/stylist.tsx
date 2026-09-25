@@ -41,7 +41,7 @@ export function TripCard(props: TripCardProps) {
   if (props.add)
     return (
       <button type="button" className="y-trip-card y-trip-card--add" onClick={props.onClick}>
-        <IconButton icon="plus" label="Новая поездка" variant="primary" size="L" tabIndex={-1} />
+        <IconButton icon="plus" label="Новая поездка" variant="primary" size="L" decorative />
         <span className="y-body">{props.label ?? 'Собрать новый чемодан'}</span>
       </button>
     );

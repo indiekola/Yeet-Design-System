@@ -1,0 +1,33 @@
+name: QA Storybook
+
+on:
+  push:
+    branches: [main, claude/figma-access-ara4o8]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build-storybook
+      - run: npx playwright-core install --with-deps chromium
+      - name: QA (тени, края, спеки Figma, доступность, скриншоты)
+        run: npm run qa
+      - if: always()
+        run: cat qa/out/report.md >> "$GITHUB_STEP_SUMMARY"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-report
+          path: qa/out
