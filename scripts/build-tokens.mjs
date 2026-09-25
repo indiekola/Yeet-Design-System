@@ -57,6 +57,7 @@ function css() {
   for (const [k, v] of Object.entries(t.radius)) L.push(`  --radius-${k}: ${v.value}px;`);
   L.push('');
   for (const [k, f] of Object.entries(t.font)) L.push(`  --font-${k}: '${f.family}', ${f.fallback};`);
+  for (const [k, s] of Object.entries(t.typography)) L.push(`  --font-weight-${k}: ${s.weight};`);
   L.push(`  --screen-width: ${t.layout['screen-width']}px;`, `  --screen-height: ${t.layout['screen-height']}px;`, `  --screen-gutter: var(--space-${t.layout['screen-gutter']});`, `  --status-bar-height: ${t.layout['status-bar-height']}px;`, '');
   const m = t.motion;
   const durVar = { fast: '--motion-fast', base: '--motion-base', 300: '--motion-300' };

@@ -1,3 +1,4 @@
+import { useSlidingPill } from '../utils/useSlidingPill';
 import type { ReactNode } from 'react';
 import { Button, ColorDot, Icon, IconButton, type ControlSize } from '../atoms';
 import type { IconName } from '../icons/icons';
@@ -9,19 +10,21 @@ import { cx } from '../utils/cx';
 export type Segment = { value: string; label?: string; icon?: IconName };
 
 /**
- * Переключатель вкладок: активный сегмент — `inverse`, остальные — `ghost`.
+ * Переключатель вкладок: под активным сегментом — пилюля `inverse`, которая переезжает между пунктами (`--motion-nav`).
  * **Контексты:** «Вещи / Образы / Вишлист» в Гардеробе, «Образы · 1 / Вещи» в поездке, режимы создания образа (иконки).
  */
 export function SegmentControl({ segments, value, onChange, size = 'L', fit }: { segments: Segment[]; value: string; onChange?: (v: string) => void; size?: ControlSize; /** По ширине содержимого (вложенный переключатель «Вещи / Образы» в Вишлисте). */ fit?: boolean }) {
+  const [ref, pill] = useSlidingPill<HTMLDivElement>(segments.findIndex((s) => s.value === value));
   return (
-    <div className={cx('y-segment', `y-segment--${size}`, fit && 'y-segment--fit')} role="tablist">
+    <div ref={ref} className={cx('y-segment', `y-segment--${size}`, fit && 'y-segment--fit')} role="tablist">
+      <span className="y-segment__pill" style={pill} aria-hidden />
       {segments.map((s) => {
         const active = s.value === value;
-        const common = { key: s.value, role: 'tab', 'aria-selected': active, onClick: () => onChange?.(s.value) } as const;
+        const common = { key: s.value, role: 'tab', 'aria-selected': active, 'data-pill-item': true, onClick: () => onChange?.(s.value) } as const;
         return s.icon && !s.label ? (
-          <IconButton {...common} icon={s.icon} label={s.value} size={size} variant={active ? 'inverse' : 'ghost'} />
+          <IconButton {...common} icon={s.icon} label={s.value} size={size} variant="ghost" />
         ) : (
-          <Button {...common} size={size} variant={active ? 'inverse' : 'ghost'} leftIcon={s.icon}>
+          <Button {...common} size={size} variant="ghost" leftIcon={s.icon}>
             {s.label}
           </Button>
         );

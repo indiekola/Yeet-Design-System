@@ -8,10 +8,10 @@ const meta = {
   title: 'Molecules/BarChart',
   component: BarChart,
   tags: ['autodocs'],
-  args: { bars: categories, height: 200 },
-  argTypes: { height: { control: { type: 'range', min: 120, max: 280, step: 4 } } },
+  args: { bars: categories, height: 300 },
+  argTypes: { height: { control: { type: 'range', min: 160, max: 360, step: 4 } } },
   decorators: [withWidth(353)],
-  parameters: { docs: { description: { component: 'Столбцы-капсулы аналитики (Figma: `bar-chart` из `bar-chart / bar` · Value, Icon). Высота ∝ значению, минимум 34%.' } } },
+  parameters: { docs: { description: { component: '«Палитра» аналитики как во флоу Profile / Overview / Analytics: капсулы на всю ширину (gap 7), центрированы по вертикали, высота 100…300 по значению; белая пилюля 44 с иконкой или точкой цвета, число H2 24/28.' } } },
 } satisfies Meta<typeof BarChart>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -25,8 +25,8 @@ export const InFlow: Story = {
   render: () => (
     <UsageGrid min={353}>
       <Usage screen="Profile / Analytics" note="по категориям"><BarChart bars={categories} /></Usage>
-      <Usage screen="Profile / Analytics" note="по цветам"><BarChart height={180} bars={[{ label: 'Синий', color: 'blue', value: 13 }, { label: 'Чёрный', color: 'black', value: 62 }, { label: 'Коричневый', color: 'brown', value: 25 }]} /></Usage>
-      <Usage screen="Profile / Analytics" note="по сезонам"><BarChart height={180} bars={[{ label: 'Весна', icon: 'flower', value: 20 }, { label: 'Лето', icon: 'sun', value: 70 }, { label: 'Осень', icon: 'leaf', value: 8 }, { label: 'Зима', icon: 'snowflake', value: 1 }]} /></Usage>
+      <Usage screen="Profile / Analytics" note="по цветам"><BarChart bars={[{ label: 'Синий', color: 'blue', value: 13 }, { label: 'Чёрный', color: 'black', value: 62 }, { label: 'Коричневый', color: 'brown', value: 25 }]} /></Usage>
+      <Usage screen="Profile / Analytics" note="по сезонам"><BarChart bars={[{ label: 'Весна', icon: 'flower', value: 20 }, { label: 'Лето', icon: 'sun', value: 70 }, { label: 'Осень', icon: 'leaf', value: 8 }, { label: 'Зима', icon: 'snowflake', value: 1 }]} /></Usage>
     </UsageGrid>
   ),
 };

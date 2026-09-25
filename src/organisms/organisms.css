@@ -28,7 +28,10 @@
   flex: 1; display: grid; place-items: center; border: 0; border-radius: var(--radius-xl); background: transparent;
   color: var(--color-text-primary); cursor: pointer;
 }
-.y-tab-bar__tab[aria-current='page'] { background: var(--color-bg-subtle); }
+.y-tab-bar { position: relative; }
+.y-tab-bar__tab { position: relative; z-index: 1; }
+/* Пилюля выбранной вкладки переезжает между вкладками */
+.y-tab-bar__pill { position: absolute; top: 0; left: 0; border-radius: var(--radius-xl); background: var(--color-bg-subtle); transition: transform var(--motion-nav), width var(--motion-nav); pointer-events: none; }
 .y-tab-bar__avatar { width: 22px; height: 22px; border: 1.5px solid currentColor; border-radius: 50%; display: grid; place-items: center; font: 400 12px/16px var(--font-text); }
 
 /* Sheet & Dialog */
@@ -65,9 +68,11 @@
 .y-collage {
   position: relative; flex: none; width: 100%; aspect-ratio: 1; border-radius: var(--card-radius); overflow: hidden;
   background-color: var(--card-bg);
-  /* Figma pattern: точка 2×2 в клетке 10×10 */
-  background-image: radial-gradient(circle, var(--color-pattern-dot) 1px, transparent 1.2px);
-  background-size: 10px 10px; background-position: 0 0;
+  /* Figma pattern: точка 2×2 в клетке 10×10, поле точек с отступом 14 от краёв карточки */
+  padding: 14px;
+  background-image: radial-gradient(circle, var(--color-pattern-dot) 1px, transparent 1.2px), linear-gradient(var(--card-bg), var(--card-bg));
+  background-size: 10px 10px, auto; background-position: 0 0;
+  background-origin: content-box, border-box; background-clip: content-box, border-box;
 }
 .y-collage__item { position: absolute; transform: translate(-50%, -50%); }
 
@@ -75,7 +80,7 @@
   position: relative; width: 100%; aspect-ratio: 1; border-radius: var(--card-radius); background: var(--card-bg);
   display: grid; place-items: center; overflow: hidden; color: var(--color-text-primary);
 }
-.y-photo-area__add { display: flex; flex-direction: column; align-items: center; gap: var(--space-12); font: 500 14px/20px var(--font-text); background: none; border: 0; color: inherit; cursor: pointer; }
+.y-photo-area__add { display: flex; flex-direction: column; align-items: center; gap: var(--space-12); font: var(--font-weight-body) 14px/20px var(--font-text); background: none; border: 0; color: inherit; cursor: pointer; }
 .y-photo-area__close { position: absolute; top: var(--space-12); right: var(--space-12); }
 
 .y-weather {
@@ -153,3 +158,28 @@
 .y-canvas__item { transition: box-shadow var(--motion-fade), scale var(--motion-lift); }
 .y-canvas__item:active { scale: var(--gesture-lift-scale); box-shadow: var(--shadow-floating); }
 .y-canvas__item.is-selected:active { box-shadow: 0 0 0 1.5px var(--color-accent), var(--shadow-floating); }
+
+/* ─── Скролл: большой заголовок → пилюля по центру, липкие фильтры ─── */
+.y-header__title-row, .y-header__row { position: relative; }
+.y-header__pill {
+  position: absolute; left: 50%; top: 50%; max-width: 60%; height: 40px; padding: 0 var(--space-16);
+  display: inline-flex; align-items: center; border-radius: var(--radius-xl); background: var(--color-bg-subtle);
+  font: var(--font-weight-body) 14px/20px var(--font-text); color: var(--color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0; transform: translate(-50%, -50%) scale(0.8); pointer-events: none;
+  transition: opacity var(--motion-fade), transform var(--motion-lift);
+}
+.y-header__large-title { transition: opacity var(--motion-fade), transform var(--motion-lift); transform-origin: left center; }
+.y-header__large-title + .y-header__pill ~ * { position: relative; z-index: 1; }
+.y-header__collapse { display: grid; grid-template-rows: 1fr; transition: grid-template-rows var(--motion-collapse), opacity var(--motion-fade); }
+.y-header__collapse > * { overflow: hidden; min-height: 0; }
+.y-screen[data-collapsed] .y-header__pill { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.y-screen[data-collapsed] .y-header__large-title { opacity: 0; transform: translateY(-6px) scale(0.92); }
+.y-screen[data-collapsed] .y-header__body > p { display: none; }
+.y-screen[data-collapsed] .y-header__collapse { grid-template-rows: 0fr; opacity: 0; }
+/* Миниатюра по центру шапки при скролле деталей (Figma: Outfit / Item Details / Scrolled) */
+.y-header__center { position: relative; }
+.y-header__on-scroll {
+  width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--card-bg); overflow: hidden; display: grid; place-items: center;
+  opacity: 0; transform: translateY(12px) scale(0.6); transition: opacity var(--motion-fade), transform var(--motion-collapse);
+}
+.y-screen[data-collapsed] .y-header__on-scroll { opacity: 1; transform: none; }

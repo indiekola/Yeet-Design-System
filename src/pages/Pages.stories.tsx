@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { Avatar, Button, Icon, IconButton, Logo, Stamp } from '../atoms';
 import { BarChart, Carousel, ChipGroup, EmptyState, Field, InputBar, InputGroup, List, ListGroup, ListItem, LoadingState, PhotoTile, RangeSlider, SegmentControl, Snackbar, StatRow, StatTile, UsageMeter } from '../molecules';
-import { BottomBar, BottomNav, type CanvasItem, ChatBubble, Dialog, OutfitCanvas, type Garment, Header, ItemCard, OutfitCollage, Overlay, PhotoArea, ProductCard, Sheet, StatusBar, StylistPromptCard, TripCard, WeatherCard } from '../organisms';
-import { Grid, Row, Screen } from '../templates';
+import { BottomBar, BottomNav, type CanvasItem, ChatBubble, Dialog, OutfitCanvas, type Garment, Header, ItemArt, ItemCard, OutfitCollage, Overlay, PhotoArea, ProductCard, Sheet, StatusBar, StylistPromptCard, TripCard, WeatherCard } from '../organisms';
+import { Grid, Row, Screen, Sticky } from '../templates';
 import type { ItemColor } from '../tokens/tokens';
 
 const meta = {
@@ -52,7 +52,9 @@ export const Today: Story = {
   name: 'Outfits / Everyday / Sunny',
   render: () => (
     <Screen header={<Header type="large" title="Твои образы" subtitle="на каждый день" />} bottom={<BottomNav active="today" />}>
-      <ChipGroup chips={[{ label: 'На каждый день', selected: true }, { label: 'Работа' }, { label: 'Свидание' }, { label: 'Вечеринка' }]} />
+      <Sticky>
+        <ChipGroup chips={[{ label: 'На каждый день', selected: true }, { label: 'Работа' }, { label: 'Свидание' }, { label: 'Вечеринка' }]} />
+      </Sticky>
       <div style={{ position: 'relative' }}>
         <OutfitCollage items={[{ kind: 'top', x: 68, y: 32, color: 'green' }, { kind: 'bottom', x: 30, y: 58, size: 140, color: 'green' }, { kind: 'accessories', x: 32, y: 20, size: 64 }, { kind: 'shoe', x: 70, y: 76, size: 80, color: 'brown' }]} />
         <div style={{ position: 'absolute', top: -20, left: 16 }}><WeatherCard temperature="20°" description="Солнечно, ветер 14 км/ч" /></div>
@@ -70,12 +72,14 @@ export const Wardrobe: Story = {
     return (
       <Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />}>
         <SegmentControl value={tab} onChange={setTab} segments={[{ value: 'items', label: 'Вещи' }, { value: 'outfits', label: 'Образы' }, { value: 'wishlist', label: 'Вишлист' }]} />
-        <Row gap={4}>
-          <IconButton icon="search" label="Поиск" size="S" />
-          <IconButton icon="archive" label="Архив" size="S" />
-          <ChipGroup chips={[{ label: 'Категория', dropdown: true }, { label: 'Сезон', dropdown: true }, { label: 'Теги', dropdown: true }]} />
-        </Row>
-        <Grid>{grid.map((k, i) => <ItemCard key={i} kind={k} />)}</Grid>
+        <Sticky>
+          <Row gap={4}>
+            <IconButton icon="search" label="Поиск" size="S" />
+            <IconButton icon="archive" label="Архив" size="S" />
+            <ChipGroup chips={[{ label: 'Категория', dropdown: true }, { label: 'Сезон', dropdown: true }, { label: 'Теги', dropdown: true }]} />
+          </Row>
+        </Sticky>
+        <Grid>{[...grid, ...grid].map((k, i) => <ItemCard key={i} kind={k} />)}</Grid>
       </Screen>
     );
   },
@@ -98,7 +102,7 @@ export const ItemDetails: Story = {
   parameters: { controls: { disable: true } },
   name: 'Wishlist / Item Details',
   render: () => (
-    <Screen header={<Header type="bar" actions={[{ icon: 'more', label: 'Ещё' }]} />} bottom={<BottomBar label="Переместить в гардероб" secondary={{ icon: 'external-link', label: 'Открыть в магазине' }} />} flush>
+    <Screen header={<Header type="bar" actions={[{ icon: 'more', label: 'Ещё' }]} centerOnScroll={<ItemArt kind="container" color="black" size={36} />} />} bottom={<BottomBar label="Переместить в гардероб" secondary={{ icon: 'external-link', label: 'Открыть в магазине' }} />} flush>
       <div style={{ padding: '0 20px' }}><PhotoArea kind="container" /></div>
       <Sheet type="panel" title="Сумка">
         <p className="y-body y-text--secondary">10 000 ₽ · Sander · Чёрный<br />Аксессуары · Все сезоны</p>
@@ -114,7 +118,7 @@ export const OutfitDetails: Story = {
   parameters: { controls: { disable: true } },
   name: 'Wardrobe / Outfit Details / Scrolled',
   render: () => (
-    <Screen header={<Header type="bar" actions={[{ icon: 'pen', label: 'Редактировать' }, { icon: 'more', label: 'Ещё' }]} />} flush>
+    <Screen header={<Header type="bar" actions={[{ icon: 'pen', label: 'Редактировать' }, { icon: 'more', label: 'Ещё' }]} centerOnScroll={<ItemArt kind="top" color="green" size={36} />} />} flush>
       <Sheet type="panel" title="На каждый день">
         <p className="y-body y-text--secondary">Все сезоны</p>
         <StatRow><StatTile label="Надето раз" value={8} /><StatTile label="Д. простоя" value={1} /><StatTile label="Вещи" value={4} /></StatRow>
@@ -375,7 +379,7 @@ export const ProfileAnalytics: Story = {
       </Carousel>
       <BarChart bars={[{ label: 'Верхняя одежда', icon: 'outerwear', value: 5 }, { label: 'Верх', icon: 'top', value: 50 }, { label: 'Обувь', icon: 'shoe', value: 10 }, { label: 'Аксессуары', icon: 'accessories', value: 30 }, { label: 'Низ', icon: 'bottom', value: 5 }]} />
       <h3 className="y-h3">По сезонам</h3>
-      <BarChart height={180} bars={[{ label: 'Весна', icon: 'flower', value: 20 }, { label: 'Лето', icon: 'sun', value: 70 }, { label: 'Осень', icon: 'leaf', value: 8 }, { label: 'Зима', icon: 'snowflake', value: 1 }]} />
+      <BarChart bars={[{ label: 'Весна', icon: 'flower', value: 20 }, { label: 'Лето', icon: 'sun', value: 70 }, { label: 'Осень', icon: 'leaf', value: 8 }, { label: 'Зима', icon: 'snowflake', value: 1 }]} />
       <h3 className="y-h3">Самый дорогой образ</h3>
       <OutfitCollage
         label="Ужин"
@@ -396,9 +400,11 @@ export const Wishlist: Story = {
   render: () => (
     <Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />}>
       <SegmentControl value="wishlist" segments={[{ value: 'items', label: 'Вещи' }, { value: 'outfits', label: 'Образы' }, { value: 'wishlist', label: 'Вишлист' }]} />
-      <div style={{ alignSelf: 'flex-start' }}>
-        <SegmentControl size="S" value="items" segments={[{ value: 'items', label: 'Вещи' }, { value: 'outfits', label: 'Образы' }]} />
-      </div>
+      <Sticky>
+        <div style={{ alignSelf: 'flex-start' }}>
+          <SegmentControl size="S" value="items" segments={[{ value: 'items', label: 'Вещи' }, { value: 'outfits', label: 'Образы' }]} />
+        </div>
+      </Sticky>
       <Grid rowGap={16}>
         {shoes.map((n, i) => <ProductCard key={i} kind="shoe" name={n} price={i ? '14 300 ₽' : '10 400 ₽'} liked />)}
       </Grid>

@@ -29,11 +29,12 @@ export type ScreenProps = {
  */
 export function Screen({ header, bottom, overlay, floating, floatingOffset = 132, center, flush, children }: ScreenProps) {
   const ref = useRef<HTMLElement>(null);
-  const [edges, setEdges] = useState({ top: false, bottom: false });
+  const [edges, setEdges] = useState({ top: false, bottom: false, collapsed: false });
   const update = useCallback(() => {
     const el = ref.current;
     if (!el) return;
-    setEdges({ top: el.scrollTop > 1, bottom: el.scrollTop + el.clientHeight < el.scrollHeight - 1 });
+    // collapsed — большой заголовок уехал: шапка показывает его пилюлей по центру, липкие фильтры прижаты к шапке
+    setEdges({ top: el.scrollTop > 1, bottom: el.scrollTop + el.clientHeight < el.scrollHeight - 1, collapsed: el.scrollTop > 24 });
   }, []);
   useEffect(() => {
     update();
@@ -45,7 +46,7 @@ export function Screen({ header, bottom, overlay, floating, floatingOffset = 132
   }, [update]);
 
   return (
-    <div className="y-screen" data-edge-top={edges.top || undefined} data-edge-bottom={edges.bottom || undefined}>
+    <div className="y-screen" data-edge-top={edges.top || undefined} data-edge-bottom={edges.bottom || undefined} data-collapsed={edges.collapsed || undefined}>
       {header ?? <StatusBar />}
       <main ref={ref} onScroll={update} className={cx('y-screen__content', center && 'y-screen__content--center', flush && 'y-screen__content--flush')}>
         {children}
@@ -62,6 +63,14 @@ export function Screen({ header, bottom, overlay, floating, floatingOffset = 132
 }
 
 /* ─── Layout primitives ─────────────────────────────────────────────── */
+
+/**
+ * Липкая полоса внутри скролла: фильтры и чипсы прижимаются под шапку и остаются на месте,
+ * пока контент едет под ними. На фоне экрана, во всю ширину, с затуханием снизу, когда прижата.
+ */
+export function Sticky({ children }: { children: ReactNode }) {
+  return <div className="y-sticky">{children}</div>;
+}
 
 /**
  * Сетка карточек в 2 колонки по ширине экрана (173 + 7 + 173). Вещи, товары, поездки, карточки стилиста.

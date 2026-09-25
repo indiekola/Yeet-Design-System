@@ -28,3 +28,17 @@
 /* Layout primitives */
 .y-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8) 7px; }
 .y-row { display: flex; }
+
+/* Липкая полоса фильтров (Sticky): прижимается под шапку; content padding-top 8 → top −8 */
+.y-sticky {
+  /* top −8: sticky отсчитывается от content-box, а у контента padding-top 8; z-index над затуханием шапки */
+  position: sticky; top: calc(var(--space-8) * -1); z-index: 4; flex-shrink: 0;
+  margin: calc(var(--space-8) * -1) calc(var(--screen-gutter) * -1) 0; padding: var(--space-8) var(--screen-gutter);
+  background: var(--color-bg-canvas); display: flex; flex-direction: column; gap: var(--space-16);
+}
+.y-sticky::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 24px; pointer-events: none;
+  background: linear-gradient(var(--color-bg-canvas), transparent); opacity: 0; transition: opacity var(--motion-fade);
+}
+.y-screen[data-collapsed] .y-sticky::after { opacity: 1; }
+.y-screen__content--flush .y-sticky { margin-left: 0; margin-right: 0; }

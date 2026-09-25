@@ -40,17 +40,21 @@ export function Carousel({ title, itemWidth = 173, children }: { title?: string;
 export type Bar = { value: number; icon?: IconName; color?: ItemColor; label: string };
 
 /**
- * Столбцы-капсулы аналитики профиля: высота пропорциональна значению, сверху — иконка категории
- * или цвет вещи, снизу — число. Максимальный столбец — акцентный уровень `--color-bg-elevated`.
+ * «Палитра» аналитики профиля (Figma, флоу Profile / Overview / Analytics → Abstract-Palette):
+ * капсулы делят ширину поровну (gap 7) и центрируются по вертикали; высота от 100 (минимум: пилюля + число)
+ * до `height` по значению. Сверху — белая пилюля 44 с иконкой категории / сезона или точкой цвета, снизу — число H2.
  * **Контексты:** Профиль / Аналитика — категории, цвета, сезоны.
  */
-export function BarChart({ bars, height = 200 }: { bars: Bar[]; height?: number }) {
-  const max = Math.max(...bars.map((b) => b.value), 1);
+export function BarChart({ bars, height = 300 }: { bars: Bar[]; height?: number }) {
+  const values = bars.map((b) => b.value);
+  const min = Math.min(...values), max = Math.max(...values);
+  const MIN_H = 100;
+  const h = (v: number) => (max === min ? height : MIN_H + ((height - MIN_H) * (v - min)) / (max - min));
   return (
     <div className="y-bar-chart" style={{ height }} role="list">
       {bars.map((b) => (
-        <div key={b.label} className="y-bar-chart__bar" role="listitem" aria-label={`${b.label}: ${b.value}`} style={{ height: `${Math.max(34, (b.value / max) * 100)}%` }}>
-          <span className="y-bar-chart__cap">{b.icon ? <Icon name={b.icon} size={20} /> : b.color ? <ColorDot color={b.color} size={10} /> : null}</span>
+        <div key={b.label} className="y-bar-chart__bar" role="listitem" aria-label={`${b.label}: ${b.value}`} style={{ height: h(b.value) }}>
+          <span className="y-bar-chart__cap">{b.icon ? <Icon name={b.icon} /> : b.color ? <ColorDot color={b.color} size={15} /> : null}</span>
           <span className="y-bar-chart__value">{b.value}</span>
         </div>
       ))}

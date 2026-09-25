@@ -38,3 +38,44 @@ export function Logo({ height = 32, className }: { height?: number; className?: 
     </svg>
   );
 }
+
+/* ─── WeatherIcon ───────────────────────────────────────────────────── */
+
+const weatherFiles = import.meta.glob<string>('../icons/weather/*.svg', { eager: true, query: '?url', import: 'default' });
+
+/** Цветные иконки погоды из Figma (Design System → weather-icons): день / ночь для ясно и переменной облачности. */
+export const weatherKinds = ['clear-day', 'clear-night', 'pcloudy-day', 'pcloudy-night', 'mcloudy', 'fog', 'rain', 'shower', 'tstorm', 'snow', 'windy'] as const;
+export type Weather = (typeof weatherKinds)[number];
+export const weatherNames: Record<Weather, string> = {
+  'clear-day': 'Ясно', 'clear-night': 'Ясно, ночь', 'pcloudy-day': 'Переменная облачность', 'pcloudy-night': 'Переменная облачность, ночь',
+  mcloudy: 'Облачно', fog: 'Туман', rain: 'Дождь', shower: 'Ливень', tstorm: 'Гроза', snow: 'Снег', windy: 'Ветрено',
+};
+
+export function WeatherIcon({ kind, size = 24, className }: { kind: Weather; size?: number; className?: string }) {
+  return <img className={cx('y-weather-icon', className)} src={weatherFiles[`../icons/weather/${kind}.svg`]} width={size} height={size} alt={weatherNames[kind]} />;
+}
+
+/* ─── Flag ──────────────────────────────────────────────────────────── */
+
+const flagFiles = import.meta.glob<string>('../icons/flags/*.svg', { eager: true, query: '?url', import: 'default' });
+
+/** Языки интерфейса и флаги из Figma (Design System → flags-icons), круглые 24. */
+export const languages = [
+  { code: 'ru', flag: 'ru', name: 'Русский' },
+  { code: 'en', flag: 'gb', name: 'English' },
+  { code: 'ka', flag: 'ge', name: 'ქართული' },
+  { code: 'uk', flag: 'ua', name: 'Українська' },
+  { code: 'kk', flag: 'kz', name: 'Қазақша' },
+  { code: 'hy', flag: 'am', name: 'Հայերեն' },
+  { code: 'de', flag: 'de', name: 'Deutsch' },
+  { code: 'fr', flag: 'fr', name: 'Français' },
+  { code: 'it', flag: 'it', name: 'Italiano' },
+  { code: 'tr', flag: 'tr', name: 'Türkçe' },
+  { code: 'ja', flag: 'jp', name: '日本語' },
+  { code: 'zh', flag: 'cn', name: '中文' },
+] as const;
+export type FlagCode = 'ru' | 'gb' | 'us' | 'ge' | 'ua' | 'kz' | 'am' | 'de' | 'fr' | 'it' | 'tr' | 'jp' | 'cn';
+
+export function Flag({ code, size = 24, className }: { code: FlagCode; size?: number; className?: string }) {
+  return <img className={cx('y-flag', className)} src={flagFiles[`../icons/flags/${code}.svg`]} width={size} height={size} alt="" aria-hidden />;
+}

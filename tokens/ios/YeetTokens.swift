@@ -160,7 +160,7 @@ public enum YeetType {
     /// Заголовки sheet, диалогов, карточек
     public static let h3 = YeetTextStyle(font: .custom("Roboto Slab", size: 19).weight(Font.Weight(400)), lineHeight: 24, tracking: -0.3, size: 19)
     /// Текст, кнопки, пункты списков
-    public static let body = YeetTextStyle(font: .custom("Inter", size: 14).weight(Font.Weight(500)), lineHeight: 20, tracking: 0, size: 14)
+    public static let body = YeetTextStyle(font: .custom("Inter", size: 14).weight(Font.Weight(460)), lineHeight: 20, tracking: 0, size: 14)
     /// Подписи, мета-данные, бейджи
     public static let caption = YeetTextStyle(font: .custom("Inter", size: 12).weight(Font.Weight(400)), lineHeight: 16, tracking: 0, size: 12)
 }

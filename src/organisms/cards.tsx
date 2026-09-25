@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Badge, ColorDot, Icon, IconButton } from '../atoms';
+import { Badge, ColorDot, Icon, IconButton, WeatherIcon, type Weather } from '../atoms';
 import type { IconName } from '../icons/icons';
 import type { ItemColor } from '../tokens/tokens';
 import { cx } from '../utils/cx';
@@ -123,10 +123,10 @@ export function PhotoArea({ kind, image, loading, onAdd, onRemove, children }: {
 }
 
 /** Карточка погоды на экране «Сегодня»: температура + описание. Плавающая, инвертированная. */
-export function WeatherCard({ temperature, description, icon = 'sun' }: { temperature: string; description: string; icon?: IconName }) {
+export function WeatherCard({ temperature, description, icon = 'sun', weather }: { temperature: string; description: string; icon?: IconName; /** Цветная иконка погоды из Figma вместо линейной. */ weather?: Weather }) {
   return (
     <div className="y-weather">
-      <span className="y-weather__temp"><Icon name={icon} />{temperature}</span>
+      <span className="y-weather__temp">{weather ? <WeatherIcon kind={weather} /> : <Icon name={icon} />}{temperature}</span>
       <span className="y-caption">{description}</span>
     </div>
   );

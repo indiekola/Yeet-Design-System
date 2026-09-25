@@ -178,7 +178,7 @@ class YeetTypography(display: FontFamily, text: FontFamily) {
     /** Заголовки sheet, диалогов, карточек */
     val h3 = TextStyle(fontFamily = display, fontWeight = FontWeight(400), fontSize = 19.sp, lineHeight = 24.sp, letterSpacing = (-0.3).sp)
     /** Текст, кнопки, пункты списков */
-    val body = TextStyle(fontFamily = text, fontWeight = FontWeight(500), fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = (0).sp)
+    val body = TextStyle(fontFamily = text, fontWeight = FontWeight(460), fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = (0).sp)
     /** Подписи, мета-данные, бейджи */
     val caption = TextStyle(fontFamily = text, fontWeight = FontWeight(400), fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = (0).sp)
 
@@ -186,7 +186,7 @@ class YeetTypography(display: FontFamily, text: FontFamily) {
         /** YeetTypography.fromResources(R.font.roboto_slab_variable, R.font.inter_variable) */
         fun fromResources(@FontRes display: Int, @FontRes text: Int) = YeetTypography(
             display = yeetFontFamily(display, 380, 400),
-            text = yeetFontFamily(text, 400, 500),
+            text = yeetFontFamily(text, 400, 460),
         )
     }
 }

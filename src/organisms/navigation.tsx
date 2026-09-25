@@ -1,3 +1,4 @@
+import { useSlidingPill } from '../utils/useSlidingPill';
 import type { ReactNode } from 'react';
 import { Button, Icon, IconButton, ScrollEdge } from '../atoms';
 import type { IconName } from '../icons/icons';
@@ -11,7 +12,7 @@ type Action = { icon: IconName; label: string; onClick?: () => void };
 
 export type HeaderProps =
   | { type: 'large'; title: string; subtitle?: string; action?: Action }
-  | { type: 'bar'; titleChip?: string; /** Вместо чипа: шаги создания образа (`SegmentControl` S с иконками). */ center?: ReactNode; onBack?: () => void; actions?: Action[] }
+  | { type: 'bar'; titleChip?: string; /** Вместо чипа: шаги создания образа (`SegmentControl` S с иконками). */ center?: ReactNode; /** Появляется по центру, когда контент прокручен (Screen → data-collapsed): миниатюра фото вещи или образа. */ centerOnScroll?: ReactNode; onBack?: () => void; actions?: Action[] }
   | { type: 'back'; title: string; onBack?: () => void; textAction?: { label: string; onClick?: () => void } }
   | { type: 'search'; query?: string; placeholder?: string; onBack?: () => void; onQueryChange?: (v: string) => void; filters?: Chip[] };
 
@@ -34,7 +35,9 @@ export function Header(props: HeaderProps) {
         {props.type === 'large' && (
           <>
             <div className="y-header__title-row">
-              <h1 className="y-h1">{props.title}</h1>
+              <h1 className="y-h1 y-header__large-title">{props.title}</h1>
+              {/* при скролле большой заголовок уходит в пилюлю по центру (Screen → data-collapsed) */}
+              <span className="y-header__pill" aria-hidden>{props.title}</span>
               {props.action && <IconButton icon={props.action.icon} label={props.action.label} onClick={props.action.onClick} />}
             </div>
             {props.subtitle && <p className="y-body y-text--secondary">{props.subtitle}</p>}
@@ -45,7 +48,10 @@ export function Header(props: HeaderProps) {
             <div className="y-header__side">
               <IconButton icon="chevron-left" label="Назад" onClick={props.onBack} />
             </div>
-            <div className="y-header__center">{props.center ?? (props.titleChip && <Button variant="tertiary" size="M" tabIndex={-1}>{props.titleChip}</Button>)}</div>
+            <div className="y-header__center">
+              {props.center ?? (props.titleChip && <Button variant="tertiary" size="M" tabIndex={-1}>{props.titleChip}</Button>)}
+              {props.centerOnScroll && <span className="y-header__on-scroll" aria-hidden>{props.centerOnScroll}</span>}
+            </div>
             <div className="y-header__side y-header__side--end">
               {props.actions?.map((a) => <IconButton key={a.label} icon={a.icon} label={a.label} onClick={a.onClick} />)}
             </div>
@@ -55,13 +61,14 @@ export function Header(props: HeaderProps) {
           <>
             <div className="y-header__row">
               <IconButton icon="chevron-left" label="Назад" onClick={props.onBack} />
+              <span className="y-header__pill" aria-hidden>{props.title}</span>
               {props.textAction && (
                 <Button variant="ghost" size="M" onClick={props.textAction.onClick}>
                   {props.textAction.label}
                 </Button>
               )}
             </div>
-            <h1 className="y-h1 y-header__back-title">{props.title}</h1>
+            <div className="y-header__collapse"><h1 className="y-h1 y-header__back-title">{props.title}</h1></div>
           </>
         )}
         {props.type === 'search' && (
@@ -97,10 +104,12 @@ const tabs: { id: Tab; label: string; icon?: IconName }[] = [
 
 /** Плавающий таб-бар: 5 вкладок-иконок, активная — подложка `--color-bg-subtle`. */
 export function TabBar({ active, initial = 'С', onChange }: { active: Tab; initial?: string; onChange?: (t: Tab) => void }) {
+  const [ref, pill] = useSlidingPill<HTMLElement>(tabs.findIndex((t) => t.id === active));
   return (
-    <nav className="y-tab-bar" aria-label="Основная навигация">
+    <nav ref={ref} className="y-tab-bar" aria-label="Основная навигация">
+      <span className="y-tab-bar__pill" style={pill} aria-hidden />
       {tabs.map((t) => (
-        <button key={t.id} type="button" className="y-tab-bar__tab" aria-label={t.label} aria-current={t.id === active ? 'page' : undefined} onClick={() => onChange?.(t.id)}>
+        <button key={t.id} type="button" data-pill-item className="y-tab-bar__tab" aria-label={t.label} aria-current={t.id === active ? 'page' : undefined} onClick={() => onChange?.(t.id)}>
           {t.icon ? <Icon name={t.icon} /> : <span className="y-tab-bar__avatar">{initial}</span>}
         </button>
       ))}
