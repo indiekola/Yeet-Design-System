@@ -378,14 +378,31 @@ export const ProfileAnalytics: Story = {
         <ItemCard kind="bottom" color="black" label="9 раз" />
       </Carousel>
       <BarChart bars={[{ label: 'Верхняя одежда', icon: 'outerwear', value: 5 }, { label: 'Верх', icon: 'top', value: 50 }, { label: 'Обувь', icon: 'shoe', value: 10 }, { label: 'Аксессуары', icon: 'accessories', value: 30 }, { label: 'Низ', icon: 'bottom', value: 5 }]} />
-      <h3 className="y-h3">По сезонам</h3>
-      <BarChart bars={[{ label: 'Весна', icon: 'flower', value: 20 }, { label: 'Лето', icon: 'sun', value: 70 }, { label: 'Осень', icon: 'leaf', value: 8 }, { label: 'Зима', icon: 'snowflake', value: 1 }]} />
       <h3 className="y-h3">Самый дорогой образ</h3>
       <OutfitCollage
         label="Ужин"
         items={[{ kind: 'bottom', x: 28, y: 44, size: 130, color: 'black' }, { kind: 'top', x: 64, y: 30, color: 'brown' }, { kind: 'container', x: 78, y: 56, size: 56, color: 'black' }]}
         footer={<><span><span className="y-h2" style={{ display: 'block' }}>120 640 ₽</span><span className="y-caption y-text--secondary">4 вещи</span></span><Icon name="chevron-right" /></>}
       />
+      {/* порядок как во флоу Profile / Overview / Analytics: цвета → давно не надевалось → сезоны → лучшая инвестиция → другие цифры */}
+      <BarChart bars={[{ label: 'Синий', color: 'blue', value: 13 }, { label: 'Чёрный', color: 'black', value: 62 }, { label: 'Коричневый', color: 'brown', value: 25 }]} />
+      <Carousel title="Давно не надевалось" itemWidth={173}>
+        <ItemCard kind="top" color="black" label="20 дней" />
+        <ItemCard kind="top" color="white" label="1 день" />
+        <ItemCard kind="shoe" color="brown" label="1 день" />
+      </Carousel>
+      <BarChart bars={[{ label: 'Весна', icon: 'flower', value: 20 }, { label: 'Лето', icon: 'sun', value: 70 }, { label: 'Осень', icon: 'leaf', value: 8 }, { label: 'Зима', icon: 'snowflake', value: 1 }]} />
+      <h3 className="y-h3">Лучшая инвестиция</h3>
+      <OutfitCollage
+        label="Аксессуары"
+        items={[{ kind: 'container', x: 50, y: 42, size: 180, color: 'black' }]}
+        footer={<><span><span className="y-h2" style={{ display: 'block' }}>32 640 ₽</span><span className="y-caption y-text--secondary">5 образов</span></span><Icon name="chevron-right" /></>}
+      />
+      <h3 className="y-h3">Другие цифры</h3>
+      <StatRow>
+        <StatTile label="Стоимость гардероба" value="23 600 ₽" />
+        <StatTile label="Средняя стоимость одной вещи" value="1 480 ₽" />
+      </StatRow>
     </Screen>
   ),
 };
