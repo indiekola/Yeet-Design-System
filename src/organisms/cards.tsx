@@ -46,7 +46,7 @@ export function ItemCard({ kind, color, image, discount, label, selected, onClic
       <ItemArt kind={kind} color={color} src={image} size={image ? 138 : 88} />
       {discount && <Badge variant="danger" className="y-item-card__badge">{discount}</Badge>}
       {label && !discount && <Badge variant="secondary" className="y-item-card__badge">{label}</Badge>}
-      {selected !== undefined && <span className="y-item-card__check">{selected ? <Icon name="check" /> : null}</span>}
+      {selected && <span className="y-item-card__check" aria-hidden><Icon name="check" size={16} strokeWidth={2} /></span>}
     </button>
   );
 }

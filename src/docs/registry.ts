@@ -62,6 +62,7 @@ export const registry: Entry[] = [
   { code: 'WeatherCard', figma: 'weather-card', level: 'Organisms', section: '07 Content', story: 'Organisms/WeatherCard' },
   { code: 'ChatBubble', figma: 'chat-bubble', level: 'Organisms', section: '07 Content', story: 'Organisms/ChatBubble' },
   { code: 'StylistPromptCard', figma: 'stylist-prompt-card', level: 'Organisms', section: '07 Content', story: 'Organisms/StylistPromptCard' },
+  { code: 'OutfitCanvas', figma: 'экран Canvas (outfit-collage + pattern)', level: 'Organisms', section: '07 Content', story: 'Organisms/OutfitCanvas' },
   { code: 'TripCard', figma: 'trip-card', level: 'Organisms', section: '07 Content', story: 'Organisms/TripCard' },
 
   { code: 'Screen', figma: 'Screen patterns', level: 'Templates', section: '10 Screen patterns', story: 'Templates/Screen' },

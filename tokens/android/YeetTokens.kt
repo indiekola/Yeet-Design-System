@@ -56,6 +56,8 @@ data class YeetColorScheme(
     val borderSubtle: Color,
     /** Разделители строк в input-group и list-group · Figma divider (black @5%) */
     val divider: Color,
+    /** Точки фона коллажа и холста (2 px, шаг 10) · Figma pattern (black @23%) */
+    val patternDot: Color,
 )
 
 val YeetLightColors = YeetColorScheme(
@@ -76,6 +78,7 @@ val YeetLightColors = YeetColorScheme(
     dangerSoft = Color(0x1AFF4230),
     borderSubtle = Color(0x1A000000),
     divider = Color(0x0D000000),
+    patternDot = Color(0x3B000000),
 )
 
 val YeetDarkColors = YeetColorScheme(
@@ -96,6 +99,7 @@ val YeetDarkColors = YeetColorScheme(
     dangerSoft = Color(0x2EFF5A4A),
     borderSubtle = Color(0x1FF5F5F7),
     divider = Color(0x14F5F5F7),
+    patternDot = Color(0x3BF5F5F7),
 )
 
 /** Цвет вещи — атрибут одежды, не интерфейс. */

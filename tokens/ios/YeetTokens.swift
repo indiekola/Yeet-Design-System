@@ -53,6 +53,8 @@ public enum YeetColor {
     public static let borderSubtle = dynamic(UIColor(hex: 0x000000, alpha: 0.1), UIColor(hex: 0xF5F5F7, alpha: 0.12))
     /// Разделители строк в input-group и list-group · Figma divider (black @5%)
     public static let divider = dynamic(UIColor(hex: 0x000000, alpha: 0.05), UIColor(hex: 0xF5F5F7, alpha: 0.08))
+    /// Точки фона коллажа и холста (2 px, шаг 10) · Figma pattern (black @23%)
+    public static let patternDot = dynamic(UIColor(hex: 0x000000, alpha: 0.23), UIColor(hex: 0xF5F5F7, alpha: 0.23))
 }
 
 /// Цвет вещи — атрибут одежды, не интерфейс.

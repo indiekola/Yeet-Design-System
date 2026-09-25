@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { Avatar, Button, Icon, IconButton, Logo, Stamp } from '../atoms';
-import { BarChart, Carousel, ChipGroup, EmptyState, Field, Hint, InputBar, InputGroup, List, ListGroup, ListItem, LoadingState, PhotoTile, RangeSlider, SegmentControl, Snackbar, StatRow, StatTile, UsageMeter } from '../molecules';
-import { BottomBar, BottomNav, ChatBubble, Dialog, type Garment, Header, ItemCard, OutfitCollage, Overlay, PhotoArea, ProductCard, Sheet, StatusBar, StylistPromptCard, TripCard, WeatherCard } from '../organisms';
+import { BarChart, Carousel, ChipGroup, EmptyState, Field, InputBar, InputGroup, List, ListGroup, ListItem, LoadingState, PhotoTile, RangeSlider, SegmentControl, Snackbar, StatRow, StatTile, UsageMeter } from '../molecules';
+import { BottomBar, BottomNav, type CanvasItem, ChatBubble, Dialog, OutfitCanvas, type Garment, Header, ItemCard, OutfitCollage, Overlay, PhotoArea, ProductCard, Sheet, StatusBar, StylistPromptCard, TripCard, WeatherCard } from '../organisms';
 import { Grid, Row, Screen } from '../templates';
+import type { ItemColor } from '../tokens/tokens';
 
 const meta = {
   title: 'Pages/Экраны флоу',
@@ -163,14 +164,37 @@ export const NewItem: Story = {
   ),
 };
 
+function CanvasScreen() {
+  const wardrobe: { id: string; kind: Garment; color: ItemColor }[] = [
+    { id: 'bottom', kind: 'bottom', color: 'green' }, { id: 'shoes', kind: 'shoe', color: 'brown' },
+    { id: 'top', kind: 'top', color: 'green' }, { id: 'glasses', kind: 'accessories', color: 'black' },
+  ];
+  const spots: Record<string, Pick<CanvasItem, 'x' | 'y' | 'size'>> = { bottom: { x: 30, y: 58, size: 140 }, shoes: { x: 72, y: 76, size: 72 }, top: { x: 66, y: 34 }, glasses: { x: 32, y: 18, size: 56 } };
+  const [items, setItems] = useState<CanvasItem[]>(wardrobe.slice(0, 2).map((w) => ({ ...w, ...spots[w.id] })));
+  const [selected, setSelected] = useState<string>();
+  const [hint, setHint] = useState(true);
+  const toggle = (w: (typeof wardrobe)[number]) =>
+    setItems((cur) => (cur.some((c) => c.id === w.id) ? cur.filter((c) => c.id !== w.id) : [...cur, { ...w, ...spots[w.id] }]));
+  return (
+    <Screen
+      header={<Header type="bar" center={<SegmentControl size="M" fit value="canvas" segments={[{ value: 'items', icon: 'wardrobe' }, { value: 'canvas', icon: 'collage' }, { value: 'info', icon: 'info' }]} />} actions={[{ icon: 'arrows-shuffle', label: 'Перемешать' }]} />}
+      bottom={<BottomBar label="Далее" />}
+    >
+      <OutfitCanvas items={items} onChange={setItems} selectedId={selected} onSelect={setSelected} hint={hint ? <Snackbar onClose={() => setHint(false)}>Перемещай и масштабируй вещи</Snackbar> : undefined} />
+      <div style={{ margin: '0 calc(var(--screen-gutter) * -1)' }}>
+        <Sheet type="panel" title="Гардероб">
+          <ChipGroup chips={[{ label: 'Категория · 2', selected: true, dropdown: true }, { label: 'Зима', selected: true, dropdown: true }]} />
+          <Grid>{wardrobe.map((w) => <ItemCard key={w.id} kind={w.kind} color={w.color} selected={items.some((c) => c.id === w.id)} onClick={() => toggle(w)} />)}</Grid>
+        </Sheet>
+      </div>
+    </Screen>
+  );
+}
+
 export const Canvas: Story = {
   parameters: { controls: { disable: true } },
-  name: 'Outfit Creation / Canvas / Gesture Hint',
-  render: () => (
-    <Screen header={<Header type="bar" actions={[{ icon: 'arrows-shuffle', label: 'Перемешать' }]} />} floating={<Hint>Перемещай и масштабируй вещи</Hint>} floatingOffset={120} bottom={<BottomBar label="Сохранить образ" />}>
-      <OutfitCollage items={[{ kind: 'top', x: 66, y: 34, color: 'black' }, { kind: 'bottom', x: 34, y: 58, size: 140 }, { kind: 'shoe', x: 70, y: 78, size: 80 }]} />
-    </Screen>
-  ),
+  name: 'Outfit Creation / Canvas / Filtered',
+  render: () => <CanvasScreen />,
 };
 
 export const Stylist: Story = {
