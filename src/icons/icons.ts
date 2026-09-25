@@ -40,6 +40,10 @@ export const icons = {
   'horizontal-drag': "<path d=\"M15 6V18M9 6V18\" stroke-linecap=\"square\"/>",
   'info': "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 11V16.5M12 7.5V8.2\" stroke-linecap=\"square\"/>",
   'log-out': "<path d=\"M14 4H19V20H14M10 8L6 12L10 16M6.5 12H15\" stroke-linecap=\"square\"/>",
+  'sun': "<circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2.5V4.5M12 19.5V21.5M21.5 12H19.5M4.5 12H2.5M18.72 5.28L17.3 6.7M6.7 17.3L5.28 18.72M18.72 18.72L17.3 17.3M6.7 6.7L5.28 5.28\" stroke-linecap=\"square\"/>",
+  'snowflake': "<path d=\"M12 2.5V21.5M3.77 7.25L20.23 16.75M3.77 16.75L20.23 7.25M9.5 3.8L12 6.3L14.5 3.8M9.5 20.2L12 17.7L14.5 20.2M4.1 11.1L7.5 12.1L6.6 15.5M19.9 12.9L16.5 11.9L17.4 8.5M4.1 12.9L7.5 11.9L6.6 8.5M19.9 11.1L16.5 12.1L17.4 15.5\" stroke-linecap=\"square\"/>",
+  'leaf': "<path d=\"M5 19C5 11 10 5 20 4C20 14 14 19 7 19H5ZM5 19L13 11\" stroke-linecap=\"square\"/>",
+  'flower': "<circle cx=\"12\" cy=\"10\" r=\"2.5\"/><path d=\"M12 7.5C12 5 13.2 3.5 14.5 3.5C16.5 3.5 16.8 6.5 14.3 8.8M14.4 9.2C16.8 8.4 18.8 9.3 18.8 10.8C18.8 12.8 16 13.5 14.1 11.6M13.6 12.2C14.6 14.5 13.9 16.5 12 16.5C10.1 16.5 9.4 14.5 10.4 12.2M9.9 11.6C8 13.5 5.2 12.8 5.2 10.8C5.2 9.3 7.2 8.4 9.6 9.2M9.7 8.8C7.2 6.5 7.5 3.5 9.5 3.5C10.8 3.5 12 5 12 7.5M12 16.5V21M12 19C10.5 17.5 8.5 17.5 7.5 18M12 19.5C13.5 18 15.5 18 16.5 18.5\" stroke-linecap=\"square\"/>",
 } as const;
 
 export type IconName = keyof typeof icons;

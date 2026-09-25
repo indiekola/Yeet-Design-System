@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { Avatar, Button, Icon, IconButton, Logo, Stamp } from '../atoms';
-import { BarChart, Carousel, ChipGroup, EmptyState, ListGroup, PhotoTile, UsageMeter, Field, Hint, InputBar, InputGroup, List, ListItem, LoadingState, SegmentControl, Snackbar, StatRow, StatTile } from '../molecules';
-import { BottomBar, BottomNav, ChatBubble, StatusBar, StylistPromptCard, TripCard, Dialog, Header, ItemCard, OutfitCollage, Overlay, PhotoArea, ProductCard, Sheet, WeatherCard, type Garment } from '../organisms';
+import { BarChart, Carousel, ChipGroup, EmptyState, Field, Hint, InputBar, InputGroup, List, ListGroup, ListItem, LoadingState, PhotoTile, RangeSlider, SegmentControl, Snackbar, StatRow, StatTile, UsageMeter } from '../molecules';
+import { BottomBar, BottomNav, ChatBubble, Dialog, type Garment, Header, ItemCard, OutfitCollage, Overlay, PhotoArea, ProductCard, Sheet, StatusBar, StylistPromptCard, TripCard, WeatherCard } from '../organisms';
 import { Grid, Row, Screen } from '../templates';
 
 const meta = {
@@ -289,10 +289,10 @@ export const Settings: Story = {
         <ListItem label="Сима · sima@space.com" trailing={<IconButton icon="log-out" label="Выйти" variant="ghost" size="S" tabIndex={-1} />} icon={undefined} />
       </ListGroup>
       <ListGroup><ListItem label="Корзина вещей" trailing={<Icon name="chevron-right" />} /></ListGroup>
-      <ListGroup>
-        <ListItem label="Страна" trailing={<><span className="y-body">Россия</span><Icon name="chevron-up-down" /></>} />
-        <ListItem label="Валюта" trailing={<><span className="y-body">₽ · RUB</span><Icon name="chevron-up-down" /></>} />
-      </ListGroup>
+      <InputGroup>
+        <Field label="Страна" value="Россия" trailingIcon="chevron-up-down" />
+        <Field label="Валюта" value="₽ · RUB" trailingIcon="chevron-up-down" />
+      </InputGroup>
       <ListGroup>
         <ListItem label="Язык" trailing={<Icon name="external-link" />} />
         <ListItem label="Уведомления" trailing={<Icon name="external-link" />} />
@@ -328,6 +328,8 @@ export const ProfileAnalytics: Story = {
         <ItemCard kind="bottom" color="black" label="9 раз" />
       </Carousel>
       <BarChart bars={[{ label: 'Верхняя одежда', icon: 'outerwear', value: 5 }, { label: 'Верх', icon: 'top', value: 50 }, { label: 'Обувь', icon: 'shoe', value: 10 }, { label: 'Аксессуары', icon: 'accessories', value: 30 }, { label: 'Низ', icon: 'bottom', value: 5 }]} />
+      <h3 className="y-h3">По сезонам</h3>
+      <BarChart height={180} bars={[{ label: 'Весна', icon: 'flower', value: 20 }, { label: 'Лето', icon: 'sun', value: 70 }, { label: 'Осень', icon: 'leaf', value: 8 }, { label: 'Зима', icon: 'snowflake', value: 1 }]} />
       <h3 className="y-h3">Самый дорогой образ</h3>
       <OutfitCollage
         label="Ужин"
@@ -337,3 +339,115 @@ export const ProfileAnalytics: Story = {
     </Screen>
   ),
 };
+
+/* ─── Вишлист, архив, создание образа, профиль ────────────────────────── */
+
+const shoes = ['Nike Air Force 1 ’07', 'Nike Ava Edge', 'Nike Ava Edge', 'Nike Ava Edge'];
+
+export const Wishlist: Story = {
+  name: 'Wishlist / Items / Populated',
+  render: () => (
+    <Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />}>
+      <SegmentControl value="wishlist" segments={[{ value: 'items', label: 'Вещи' }, { value: 'outfits', label: 'Образы' }, { value: 'wishlist', label: 'Вишлист' }]} />
+      <div style={{ alignSelf: 'flex-start' }}>
+        <SegmentControl size="S" value="items" segments={[{ value: 'items', label: 'Вещи' }, { value: 'outfits', label: 'Образы' }]} />
+      </div>
+      <Grid rowGap={16}>
+        {shoes.map((n, i) => <ProductCard key={i} kind="shoe" name={n} price={i ? '14 300 ₽' : '10 400 ₽'} liked />)}
+      </Grid>
+    </Screen>
+  ),
+};
+
+export const Archive: Story = {
+  name: 'Archive / Items / Populated',
+  render: () => (
+    <Screen header={<Header type="bar" titleChip="Архив вещей" />}>
+      <Grid>
+        <ItemCard kind="top" color="white" />
+        <ItemCard kind="top" color="black" />
+      </Grid>
+    </Screen>
+  ),
+};
+
+const creationSteps = (step: string) => (
+  <SegmentControl size="S" value={step} segments={[{ value: 'items', icon: 'wardrobe' }, { value: 'canvas', icon: 'collage' }, { value: 'info', icon: 'info' }]} />
+);
+
+export const OutfitCriteria: Story = {
+  name: 'Outfit Creation / Criteria / Default',
+  render: () => (
+    <Screen header={<Header type="bar" center={creationSteps('info')} />} bottom={<BottomBar label="Создать образ" />}>
+      <InputGroup>
+        <Field label="Повод" value="Все" trailingIcon="chevron-up-down" />
+        <Field label="Сезон" value="Все" trailingIcon="chevron-up-down" />
+      </InputGroup>
+      <h3 className="y-h3">Теги</h3>
+      <ChipGroup wrap onAdd={() => {}} chips={['Тег #1', 'Тег #2', 'Тег #3', 'Тег #4', 'Тег #5', 'Тег #6'].map((label) => ({ label, removable: true }))} />
+    </Screen>
+  ),
+};
+
+export const OutfitItems: Story = {
+  name: 'Outfit Creation / Item Selection / Ready to Continue',
+  render: () => (
+    <Screen header={<Header type="bar" center={creationSteps('items')} actions={[{ icon: 'arrows-shuffle', label: 'Перемешать' }]} />} bottom={<BottomBar label="Далее" />}>
+      {(
+        [
+          ['Верх', 'top', 'green'],
+          ['Низ', null, null],
+          ['Обувь', 'shoe', 'brown'],
+        ] as const
+      ).map(([title, kind, color]) => (
+        <section key={title} style={{ display: 'grid', gap: 12 }}>
+          <h3 className="y-h3">{title}</h3>
+          <Row gap={12} align="center">
+            {kind && <div style={{ width: 173 }}><ItemCard kind={kind} color={color ?? undefined} /></div>}
+            <IconButton icon="plus" label={`Добавить: ${title.toLowerCase()}`} />
+          </Row>
+        </section>
+      ))}
+    </Screen>
+  ),
+};
+
+export const ProfileEdit: Story = {
+  name: 'Profile / Edit / No Avatar',
+  render: () => (
+    <Screen header={<Header type="bar" titleChip="Редактирование профиля" />}>
+      <div style={{ display: 'grid', placeItems: 'center', padding: '8px 0' }}><Avatar size="L" /></div>
+      <InputGroup>
+        <Field label="Имя" value="Сима" />
+        <Field label="E-mail" value="sima@space.com" />
+      </InputGroup>
+      <InputGroup>
+        <Field label="Пол" value="Не указан" trailingIcon="chevron-up-down" />
+        <Field label="Стиль" value="Кэжуал" trailingIcon="chevron-up-down" />
+        <Field label="Год рождения" value="1991" trailingIcon="chevron-up-down" />
+      </InputGroup>
+    </Screen>
+  ),
+};
+
+function PriceSheet() {
+  const [v, setV] = useState<[number, number]>([0, 30000]);
+  return (
+    <Screen
+      header={<Header type="search" query="Белые кроссовки" filters={[{ label: 'Сортировка' }, { label: 'Цена', selected: true }]} />}
+      overlay={
+        <Overlay>
+          <Sheet title="Цена" footer={[{ label: 'Сбросить' }, { label: 'Показать 128' }]}>
+            <RangeSlider label="Цена" min={0} max={60000} value={v} onChange={setV} histogram={[2, 3, 6, 12, 18, 20, 17, 19, 22, 16, 10, 6, 4, 3, 2, 2, 3, 2, 1, 1]} />
+          </Sheet>
+        </Overlay>
+      }
+    >
+      <Grid rowGap={16}>
+        {shoes.map((n, i) => <ProductCard key={i} kind="shoe" name={n} price="14 300 ₽" />)}
+      </Grid>
+    </Screen>
+  );
+}
+
+export const PriceFilter: Story = { name: 'Search / Results / Sheet / Price Filter', render: () => <PriceSheet /> };

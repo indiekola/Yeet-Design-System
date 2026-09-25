@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { ChipGroup, List, ListItem, SegmentControl } from '.';
+import { ChipGroup, List, ListGroup, ListItem, RangeSlider, SegmentControl } from '.';
+import { Icon } from '../atoms';
 import { Column, Usage, UsageGrid } from '../docs/helpers';
 
 const meta = {
@@ -60,6 +61,47 @@ export const ListItems: Story = {
       <Usage screen="Sheet · Category" note="expandable"><List><ListItem type="expandable" icon="outerwear" label="Верхняя одежда" /><ListItem type="expandable" icon="top" label="Верх" expanded /><ListItem type="expandable" icon="bottom" label="Низ" /><ListItem type="expandable" icon="shoe" label="Обувь" /><ListItem type="expandable" icon="accessories" label="Аксессуары" /></List></Usage>
       <Usage screen="Sheet · Birth Year" note="radio"><List>{[1991, 1992, 1993, 1994].map((y, i) => <ListItem key={y} type="radio" label={String(y)} checked={i === 0} />)}</List></Usage>
       <Usage screen="Sheet · Country" note="radio + флаг"><List><ListItem type="radio" label="Россия" checked trailing="🇷🇺" /><ListItem type="radio" label="Беларусь" trailing="🇧🇾" /><ListItem type="radio" label="Казахстан" trailing="🇰🇿" /><ListItem type="radio" label="Грузия" trailing="🇬🇪" /></List></Usage>
+    </UsageGrid>
+  ),
+};
+
+const priceHistogram = [2, 3, 6, 12, 18, 20, 17, 19, 22, 16, 10, 6, 4, 3, 2, 2, 3, 2, 1, 1];
+
+function PriceRange() {
+  const [v, setV] = useState<[number, number]>([0, 30000]);
+  return <RangeSlider label="Цена" min={0} max={60000} value={v} onChange={setV} histogram={priceHistogram} />;
+}
+
+export const Range: Story = {
+  name: 'RangeSlider',
+  render: () => (
+    <UsageGrid min={353}>
+      <Usage screen="Search / Results / Sheet / Price Filter" note="двойной ползунок с гистограммой" width={353}><PriceRange /></Usage>
+    </UsageGrid>
+  ),
+};
+
+export const Groups: Story = {
+  name: 'ListGroup',
+  render: () => (
+    <UsageGrid min={353}>
+      <Usage screen="Settings / Main" note="переход внутрь" width={353}>
+        <ListGroup>
+          <ListItem label="Корзина вещей" trailing={<Icon name="chevron-right" />} />
+        </ListGroup>
+      </Usage>
+      <Usage screen="Settings / Main" note="системные настройки" width={353}>
+        <ListGroup>
+          <ListItem label="Язык" trailing={<Icon name="external-link" />} />
+          <ListItem label="Уведомления" trailing={<Icon name="external-link" />} />
+        </ListGroup>
+      </Usage>
+      <Usage screen="Settings / Main" note="внешние ссылки" width={353}>
+        <ListGroup>
+          <ListItem label="Оценить приложение" trailing={<Icon name="external-link" />} />
+          <ListItem label="Техническая поддержка" trailing={<Icon name="external-link" />} />
+        </ListGroup>
+      </Usage>
     </UsageGrid>
   ),
 };

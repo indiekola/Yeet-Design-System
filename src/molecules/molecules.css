@@ -129,3 +129,23 @@
 .y-list-group { flex: none; display: flex; flex-direction: column; background: var(--card-bg); border-radius: var(--radius-lg); overflow: hidden; }
 .y-list-group > .y-list-item { min-height: 56px; padding: var(--space-16) var(--space-20); }
 .y-list-group > .y-list-item + .y-list-item { box-shadow: inset 0 1px 0 var(--color-border-subtle); }
+
+/* RangeSlider */
+.y-range { position: relative; width: 100%; display: flex; flex-direction: column; gap: var(--space-8); }
+.y-range__hist { width: 100%; height: 64px; display: block; margin-bottom: -12px; }
+.y-range__hist-all { fill: var(--color-bg-subtle); }
+.y-range__hist-on { fill: var(--color-border-subtle); clip-path: inset(0 calc(100% - var(--hi)) 0 var(--lo)); }
+.y-range__track { position: relative; height: 24px; margin: 0 12px; }
+.y-range__track::before { content: ''; position: absolute; left: -12px; right: -12px; top: 50%; height: 1px; background: var(--color-border-subtle); }
+.y-range__fill { position: absolute; top: calc(50% - 0.5px); height: 1px; left: var(--lo); right: calc(100% - var(--hi)); background: var(--color-accent); }
+.y-range__thumb {
+  position: absolute; top: 0; width: 24px; height: 24px; margin-left: -12px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--button-primary-bg); color: var(--button-primary-fg); pointer-events: none;
+}
+.y-range__track input {
+  position: absolute; inset: 0 -12px; width: calc(100% + 24px); height: 24px; margin: 0; opacity: 0; pointer-events: none; -webkit-appearance: none; appearance: none; background: none;
+}
+.y-range__track input::-webkit-slider-thumb { pointer-events: auto; width: 24px; height: 24px; -webkit-appearance: none; cursor: grab; }
+.y-range__track input::-moz-range-thumb { pointer-events: auto; width: 24px; height: 24px; border: 0; cursor: grab; }
+.y-range__track:focus-within { outline: 2px solid var(--color-accent); outline-offset: 6px; border-radius: 12px; }
+.y-range__labels { display: flex; justify-content: space-between; color: var(--color-text-primary); }

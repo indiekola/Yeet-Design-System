@@ -105,9 +105,75 @@ export function List({ children }: { children: ReactNode }) {
 /* ─── ListGroup ─────────────────────────────────────────────────────── */
 
 /**
- * Группа строк на карточке с разделителями — экранные списки (в отличие от `List` внутри sheet).
- * **Контексты:** Настройки (аккаунт, страна и валюта, ссылки), Профиль / Редактирование.
+ * Группа строк-переходов на карточке с разделителями: «Корзина вещей →», «Язык ↗», «Поддержка ↗».
+ * Для пар «ключ — значение» (Страна: Россия) — `InputGroup` + `Field`, не этот компонент.
+ * **Контексты:** Настройки.
  */
 export function ListGroup({ children }: { children: ReactNode }) {
   return <div className="y-list-group">{children}</div>;
+}
+
+/* ─── RangeSlider ───────────────────────────────────────────────────── */
+
+export type RangeSliderProps = {
+  min: number;
+  max: number;
+  value: [number, number];
+  onChange?: (v: [number, number]) => void;
+  step?: number;
+  /** Распределение товаров по цене — серая гистограмма под треком; выбранный диапазон темнее. */
+  histogram?: number[];
+  format?: (v: number) => string;
+  /** Подпись для скринридера: «Цена». */
+  label: string;
+};
+
+const rub = (v: number) => `${v.toLocaleString('ru-RU')} ₽`;
+
+/**
+ * Двойной ползунок диапазона с гистограммой. Ручки — Primary 24 с иконкой `horizontal-drag`,
+ * трек выбранного диапазона — `--color-accent`. Под ним — границы диапазона.
+ * **Контексты:** Search / Results / Sheet / Price Filter.
+ */
+export function RangeSlider({ min, max, value, onChange, step = 100, histogram, format = rub, label }: RangeSliderProps) {
+  const [lo, hi] = value;
+  const pct = (v: number) => ((v - min) / (max - min)) * 100;
+  const area = histogram && histogramPath(histogram);
+  return (
+    <div className="y-range" style={{ ['--lo' as string]: `${pct(lo)}%`, ['--hi' as string]: `${pct(hi)}%` }}>
+      {area && (
+        <svg className="y-range__hist" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden>
+          <path d={area} className="y-range__hist-all" />
+          <path d={area} className="y-range__hist-on" />
+        </svg>
+      )}
+      <div className="y-range__track">
+        <span className="y-range__fill" />
+        {[0, 1].map((i) => (
+          <span key={i} className="y-range__thumb" style={{ left: `${pct(value[i])}%` }} aria-hidden>
+            <Icon name="horizontal-drag" size={14} />
+          </span>
+        ))}
+        <input type="range" aria-label={`${label}: от`} min={min} max={max} step={step} value={lo} onChange={(e) => onChange?.([Math.min(+e.target.value, hi - step), hi])} />
+        <input type="range" aria-label={`${label}: до`} min={min} max={max} step={step} value={hi} onChange={(e) => onChange?.([lo, Math.max(+e.target.value, lo + step)])} />
+      </div>
+      <div className="y-range__labels y-caption">
+        <span>{format(lo)}</span>
+        <span>{format(hi)}</span>
+      </div>
+    </div>
+  );
+}
+
+/** Сглаженная площадь гистограммы в координатах 100×40. */
+function histogramPath(bins: number[]): string {
+  const top = Math.max(...bins, 1);
+  const pts = bins.map((b, i) => [(i / (bins.length - 1)) * 100, 40 - (b / top) * 36] as const);
+  const d = pts.map(([x, y], i) => {
+    if (!i) return `M${x},${y}`;
+    const [px, py] = pts[i - 1];
+    const mx = (px + x) / 2;
+    return `C${mx},${py} ${mx},${y} ${x},${y}`;
+  });
+  return `M0,40 L${pts[0][0]},${pts[0][1]} ${d.slice(1).join(' ')} L100,40 Z`;
 }

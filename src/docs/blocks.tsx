@@ -218,3 +218,6 @@ export function MotionTable() {
     />
   );
 }
+
+/** «11 · 17 · 16» — число атомов, молекул и организмов из реестра. */
+export const levelCounts = () => (['Atoms', 'Molecules', 'Organisms'] as const).map((l) => byLevel(l).length).join(' · ');

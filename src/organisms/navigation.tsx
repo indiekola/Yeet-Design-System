@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Button, Icon, IconButton, ScrollEdge } from '../atoms';
 import type { IconName } from '../icons/icons';
 import { ChipGroup, InputBar, type Chip } from '../molecules';
@@ -10,7 +11,7 @@ type Action = { icon: IconName; label: string; onClick?: () => void };
 
 export type HeaderProps =
   | { type: 'large'; title: string; subtitle?: string; action?: Action }
-  | { type: 'bar'; titleChip?: string; onBack?: () => void; actions?: Action[] }
+  | { type: 'bar'; titleChip?: string; /** Вместо чипа: шаги создания образа (`SegmentControl` S с иконками). */ center?: ReactNode; onBack?: () => void; actions?: Action[] }
   | { type: 'back'; title: string; onBack?: () => void; textAction?: { label: string; onClick?: () => void } }
   | { type: 'search'; query?: string; placeholder?: string; onBack?: () => void; onQueryChange?: (v: string) => void; filters?: Chip[] };
 
@@ -44,7 +45,7 @@ export function Header(props: HeaderProps) {
             <div className="y-header__side">
               <IconButton icon="chevron-left" label="Назад" onClick={props.onBack} />
             </div>
-            <div className="y-header__center">{props.titleChip && <Button variant="tertiary" size="M" tabIndex={-1}>{props.titleChip}</Button>}</div>
+            <div className="y-header__center">{props.center ?? (props.titleChip && <Button variant="tertiary" size="M" tabIndex={-1}>{props.titleChip}</Button>)}</div>
             <div className="y-header__side y-header__side--end">
               {props.actions?.map((a) => <IconButton key={a.label} icon={a.icon} label={a.label} onClick={a.onClick} />)}
             </div>
