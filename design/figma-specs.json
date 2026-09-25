@@ -2,52 +2,536 @@
   "$description": "Эталонные размеры компонентов из Figma (страница Design System 2.0 (Claude)). `npm run qa` сравнивает с ними вычисленные стили в Storybook. Допуск — 1px. Обновлять при изменении компонента в Figma.",
   "tolerance": 1,
   "specs": [
-    { "figma": "button · Size=L", "story": "atoms-button--playground", "selector": ".y-button", "expect": { "height": 52, "paddingLeft": 20, "borderRadius": 32, "fontSize": 14, "fontFamily": "Inter" } },
-    { "figma": "button · Size=XL", "story": "atoms-button--variants", "selector": ".y-button--XL", "expect": { "height": 56, "paddingLeft": 24, "gap": 12 } },
-    { "figma": "button · Size=M", "story": "atoms-button--variants", "selector": ".y-button--M", "expect": { "height": 48, "paddingLeft": 16, "gap": 8 } },
-    { "figma": "button · Size=S", "story": "atoms-button--variants", "selector": ".y-button--S", "expect": { "height": 40, "paddingLeft": 12, "gap": 8 } },
-    { "figma": "icon-button · Size=M", "story": "atoms-iconbutton--playground", "selector": ".y-icon-button", "expect": { "width": 48, "height": 48 } },
-    { "figma": "badge", "story": "atoms-badge--playground", "selector": ".y-badge", "expect": { "height": 24, "paddingLeft": 8, "borderRadius": 12, "fontSize": 12 } },
-    { "figma": "avatar · Size=L", "story": "atoms-avatar--playground", "selector": ".y-avatar", "expect": { "width": 96, "height": 96 } },
-    { "figma": "stamp · Primary", "story": "atoms-stamp--playground", "selector": ".y-stamp", "expect": { "width": 148, "height": 148 } },
-    { "figma": "input", "story": "molecules-field-inputgroup--playground", "selector": ".y-field", "expect": { "height": 56, "paddingLeft": 20, "gap": 8, "fontSize": 14 } },
-    { "figma": "input-group · Size=XL", "story": "molecules-field-inputgroup--playground", "selector": ".y-input-group", "expect": { "borderRadius": 20 } },
-    { "figma": "input-bar", "story": "molecules-inputbar--playground", "selector": ".y-input-bar", "expect": { "height": 48, "gap": 8 } },
-    { "figma": "input-bar · поле (input-group M)", "story": "molecules-inputbar--playground", "selector": ".y-input-bar__field", "expect": { "height": 48, "borderRadius": 20 } },
-    { "figma": "segment-control · Size=L", "story": "molecules-segmentcontrol--playground", "selector": ".y-segment", "expect": { "height": 52, "paddingLeft": 4, "gap": 4, "borderRadius": 32 } },
-    { "figma": "segment-control · кнопка (L − 8)", "story": "molecules-segmentcontrol--playground", "selector": ".y-segment > .y-button", "expect": { "height": 44 } },
-    { "figma": "chip-group", "story": "molecules-chipgroup--playground", "selector": ".y-chip-group", "expect": { "gap": 4 } },
-    { "figma": "chip-group · чипс (button S)", "story": "molecules-chipgroup--playground", "selector": ".y-chip-group .y-button", "expect": { "height": 40, "paddingLeft": 12 } },
-    { "figma": "list-item", "story": "molecules-listitem--playground", "selector": ".y-list-item", "expect": { "height": 24, "gap": 12, "fontSize": 14 } },
-    { "figma": "hint", "story": "molecules-hint--playground", "selector": ".y-hint", "expect": { "height": 24, "paddingLeft": 8, "paddingRight": 12, "gap": 6, "borderRadius": 32, "fontSize": 12 } },
-    { "figma": "snackbar", "story": "molecules-snackbar--playground", "selector": ".y-snackbar", "expect": { "height": 56, "paddingLeft": 20, "gap": 12, "borderRadius": 16 } },
-    { "figma": "stat-tile", "story": "molecules-stattile--playground", "selector": ".y-stat", "expect": { "height": 72, "paddingLeft": 16, "paddingTop": 12, "gap": 4, "borderRadius": 20 } },
-    { "figma": "empty-state · Title (H2)", "story": "molecules-emptystate--playground", "selector": ".y-empty .y-h2", "expect": { "fontSize": 24, "lineHeight": 28, "fontFamily": "Roboto Slab" } },
-    { "figma": "empty-state", "story": "molecules-emptystate--playground", "selector": ".y-empty", "expect": { "gap": 8 } },
-    { "figma": "loading-state", "story": "molecules-loadingstate--playground", "selector": ".y-loading", "expect": { "gap": 8 } },
-    { "figma": "photo-tile", "story": "molecules-phototile--playground", "selector": ".y-photo-tile", "expect": { "width": 173, "height": 173, "paddingTop": 28, "paddingLeft": 20, "gap": 24, "borderRadius": 20 } },
-    { "figma": "tab-bar", "story": "organisms-bottomnav-tabbar--playground", "selector": ".y-tab-bar", "expect": { "height": 56, "paddingLeft": 4, "gap": 3, "borderRadius": 48 } },
-    { "figma": "tab-bar · вкладка", "story": "organisms-bottomnav-tabbar--playground", "selector": ".y-tab-bar__tab", "expect": { "height": 48, "borderRadius": 32 } },
-    { "figma": "bottom-nav · FAB", "story": "organisms-bottomnav-tabbar--playground", "selector": ".y-bottom-nav__fab .y-icon-button", "expect": { "width": 56, "height": 56 } },
-    { "figma": "bottom-nav · таб-бар при FAB", "story": "organisms-bottomnav-tabbar--playground", "selector": ".y-tab-bar", "expect": { "width": 290 } },
-    { "figma": "bottom-bar · Button XL", "story": "organisms-bottombar--playground", "selector": ".y-bottom-bar .y-button", "expect": { "height": 56 } },
-    { "figma": "header · Large (без полосы затухания)", "story": "organisms-header--playground", "selector": ".y-header", "expect": { "height": 118 } },
-    { "figma": "sheet", "story": "organisms-sheet--playground", "selector": ".y-sheet", "expect": { "paddingTop": 8, "paddingLeft": 20, "paddingBottom": 20, "gap": 20, "borderTopLeftRadius": 32 } },
-    { "figma": "sheet · handle", "story": "organisms-sheet--playground", "selector": ".y-sheet__handle", "expect": { "width": 48, "height": 4, "borderRadius": 4 } },
-    { "figma": "sheet · title (H3)", "story": "organisms-sheet--playground", "selector": ".y-sheet .y-h3", "expect": { "fontSize": 19, "lineHeight": 24, "fontFamily": "Roboto Slab" } },
-    { "figma": "dialog · кнопки L", "story": "organisms-dialog--playground", "selector": ".y-sheet__footer .y-button", "expect": { "height": 52 } },
-    { "figma": "dialog · текст", "story": "organisms-dialog--playground", "selector": ".y-dialog__text", "expect": { "gap": 12 } },
-    { "figma": "item-card", "story": "organisms-itemcard--playground", "selector": ".y-item-card", "expect": { "width": 173, "height": 172, "borderRadius": 20 } },
-    { "figma": "product-card", "story": "organisms-productcard--playground", "selector": ".y-product-card", "expect": { "gap": 16 } },
-    { "figma": "product-card · meta", "story": "organisms-productcard--playground", "selector": ".y-product-card__meta", "expect": { "gap": 2 } },
-    { "figma": "product-card · бейдж скидки", "story": "organisms-productcard--playground", "selector": ".y-item-card__badge", "expect": { "top": 16, "left": 16 } },
-    { "figma": "outfit-collage", "story": "organisms-outfitcollage--playground", "selector": ".y-collage", "expect": { "width": 353, "height": 353, "borderRadius": 20 } },
-    { "figma": "photo-area", "story": "organisms-photoarea--playground", "selector": ".y-photo-area", "expect": { "width": 353, "height": 353, "borderRadius": 20 } },
-    { "figma": "photo-area · кнопка", "story": "organisms-photoarea--playground", "selector": ".y-photo-area__add .y-icon-button", "expect": { "width": 48, "height": 48 } },
-    { "figma": "photo-area · группа", "story": "organisms-photoarea--playground", "selector": ".y-photo-area__add", "expect": { "gap": 12 } },
-    { "figma": "weather-card", "story": "organisms-weathercard--playground", "selector": ".y-weather", "expect": { "paddingTop": 16, "paddingLeft": 20, "gap": 8, "borderTopLeftRadius": 20, "borderBottomLeftRadius": 8 } },
-    { "figma": "chat-bubble", "story": "organisms-chatbubble--playground", "selector": ".y-bubble", "expect": { "paddingTop": 16, "paddingLeft": 20, "maxWidth": 265, "borderBottomLeftRadius": 8 } },
-    { "figma": "stylist-prompt-card", "story": "organisms-stylistpromptcard--playground", "selector": ".y-prompt-card", "expect": { "width": 173, "height": 173, "paddingLeft": 24, "borderRadius": 32 } },
-    { "figma": "trip-card", "story": "organisms-tripcard--playground", "selector": ".y-trip-card", "expect": { "height": 210, "paddingLeft": 16, "gap": 4, "borderRadius": 20 } }
+    {
+      "figma": "button · Size=L",
+      "story": "atoms-button--playground",
+      "selector": ".y-button",
+      "expect": {
+        "height": 52,
+        "paddingLeft": 20,
+        "borderRadius": 32,
+        "fontSize": 14,
+        "fontFamily": "Inter"
+      }
+    },
+    {
+      "figma": "button · Size=XL",
+      "story": "atoms-button--variants",
+      "selector": ".y-button--XL",
+      "expect": {
+        "height": 56,
+        "paddingLeft": 24,
+        "gap": 12
+      }
+    },
+    {
+      "figma": "button · Size=M",
+      "story": "atoms-button--variants",
+      "selector": ".y-button--M",
+      "expect": {
+        "height": 48,
+        "paddingLeft": 16,
+        "gap": 8
+      }
+    },
+    {
+      "figma": "button · Size=S",
+      "story": "atoms-button--variants",
+      "selector": ".y-button--S",
+      "expect": {
+        "height": 40,
+        "paddingLeft": 12,
+        "gap": 8
+      }
+    },
+    {
+      "figma": "icon-button · Size=M",
+      "story": "atoms-iconbutton--playground",
+      "selector": ".y-icon-button",
+      "expect": {
+        "width": 48,
+        "height": 48
+      }
+    },
+    {
+      "figma": "badge",
+      "story": "atoms-badge--playground",
+      "selector": ".y-badge",
+      "expect": {
+        "height": 24,
+        "paddingLeft": 8,
+        "borderRadius": 12,
+        "fontSize": 12
+      }
+    },
+    {
+      "figma": "avatar · Size=L",
+      "story": "atoms-avatar--playground",
+      "selector": ".y-avatar",
+      "expect": {
+        "width": 96,
+        "height": 96
+      }
+    },
+    {
+      "figma": "stamp · Primary",
+      "story": "atoms-stamp--playground",
+      "selector": ".y-stamp",
+      "expect": {
+        "width": 148,
+        "height": 148
+      }
+    },
+    {
+      "figma": "input",
+      "story": "molecules-field-inputgroup--playground",
+      "selector": ".y-field",
+      "expect": {
+        "height": 56,
+        "paddingLeft": 20,
+        "gap": 8,
+        "fontSize": 14
+      }
+    },
+    {
+      "figma": "input-group · Size=XL",
+      "story": "molecules-field-inputgroup--playground",
+      "selector": ".y-input-group",
+      "expect": {
+        "borderRadius": 20
+      }
+    },
+    {
+      "figma": "input-bar",
+      "story": "molecules-inputbar--playground",
+      "selector": ".y-input-bar",
+      "expect": {
+        "height": 48,
+        "gap": 8
+      }
+    },
+    {
+      "figma": "input-bar · поле (input-group M)",
+      "story": "molecules-inputbar--playground",
+      "selector": ".y-input-bar__field",
+      "expect": {
+        "height": 48,
+        "borderRadius": 20
+      }
+    },
+    {
+      "figma": "segment-control · Size=L",
+      "story": "molecules-segmentcontrol--playground",
+      "selector": ".y-segment",
+      "expect": {
+        "height": 52,
+        "paddingLeft": 4,
+        "gap": 4,
+        "borderRadius": 32
+      }
+    },
+    {
+      "figma": "segment-control · кнопка (L − 8)",
+      "story": "molecules-segmentcontrol--playground",
+      "selector": ".y-segment > .y-button",
+      "expect": {
+        "height": 44
+      }
+    },
+    {
+      "figma": "chip-group",
+      "story": "molecules-chipgroup--playground",
+      "selector": ".y-chip-group",
+      "expect": {
+        "gap": 4
+      }
+    },
+    {
+      "figma": "chip-group · чипс (button S)",
+      "story": "molecules-chipgroup--playground",
+      "selector": ".y-chip-group .y-button",
+      "expect": {
+        "height": 40,
+        "paddingLeft": 12
+      }
+    },
+    {
+      "figma": "list-item",
+      "story": "molecules-listitem--playground",
+      "selector": ".y-list-item",
+      "expect": {
+        "height": 24,
+        "gap": 12,
+        "fontSize": 14
+      }
+    },
+    {
+      "figma": "hint",
+      "story": "molecules-hint--playground",
+      "selector": ".y-hint",
+      "expect": {
+        "height": 24,
+        "paddingLeft": 8,
+        "paddingRight": 12,
+        "gap": 6,
+        "borderRadius": 32,
+        "fontSize": 12
+      }
+    },
+    {
+      "figma": "snackbar",
+      "story": "molecules-snackbar--playground",
+      "selector": ".y-snackbar",
+      "expect": {
+        "height": 56,
+        "paddingLeft": 20,
+        "gap": 12,
+        "borderRadius": 16
+      }
+    },
+    {
+      "figma": "stat-tile",
+      "story": "molecules-stattile--playground",
+      "selector": ".y-stat",
+      "expect": {
+        "height": 72,
+        "paddingLeft": 16,
+        "paddingTop": 12,
+        "gap": 4,
+        "borderRadius": 20
+      }
+    },
+    {
+      "figma": "empty-state · Title (H2)",
+      "story": "molecules-emptystate--playground",
+      "selector": ".y-empty .y-h2",
+      "expect": {
+        "fontSize": 24,
+        "lineHeight": 28,
+        "fontFamily": "Roboto Slab"
+      }
+    },
+    {
+      "figma": "empty-state",
+      "story": "molecules-emptystate--playground",
+      "selector": ".y-empty",
+      "expect": {
+        "gap": 8
+      }
+    },
+    {
+      "figma": "loading-state",
+      "story": "molecules-loadingstate--playground",
+      "selector": ".y-loading",
+      "expect": {
+        "gap": 8
+      }
+    },
+    {
+      "figma": "photo-tile",
+      "story": "molecules-phototile--playground",
+      "selector": ".y-photo-tile",
+      "expect": {
+        "width": 173,
+        "height": 173,
+        "paddingTop": 28,
+        "paddingLeft": 20,
+        "gap": 24,
+        "borderRadius": 20
+      }
+    },
+    {
+      "figma": "tab-bar",
+      "story": "organisms-bottomnav-tabbar--playground",
+      "selector": ".y-tab-bar",
+      "expect": {
+        "height": 56,
+        "paddingLeft": 4,
+        "gap": 3,
+        "borderRadius": 48
+      }
+    },
+    {
+      "figma": "tab-bar · вкладка",
+      "story": "organisms-bottomnav-tabbar--playground",
+      "selector": ".y-tab-bar__tab",
+      "expect": {
+        "height": 48,
+        "borderRadius": 32
+      }
+    },
+    {
+      "figma": "bottom-nav · FAB",
+      "story": "organisms-bottomnav-tabbar--playground",
+      "selector": ".y-bottom-nav__fab .y-icon-button",
+      "expect": {
+        "width": 56,
+        "height": 56
+      }
+    },
+    {
+      "figma": "bottom-nav · таб-бар при FAB",
+      "story": "organisms-bottomnav-tabbar--playground",
+      "selector": ".y-tab-bar",
+      "expect": {
+        "width": 290
+      }
+    },
+    {
+      "figma": "bottom-bar · Button XL",
+      "story": "organisms-bottombar--playground",
+      "selector": ".y-bottom-bar .y-button",
+      "expect": {
+        "height": 56
+      }
+    },
+    {
+      "figma": "header · Large (без полосы затухания)",
+      "story": "organisms-header--playground",
+      "selector": ".y-header",
+      "expect": {
+        "height": 118
+      }
+    },
+    {
+      "figma": "sheet",
+      "story": "organisms-sheet--playground",
+      "selector": ".y-sheet",
+      "expect": {
+        "paddingTop": 8,
+        "paddingLeft": 20,
+        "paddingBottom": 20,
+        "gap": 20,
+        "borderTopLeftRadius": 32
+      }
+    },
+    {
+      "figma": "sheet · handle",
+      "story": "organisms-sheet--playground",
+      "selector": ".y-sheet__handle",
+      "expect": {
+        "width": 48,
+        "height": 4,
+        "borderRadius": 4
+      }
+    },
+    {
+      "figma": "sheet · title (H3)",
+      "story": "organisms-sheet--playground",
+      "selector": ".y-sheet .y-h3",
+      "expect": {
+        "fontSize": 19,
+        "lineHeight": 24,
+        "fontFamily": "Roboto Slab"
+      }
+    },
+    {
+      "figma": "dialog · кнопки L",
+      "story": "organisms-dialog--playground",
+      "selector": ".y-sheet__footer .y-button",
+      "expect": {
+        "height": 52
+      }
+    },
+    {
+      "figma": "dialog · текст",
+      "story": "organisms-dialog--playground",
+      "selector": ".y-dialog__text",
+      "expect": {
+        "gap": 12
+      }
+    },
+    {
+      "figma": "item-card",
+      "story": "organisms-itemcard--playground",
+      "selector": ".y-item-card",
+      "expect": {
+        "width": 173,
+        "height": 172,
+        "borderRadius": 20
+      }
+    },
+    {
+      "figma": "product-card",
+      "story": "organisms-productcard--playground",
+      "selector": ".y-product-card",
+      "expect": {
+        "gap": 16
+      }
+    },
+    {
+      "figma": "product-card · meta",
+      "story": "organisms-productcard--playground",
+      "selector": ".y-product-card__meta",
+      "expect": {
+        "gap": 2
+      }
+    },
+    {
+      "figma": "product-card · бейдж скидки",
+      "story": "organisms-productcard--playground",
+      "selector": ".y-item-card__badge",
+      "expect": {
+        "top": 16,
+        "left": 16
+      }
+    },
+    {
+      "figma": "outfit-collage",
+      "story": "organisms-outfitcollage--playground",
+      "selector": ".y-collage",
+      "expect": {
+        "width": 353,
+        "height": 353,
+        "borderRadius": 20
+      }
+    },
+    {
+      "figma": "photo-area",
+      "story": "organisms-photoarea--playground",
+      "selector": ".y-photo-area",
+      "expect": {
+        "width": 353,
+        "height": 353,
+        "borderRadius": 20
+      }
+    },
+    {
+      "figma": "photo-area · кнопка",
+      "story": "organisms-photoarea--playground",
+      "selector": ".y-photo-area__add .y-icon-button",
+      "expect": {
+        "width": 48,
+        "height": 48
+      }
+    },
+    {
+      "figma": "photo-area · группа",
+      "story": "organisms-photoarea--playground",
+      "selector": ".y-photo-area__add",
+      "expect": {
+        "gap": 12
+      }
+    },
+    {
+      "figma": "weather-card",
+      "story": "organisms-weathercard--playground",
+      "selector": ".y-weather",
+      "expect": {
+        "paddingTop": 16,
+        "paddingLeft": 20,
+        "gap": 8,
+        "borderTopLeftRadius": 20,
+        "borderBottomLeftRadius": 8
+      }
+    },
+    {
+      "figma": "chat-bubble",
+      "story": "organisms-chatbubble--playground",
+      "selector": ".y-bubble",
+      "expect": {
+        "paddingTop": 16,
+        "paddingLeft": 20,
+        "maxWidth": 265,
+        "borderBottomLeftRadius": 8
+      }
+    },
+    {
+      "figma": "stylist-prompt-card",
+      "story": "organisms-stylistpromptcard--playground",
+      "selector": ".y-prompt-card",
+      "expect": {
+        "width": 173,
+        "height": 173,
+        "paddingLeft": 24,
+        "borderRadius": 32
+      }
+    },
+    {
+      "figma": "trip-card",
+      "story": "organisms-tripcard--playground",
+      "selector": ".y-trip-card",
+      "expect": {
+        "height": 210,
+        "paddingLeft": 16,
+        "gap": 4,
+        "borderRadius": 20
+      }
+    },
+    {
+      "figma": "bar-chart (Abstract-Palette)",
+      "story": "molecules-barchart--playground",
+      "selector": ".y-bar-chart",
+      "expect": {
+        "width": 353,
+        "height": 300,
+        "gap": 7
+      }
+    },
+    {
+      "figma": "bar-chart / bar",
+      "story": "molecules-barchart--playground",
+      "selector": ".y-bar-chart__bar",
+      "expect": {
+        "width": 65,
+        "paddingTop": 4,
+        "paddingLeft": 4,
+        "gap": 4,
+        "borderRadius": 24
+      }
+    },
+    {
+      "figma": "bar-chart / bar · пилюля",
+      "story": "molecules-barchart--playground",
+      "selector": ".y-bar-chart__cap",
+      "expect": {
+        "height": 44
+      }
+    },
+    {
+      "figma": "bar-chart / bar · число H2",
+      "story": "molecules-barchart--playground",
+      "selector": ".y-bar-chart__value",
+      "expect": {
+        "height": 44,
+        "fontSize": 24,
+        "lineHeight": 28,
+        "fontFamily": "Roboto Slab"
+      }
+    },
+    {
+      "figma": "Body · Inter 460",
+      "story": "atoms-button--playground",
+      "selector": ".y-button",
+      "expect": {
+        "fontWeight": 460
+      }
+    },
+    {
+      "figma": "outfit-collage · поле точек",
+      "story": "organisms-outfitcollage--playground",
+      "selector": ".y-collage",
+      "expect": {
+        "paddingLeft": 14,
+        "paddingTop": 14
+      }
+    },
+    {
+      "figma": "list-group · на всю ширину",
+      "story": "molecules-listgroup--playground",
+      "selector": ".y-list-group",
+      "expect": {
+        "width": 353
+      }
+    },
+    {
+      "figma": "weather-card · иконка",
+      "story": "organisms-weathercard--playground",
+      "selector": ".y-weather__temp .y-icon",
+      "expect": {
+        "width": 24,
+        "height": 24
+      }
+    }
   ]
 }
