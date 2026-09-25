@@ -22,6 +22,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run build-storybook
       - run: npx playwright-core install --with-deps chromium
+      - run: npm run contrast
       - name: QA (тени, края, спеки Figma, доступность, скриншоты)
         run: npm run qa
       - if: always()
