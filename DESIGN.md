@@ -174,9 +174,17 @@ Figma-файл: [YeetStyle 2.0](https://www.figma.com/design/1LAkot5WySMWhwiiFJq
 
 ### 6.1 Атомы
 
-#### `primary-buttons` — кнопка с текстом
+Во всех кнопках одна шкала размеров и один набор **семантических** стилей — имена по роли, а не по цвету (в тёмной теме «чёрная» кнопка уже светлая).
 
-Свойства: `Style`, `Size`, `Left Icon` (bool + swap), `Right Icon` (bool + swap), текст.
+| Style | Фон | Текст / иконка | Когда использовать |
+|---|---|---|---|
+| **Primary** | `blue` | `on-accent` | Главное действие экрана/sheet — одно на экран («Войти», «Применить», «Сохранить и выйти») |
+| **Secondary** | `black` | `white` | Сильное альтернативное действие («Войти с Apple») |
+| **Tertiary** | `light-grey` | `black` | Второстепенное действие («Сбросить», «Выйти»); невыбранный чипс |
+| **Inverse** | `white` | `black` | Кнопка на сером фоне; активный сегмент в segment-control |
+| **Ghost** | нет | `black` | Текстовая кнопка, неактивный сегмент |
+| **Soft** | `blue-10%` | `blue` | Выбранный чипс / опция |
+| **Destructive** | `red-10%` | `red` | Удаление и необратимые действия — **всегда** этот стиль |
 
 | Size | Высота | Паддинг по горизонтали | Gap иконка–текст |
 |---|---|---|---|
@@ -187,39 +195,21 @@ Figma-файл: [YeetStyle 2.0](https://www.figma.com/design/1LAkot5WySMWhwiiFJq
 
 Радиус 32 (капсула), текст — `Body`.
 
-| Style | Фон | Текст/иконка | Когда использовать |
-|---|---|---|---|
-| **Blue** | `blue` | `on-accent` | Главное действие экрана/sheet — одно на экран («Войти», «Применить», «Сохранить и выйти») |
-| **Black** | `black` | `white` | Сильное альтернативное действие («Войти с Apple») |
-| **Light Grey** | `light-grey` | `black` | Второстепенное действие («Сбросить», «Выйти»); невыбранный чипс |
-| **White** | `white` | `black` | Кнопка на сером фоне; активный сегмент в segment-control |
-| **Blue-10%** | `blue-10%` | `blue` | Выбранный чипс/опция |
-| **Red-10%** | `red-10%` | `red` | Деструктивное действие («Удалить») |
-| **Transparency** | нет | `black` | Текстовая кнопка, неактивный сегмент |
+#### `button` — кнопка с текстом
 
-#### `circle-button` — круглая иконочная кнопка
+Свойства: `Style`, `Size`, `Show Left Icon` / `Left Icon`, `Show Right Icon` / `Right Icon`, текст.
 
-Свойства: `Style`, `Size`, `Icon` (swap). Размеры 56 / 52 / 48 / 40 (XL/L/M/S), радиус 32.
+#### `icon-button` — круглая кнопка с иконкой
 
-| Style | Фон | Иконка |
-|---|---|---|
-| **Primary** | `blue` | `on-accent` |
-| **Secondary** | `black` | `white` |
-| **Tertiary** | `light-grey` | `black` |
-| **White** | `white` | `black` |
-| **Blue-10%** | `blue-10%` | `blue` |
-| **Attention** | `red-10%` | `red` |
-| **Transparency** | нет | `black` |
-
-Примеры: «Назад» (Tertiary), «Отправить» в чате и «+» (Primary), FAB (Primary XL + `shadow/floating`).
+Свойства: `Style`, `Size` (56 / 52 / 48 / 40), `Icon`. Примеры: «Назад» (Tertiary), «Отправить» и «+» (Primary), FAB (Primary XL + `shadow/floating`).
 
 #### `badge`
 
-Высота 24, паддинг 8, радиус 12, текст `Caption`. Цвета: `Red`, `Blue`, `Black`, `Grey`, `Light Grey`, `Transparency`. Текст: на `Red`/`Blue` — `on-accent`, на `Black`/`Grey` — `white`, на `Light Grey`/`Transparency` — `black`.
+Высота 24, паддинг 8, радиус 12, текст `Caption`. `Style`: Primary, Danger, Secondary, Muted, Tertiary, Ghost.
 
-#### `inner-state` — содержимое поля ввода
+#### `input-value` — содержимое поля ввода
 
-Свойства: `State`, `Color` (`Black` / `Blue` / `White` / `Red`), `Color Dot` (bool), текст. Высота 24, gap 12.
+Свойства: `State`, `Color` (`Black` / `Blue` / `White` / `Red`), `Show Color Dot`, текст. Высота 24, gap 12.
 
 | State | Каретка | Текст |
 |---|---|---|
@@ -228,58 +218,57 @@ Figma-файл: [YeetStyle 2.0](https://www.figma.com/design/1LAkot5WySMWhwiiFJq
 | **Typing** | есть, 100% | 100% |
 | **Text** | нет | 100% |
 
-`Color Dot` — свотч из `item-colors` перед текстом (выбор цвета вещи). `Red` — состояние ошибки.
+`Show Color Dot` — свотч из `item-colors` перед текстом (цвет вещи, чипсы цвета). `Red` — ошибка.
 
 #### Прочие атомы
 
 | Компонент | Спецификация |
 |---|---|
 | `divider` | Линия 1 px, `black-10%`, ширина контента |
-| `sheet / sheet-handle` | Зона 24, полоска 48 × 4, радиус 4, `light-grey` |
-| `snackbar` | 353 × 56, паддинг 20, радиус 16, фон `black`, текст `Body` `white`, опциональная иконка (по умолчанию `cross`) |
-| `system / status-bar` | 393 × 62 — только для макетов |
-| `system / keyboard` | 393 × 318 — только для макетов |
+| `sheet-handle` | Зона 24, полоска 48 × 4, радиус 4, `light-grey` |
+| `snackbar` | 353 × 56, паддинг 20, радиус 16, фон `black`, текст `Body` `white`; `Show Icon` / `Icon` (по умолчанию `cross`) |
+| `system / status-bar`, `system / keyboard` | Только для макетов |
 
 ### 6.2 Молекулы
 
 #### `input` — строка поля
 
-353 × 56, паддинг 12/20, gap 8. Состоит из левой и правой частей (`inner-state` + опциональные иконки) и опционального `Divider` снизу.
-Свойства: `Left Icon`, `Right Icon` (+ swap), `Left Text`, `Right Text`, `Divider`.
-Паттерны: поле ввода (только слева), «ключ — значение» (лейбл `grey` слева, значение + `chevron` справа), пароль (справа `eye`/`eye-off`).
+353 × 56, паддинг 12/20, gap 8. Свойства: `Show Left Icon` / `Left Icon`, `Show Right Icon` / `Right Icon`, `Show Left Value`, `Show Right Value`, `Show Divider`.
+По умолчанию — паттерн «ключ — значение»: лейбл `grey` слева, значение + `chevron-up-down` справа. Другие паттерны: поле ввода (только слева), пароль (справа `eye` / `eye-off`).
 
 #### `input-group` — группа полей
 
-Контейнер `light-grey` со слотом `Inputs` (вертикально, без промежутков, строки разделены `divider`).
-
-| Size | Высота строки | Радиус |
-|---|---|---|
-| XL | 56 | 20 |
-| L | 52 | 20 |
-| M | 48 | 24 |
-
-Пример: E-mail + Пароль на экране входа; атрибуты вещи в карточке.
+Контейнер `light-grey`, радиус **20** во всех размерах, слот `Inputs` (строки `input` с разделителями). `Size`: M 48 / L 52 / XL 56 на строку.
 
 #### `segment-control`
 
-353 × (56/52/48/40), паддинг 4, gap 4, радиус 32, фон `light-grey`. Слот `Buttons`: активный сегмент — `primary-buttons`/`circle-button` **White**, остальные — **Transparency**. Режим `Text ↔ Icon`: текстовые сегменты или иконочные.
-Пример: «Вещи / Образы / Вишлист» в Гардеробе.
+353 × (56/52/48/40), паддинг 4, gap 4, радиус 32, фон `light-grey`. Слот `Buttons`: активный сегмент — `button`/`icon-button` **Inverse**, остальные — **Ghost**. `Content`: Text | Icon. Пример: «Вещи / Образы / Вишлист».
 
-#### `pills group` — группа чипсов
+#### `chip-group` — группа чипсов
 
-Слот с gap 4: `circle-button` Primary S («+», добавить) + `primary-buttons` S (Light Grey — не выбран, Blue-10% — выбран). `Row=on` — перенос на новые строки, `Row=off` — одна строка с горизонтальным скроллом.
-Используется для фильтров, поводов, сезонов, стилей.
+Слот с gap 4: `icon-button` Primary S («+») + `button` S (**Tertiary** — не выбран, **Soft** — выбран). `Wrap=true` — перенос строк, `Wrap=false` — одна строка с горизонтальным скроллом. Фильтры, поводы, сезоны, стили, пол.
 
-#### `nav-group` — панель ввода с кнопками
+#### `input-bar` — панель ввода
 
-353 × 48: `circle-button` Tertiary M слева, `input-group` M по центру, `circle-button` Primary M справа (все три опциональны).
-Пример: поле сообщения ИИ-стилисту с кнопкой отправки; строка поиска.
+353 × 48: `icon-button` Tertiary M слева, `input-group` M, `icon-button` Primary M справа (`Show Left Button`, `Show Input`, `Show Right Button`). Чат со стилистом, поиск (в т.ч. поиск по странам в sheet).
+
+#### `list-item` — строка списка
+
+Высота 24, ширина FILL, gap 12, текст `Body`. Свойства: `Label`, `Icon`, `Show Trailing` / `Trailing`.
+
+| Type | State | Вид | Где |
+|---|---|---|---|
+| **Action** | Default | иконка + текст | Action sheet (создать образ, редактировать, удалить…) |
+| **Expandable** | Collapsed / Expanded | иконка + текст + `chevron-down` / `chevron-up` | Категории одежды |
+| **Radio** | Off / On | круг `light-grey` / `blue` с точкой `on-accent` + текст | Год рождения, страна (с флагом в `Trailing`) |
 
 ### 6.3 Организмы
 
 На странице Design System собраны как референсные фреймы (ещё не компоненты).
 
 #### Bottom Sheet (база для всех sheet'ов и диалогов)
+
+Собирается только из компонентов: `sheet-handle`, `list-item`, `chip-group` / `button`, `input-bar`. Кнопки внизу — пара `button` L 50/50: Tertiary + Primary (или Destructive + Primary).
 
 - Ширина 393, фон `white`, радиус **32 сверху**, 0 снизу.
 - Паддинг 8 / 20 / 20 / 20, вертикальный gap 20.
@@ -289,7 +278,7 @@ Figma-файл: [YeetStyle 2.0](https://www.figma.com/design/1LAkot5WySMWhwiiFJq
 | Тип | Содержимое | Примеры |
 |---|---|---|
 | **Action Sheet** | Список «иконка + `Body`» | Действия с вещью (создать образ, редактировать, архивировать, удалить), «Добавить в вишлист» |
-| **Filter Sheet** | `pills group` с одиночным/множественным выбором | Сезон, повод, теги, сортировка |
+| **Filter Sheet** | `chip-group` с одиночным/множественным выбором | Сезон, повод, теги, сортировка |
 | **Picker Sheet** | Раскрывающиеся строки (иконка категории + `chevron`) с чипсами подкатегорий + «Сбросить / Применить» | Категория, цвет (чипсы с `Color Dot`) |
 | **Range Sheet** | Гистограмма + двухточечный слайдер (`blue`) | Фильтр цены |
 | **Radio Sheet** | Список с круглым радио (выбрано — `blue`) | Год рождения, страна |
@@ -299,8 +288,8 @@ Figma-файл: [YeetStyle 2.0](https://www.figma.com/design/1LAkot5WySMWhwiiFJq
 #### Dialog
 
 Тот же контейнер, что у sheet: заголовок `H3`, описание `Body` `grey`, две кнопки в ряд 50/50 (XL).
-- **Подтверждение:** левая — Light Grey, правая — Blue (безопасное действие).
-- **Деструктивное:** «Удалить» — Red-10%, «Отменить» — Blue. **Безопасное действие всегда синее.**
+- **Подтверждение:** левая — `button` Tertiary, правая — Primary.
+- **Деструктивное:** действие — Destructive («Очистить», «Удалить»), отмена — Primary. **Безопасное действие всегда синее, опасное — всегда красное.**
 - **Сложный** (удаление аккаунта): + плитки со статистикой (`light-grey`, число `H2`).
 
 #### Snackbar / Toast
@@ -321,8 +310,8 @@ Figma-файл: [YeetStyle 2.0](https://www.figma.com/design/1LAkot5WySMWhwiiFJq
 #### Навигация
 
 - **Таб-бар** — плавающая капсула `white`, высота 56, радиус 48, паддинг 4, `shadow/floating`. 5 вкладок (иконки без подписей): **Сегодня** (`home`) · **Поиск** (`search-by-image`) · **Гардероб** (`wardrobe`) · **Стилист** (`ai`) · **Профиль**. Активная вкладка — подложка `light-grey`, радиус 32.
-- **FAB «+»** — `circle-button` Primary XL справа от таб-бара на экранах с добавлением (Гардероб, Вишлист).
-- **Назад** — `circle-button` Tertiary в левом верхнем углу.
+- **FAB «+»** — `icon-button` Primary XL справа от таб-бара на экранах с добавлением (Гардероб, Вишлист).
+- **Назад** — `icon-button` Tertiary в левом верхнем углу.
 
 ---
 
@@ -383,6 +372,10 @@ Figma-файл: [YeetStyle 2.0](https://www.figma.com/design/1LAkot5WySMWhwiiFJq
 6. ✅ Слои `left-inner-sate` / `right-inner-sate` → `…-inner-state`.
 7. ✅ Опечатка «Поиска по странам» → «Поиск по странам»; выравнивание шеврона в строке «Обувь» (Picker Sheet «Категория»).
 8. ✅ Текст на синем/красном в тёмной теме — новый токен `on-accent`.
+14. ✅ Организмы (sheets, диалоги, списки) были нарисованы «сырыми» фреймами — теперь из `button`, `list-item`, `input-bar`; хардкод `#F1F4FF` у выбранных чипсов заменён на Soft (`blue-10%`).
+15. ✅ Точка-свотч внутри текста всех кнопок (включённый `Show Color Dot`) — выключена.
+16. ✅ Выбранная радиокнопка рисовалась синим кругом со спрятанной иконкой `search` — теперь `list-item` Radio с точкой `on-accent`.
+17. ✅ Шевроны категорий брались из стороннего кита (`Icon / Chevron Left`, повёрнутый) — теперь `chevron-down` / `chevron-up` из своих иконок.
 9. ⏳ 4 фона коллажей с точечным паттерном (`Section / Content`, `Container / Content 02/03` в «Photo & Image Areas»/карточках) всё ещё привязаны к `light-grey` исходной коллекции — PATTERN-заливку нельзя перепривязать через API, нужно вручную в Figma.
 10. ⏳ Два разных «чёрных»: UI `#000000` vs `item-colors/black` `#1A1A2E` — оставлено как есть (цвет вещи ≠ цвет UI).
 11. ⏳ Скругление последней карточки в сетке Гардероба — 32 вместо 20 (экран флоу, не трогали).
@@ -394,8 +387,9 @@ Figma-файл: [YeetStyle 2.0](https://www.figma.com/design/1LAkot5WySMWhwiiFJq
 ## 10. Дорожная карта
 
 - [x] Заполнить Dark-режим
-- [ ] Выделить в компоненты: bottom sheet, dialog, таб-бар, карточка вещи/образа, list item, radio, слайдер
+- [x] Унифицировать компоненты: семантические стили, имена свойств, описания; list-item; организмы из компонентов
+- [ ] Выделить в компоненты: bottom sheet, dialog, таб-бар, карточка вещи/образа, слайдер цены, плитки «галерея / камера»
 - [ ] Перевести экраны флоу на компоненты и коллекцию 2.0
-- [ ] Состояния нажатия / disabled / loading для кнопок
+- [ ] Состояния нажатия / disabled / loading для кнопок (в макетах пока не встречаются)
 - [ ] Токены для теней, прозрачностей, длительностей анимаций (страница Animations)
 - [ ] Реализация токенов и атомов в коде + Code Connect
