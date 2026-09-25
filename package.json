@@ -1,0 +1,27 @@
+{
+  "name": "yeet-design-system",
+  "private": true,
+  "version": "0.3.0",
+  "type": "module",
+  "description": "YeetStyle design system: tokens, atoms, molecules, organisms, templates — with Storybook docs",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build -o storybook-static",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-docs": "^10.0.0",
+    "@storybook/react-vite": "^10.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "storybook": "^10.0.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.0.0"
+  }
+}

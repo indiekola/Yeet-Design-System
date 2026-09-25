@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Старт/Как пользоваться" />
+
+# Как пользоваться
+
+## Дизайнерам
+1. Собирайте экраны из компонентов страницы **Design System 2.0 (Claude)** в Figma — не отвязывайте инстансы.
+2. Цвета — только из коллекции **Yeet DS 2.0**; проверяйте экран в режиме Dark.
+3. Нужного варианта нет → сначала проверьте раздел «В флоу», потом предлагайте новый вариант компонента, а не локальную правку.
+4. Называйте экраны `Раздел / Экран / Состояние`: `Wardrobe / Items / Empty`.
+
+## Разработчикам
+
+```tsx
+import { Button, IconButton } from 'src/atoms';
+import { InputGroup, Field } from 'src/molecules';
+import { Header, BottomNav } from 'src/organisms';
+import { Screen } from 'src/templates';
+import 'src/tokens/tokens.css';
+
+<Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />}>
+  …
+</Screen>
+```
+
+- Тема: `document.documentElement.dataset.theme = 'dark'`.
+- В компонентах — **только семантические и компонентные токены** (`--color-*`, `--button-*`), никогда примитивы и hex.
+- Для iOS (SwiftUI) имена токенов и компонентов те же; таблица соответствий — в `DESIGN.md`.
+
+## Чек-лист нового компонента
+- [ ] Есть в Figma с вариантами и описанием, привязан к токенам Yeet DS 2.0
+- [ ] Реализован на своём атомарном уровне, использует только нижние уровни
+- [ ] Story: Playground, все варианты, «В флоу» с реальными текстами экранов
+- [ ] Проверен в светлой и тёмной теме
+- [ ] Тексты гендерно-нейтральные
+- [ ] Добавлен в `DESIGN.md`

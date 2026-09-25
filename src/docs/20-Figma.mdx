@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Процессы/Figma ↔ код" />
+
+# Figma ↔ код
+
+**Figma:** файл YeetStyle 2.0 → страница **Design System 2.0 (Claude)**, коллекция переменных **Yeet DS 2.0** (Light / Dark).
+Секции: 00 Обзор · 01 Foundations · 02 Actions · 03 Inputs · 04 Selection · 05 Navigation & scroll · 06 Overlays ·
+07 Content · 08 States · 09 System · 10 Screen patterns. Слева компонент, справа — «В флоу».
+
+## Переменные Figma → токены кода
+
+| Figma | Код |
+|---|---|
+| `ui-colors/white` | `--color-bg-canvas`, `--color-text-inverse` |
+| `ui-colors/elevated` | `--color-bg-elevated` |
+| `ui-colors/light-grey` | `--color-bg-subtle` |
+| `ui-colors/black` | `--color-text-primary`, `--color-bg-inverse` |
+| `ui-colors/grey` | `--color-text-secondary` |
+| `ui-colors/blue` | `--color-accent`, `--color-text-accent` |
+| `ui-colors/blue-10%` | `--color-accent-soft` |
+| `ui-colors/red` / `red-10%` | `--color-danger` / `--color-danger-soft` |
+| `ui-colors/on-accent` | `--color-text-on-accent` |
+| `ui-colors/black-10%` | `--color-border-subtle` |
+| `ui-colors/overlay` | `--color-bg-overlay` |
+| `item-colors/*` | `--yeet-item-*` |
+| `spaces/*` | `--space-*` |
+| эффект `shadow/floating` | `--shadow-floating` |
+
+## Свойства компонентов
+
+| Figma | Код |
+|---|---|
+| `button` · Style=Primary, Size=L | `<Button variant="primary" size="L">` |
+| `icon-button` · Style=Tertiary, Icon=more | `<IconButton variant="tertiary" icon="more" label="Ещё" />` |
+| `header` · Type=Bar, title-chip | `<Header type="bar" titleChip="Новая вещь" />` |
+| `bottom-nav` · FAB=true | `<BottomNav active="wardrobe" fab />` |
+| `sheet` · Footer=Buttons, Type=Panel | `<Sheet type="panel" footer={[…]}>` |
+| `dialog` · Tone=Destructive | `<Dialog tone="destructive" …>` |
+| `list-item` · Type=Radio, State=On | `<ListItem type="radio" checked />` |
+| `chip-group` · Wrap=true | `<ChipGroup wrap chips={…} />` |
+
+## Как вносить изменения
+1. Изменение в Figma (компонент или переменная) → запись в Changelog на странице.
+2. То же изменение в коде + story «В флоу».
+3. Обновить `DESIGN.md`.
+4. Storybook публикуется на GitHub Pages автоматически после пуша.

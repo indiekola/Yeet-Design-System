@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { AtomicMap } from './blocks';
+
+<Meta title="Старт/Атомарная система" />
+
+# Атомарная система
+
+Компоненты разложены по уровням **Atomic Design**. Каждый уровень собирается **только** из нижних — так изменения
+распространяются предсказуемо: поправили `Button` — обновились все чипсы, шапки, sheet и диалоги.
+
+<AtomicMap />
+
+## Правила уровней
+
+| Уровень | Может использовать | Не может |
+|---|---|---|
+| **Atoms** | токены | другие компоненты |
+| **Molecules** | атомы, токены | организмы, раскладку экрана |
+| **Organisms** | молекулы, атомы | знать, на каком экране они стоят |
+| **Templates** | организмы | реальные данные |
+| **Pages** | шаблоны + данные | новые стили — только компоненты |
+
+## Контекст в компонентах
+
+Компонент знает **роль**, а не **место**. Контекст передаётся через семантические свойства:
+
+- `variant="destructive"` вместо «красная кнопка»;
+- `Header type="search"` вместо «шапка экрана поиска»;
+- `Sheet type="panel"` вместо «белый блок с тенью на деталях вещи».
+
+Где и как компонент встречается в продукте — в разделе **«В флоу»** на странице каждого компонента
+и в Figma справа от компонента.
+
+## Соответствие Figma
+
+| Figma (Design System 2.0) | Код | Уровень |
+|---|---|---|
+| `button`, `icon-button`, `badge`, `avatar`, `divider` | `Button`, `IconButton`, `Badge`, `Avatar`, `Divider` | Atom |
+| `scroll-edge` | `ScrollEdge` | Atom |
+| `input` + `input-value`, `input-group`, `input-bar` | `Field`, `InputGroup`, `InputBar` | Molecule |
+| `segment-control`, `chip-group`, `list-item` | `SegmentControl`, `ChipGroup`, `ListItem` | Molecule |
+| `stat-tile`, `hint`, `snackbar`, `empty-state`, `loading-state`, `photo-tile` | одноимённые | Molecule |
+| `header`, `tab-bar`, `bottom-nav`, `bottom-bar` | `Header`, `TabBar`, `BottomNav`, `BottomBar` | Organism |
+| `sheet`, `dialog` | `Sheet`, `Dialog` | Organism |
+| `item-card`, `product-card`, `outfit-collage`, `photo-area`, `weather-card`, `chat-bubble` | одноимённые | Organism |
+| Screen patterns | `Screen` + Pages | Template / Page |

@@ -1,0 +1,182 @@
+/*
+ * Yeet Design System — tokens
+ *
+ * Three layers, each referencing only the layer below it:
+ *   1. Primitives  (--yeet-*)      raw values: the palette, the scale. Never used in components.
+ *   2. Semantic    (--color-*, …)  role-based: what a value is FOR. Themes swap these.
+ *   3. Component   (--button-*, …) per-component decisions built from semantic tokens.
+ *
+ * Figma: collection «Yeet DS 2.0» (Light / Dark). Mapping lives in src/tokens/tokens.ts.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Roboto+Slab:wght@380;400&display=swap');
+
+/* ───────────── 1. Primitives ───────────── */
+:root {
+  --yeet-blue-500: #0100f4;
+  --yeet-blue-300: #5b5bff;
+  --yeet-red-500: #ff4230;
+  --yeet-red-400: #ff5a4a;
+
+  --yeet-neutral-0: #ffffff;
+  --yeet-neutral-50: #f7f7f7;
+  --yeet-neutral-500: #777777;
+  --yeet-neutral-1000: #000000;
+
+  --yeet-graphite-50: #f5f5f7;
+  --yeet-graphite-400: #8e8e93;
+  --yeet-graphite-850: #26262b;
+  --yeet-graphite-900: #1a1a1e;
+  --yeet-graphite-950: #0f0f11;
+
+  /* Item colors — the colour of a garment, never UI */
+  --yeet-item-black: #1a1a2e;
+  --yeet-item-grey: #777777;
+  --yeet-item-white: #ffffff;
+  --yeet-item-purple: #6a00ff;
+  --yeet-item-pink: #d900ff;
+  --yeet-item-green: #00d08b;
+  --yeet-item-blue: #0100f4;
+  --yeet-item-yellow: #ffd000;
+  --yeet-item-orange: #ff8800;
+  --yeet-item-red: #ff4230;
+  --yeet-item-beige: #ffe1c7;
+  --yeet-item-brown: #c26547;
+
+  /* Spacing scale (4pt) */
+  --space-0: 0px;
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-52: 52px;
+  --space-56: 56px;
+  --space-64: 64px;
+  --space-72: 72px;
+
+  /* Radius */
+  --radius-xs: 4px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --radius-bar: 48px;
+  --radius-full: 999px;
+
+  /* Type */
+  --font-display: 'Roboto Slab', Georgia, serif;
+  --font-text: 'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Layout */
+  --screen-width: 393px;
+  --screen-height: 852px;
+  --screen-gutter: var(--space-20);
+  --status-bar-height: 62px;
+
+  /* Motion */
+  --motion-fast: 150ms;
+  --motion-base: 240ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ───────────── 2. Semantic — Light ───────────── */
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  /* Surfaces */
+  --color-bg-canvas: var(--yeet-neutral-0);        /* screen background            · Figma ui-colors/white      */
+  --color-bg-elevated: var(--yeet-neutral-0);      /* tab-bar, sheet, dialog, hint · Figma ui-colors/elevated   */
+  --color-bg-subtle: var(--yeet-neutral-50);       /* cards, inputs, tertiary      · Figma ui-colors/light-grey */
+  --color-bg-inverse: var(--yeet-neutral-1000);    /* snackbar, secondary button   · Figma ui-colors/black      */
+  --color-bg-overlay: rgb(0 0 0 / 0.4);            /* behind modal sheet           · Figma ui-colors/overlay    */
+
+  /* Content */
+  --color-text-primary: var(--yeet-neutral-1000);
+  --color-text-secondary: var(--yeet-neutral-500);
+  --color-text-inverse: var(--yeet-neutral-0);
+  --color-text-on-accent: var(--yeet-neutral-0);
+  --color-text-accent: var(--yeet-blue-500);
+  --color-text-danger: var(--yeet-red-500);
+
+  /* Lines */
+  --color-border-subtle: rgb(0 0 0 / 0.1);
+
+  /* Accent & feedback */
+  --color-accent: var(--yeet-blue-500);
+  --color-accent-soft: rgb(1 0 244 / 0.1);
+  --color-danger: var(--yeet-red-500);
+  --color-danger-soft: rgb(255 66 48 / 0.1);
+
+  /* Effects */
+  --shadow-floating: 0 8px 40px rgb(0 0 0 / 0.12);
+}
+
+/* ───────────── 2. Semantic — Dark ───────────── */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg-canvas: var(--yeet-graphite-950);
+  --color-bg-elevated: var(--yeet-graphite-900);
+  --color-bg-subtle: var(--yeet-graphite-850);
+  --color-bg-inverse: var(--yeet-graphite-50);
+  --color-bg-overlay: rgb(0 0 0 / 0.6);
+
+  --color-text-primary: var(--yeet-graphite-50);
+  --color-text-secondary: var(--yeet-graphite-400);
+  --color-text-inverse: var(--yeet-graphite-950);
+  --color-text-on-accent: var(--yeet-neutral-0);
+  --color-text-accent: var(--yeet-blue-300);
+  --color-text-danger: var(--yeet-red-400);
+
+  --color-border-subtle: rgb(245 245 247 / 0.12);
+
+  --color-accent: var(--yeet-blue-300);
+  --color-accent-soft: rgb(91 91 255 / 0.2);
+  --color-danger: var(--yeet-red-400);
+  --color-danger-soft: rgb(255 90 74 / 0.18);
+
+  --shadow-floating: 0 8px 40px rgb(0 0 0 / 0.5);
+}
+
+/* ───────────── 3. Component tokens ───────────── */
+:root {
+  --button-primary-bg: var(--color-accent);
+  --button-primary-fg: var(--color-text-on-accent);
+  --button-secondary-bg: var(--color-bg-inverse);
+  --button-secondary-fg: var(--color-text-inverse);
+  --button-tertiary-bg: var(--color-bg-subtle);
+  --button-tertiary-fg: var(--color-text-primary);
+  --button-inverse-bg: var(--color-bg-elevated);
+  --button-inverse-fg: var(--color-text-primary);
+  --button-ghost-bg: transparent;
+  --button-ghost-fg: var(--color-text-primary);
+  --button-soft-bg: var(--color-accent-soft);
+  --button-soft-fg: var(--color-text-accent);
+  --button-destructive-bg: var(--color-danger-soft);
+  --button-destructive-fg: var(--color-text-danger);
+
+  --card-bg: var(--color-bg-subtle);
+  --card-radius: var(--radius-lg);
+  --sheet-bg: var(--color-bg-elevated);
+  --sheet-radius: var(--radius-xl);
+  --tab-bar-bg: var(--color-bg-elevated);
+  --input-bg: var(--color-bg-subtle);
+}
+
+/* ───────────── Text styles (Figma: H1 · H2 · H3 · Body · Caption) ───────────── */
+.y-h1 { font: 380 32px/36px var(--font-display); letter-spacing: -1px; margin: 0; }
+.y-h2 { font: 400 24px/28px var(--font-display); letter-spacing: -0.4px; margin: 0; }
+.y-h3 { font: 400 19px/24px var(--font-display); letter-spacing: -0.3px; margin: 0; }
+.y-body { font: 500 14px/20px var(--font-text); margin: 0; }
+.y-caption { font: 400 12px/16px var(--font-text); margin: 0; }
+
+*, *::before, *::after { box-sizing: border-box; }

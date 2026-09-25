@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { SemanticColors, ItemColorPalette } from './blocks';
+import { Do, Dont } from './helpers';
+
+<Meta title="Foundations/Токены и семантика" />
+
+# Токены и семантика
+
+Три слоя. Каждый ссылается **только** на слой ниже.
+
+| Слой | Префикс | Пример | Кто использует |
+|---|---|---|---|
+| **1. Примитивы** | `--yeet-*` | `--yeet-blue-500: #0100F4` | только семантический слой |
+| **2. Семантика** | `--color-*`, `--space-*`, `--radius-*`, `--shadow-*` | `--color-accent: var(--yeet-blue-500)` | все компоненты |
+| **3. Компонентные** | `--button-*`, `--card-*`, `--sheet-*` | `--button-primary-bg: var(--color-accent)` | конкретный компонент |
+
+Почему так: имена **по роли**, а не по цвету. В Figma исторически было `ui-colors/black`, но в тёмной теме «чёрный» — светлый.
+`--color-bg-inverse` верен в обеих темах. Тема меняет **только** второй слой — компоненты не трогаются.
+
+## Семантические цвета
+Слева — светлая тема, справа — тёмная.
+
+<SemanticColors />
+
+## Цвета вещей
+Отдельная палитра для атрибута «цвет вещи»: фильтры, свотчи, точка в поле. Одинакова в обеих темах — это реальные цвета одежды.
+**Не использовать для интерфейса.**
+
+<ItemColorPalette />
+
+## Правила
+
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+  <Do>`background: var(--color-bg-subtle)` — роль понятна, тёмная тема работает</Do>
+  <Dont>`background: #F7F7F7` или `var(--yeet-neutral-50)` — ломается в тёмной теме</Dont>
+  <Do>Текст на синей кнопке — `--color-text-on-accent`</Do>
+  <Dont>Текст на синей кнопке — `--color-text-inverse` (в тёмной теме станет тёмным)</Dont>
+  <Do>Карточке погоды — `--color-bg-inverse`</Do>
+  <Dont>Использовать `--yeet-item-*` для кнопок и фонов</Dont>
+</div>

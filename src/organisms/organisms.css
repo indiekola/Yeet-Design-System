@@ -1,0 +1,86 @@
+/* ─── Organisms ─────────────────────────────────────────────────────── */
+
+/* Status bar (system, mockups only) */
+.y-status-bar { height: var(--status-bar-height); display: flex; align-items: center; justify-content: space-between; padding: 21px 24px 19px; color: var(--color-text-primary); font: 600 17px/22px -apple-system, 'SF Pro Text', var(--font-text); }
+.y-status-bar__icons { display: inline-flex; gap: 7px; align-items: center; }
+
+/* Header — fixed chrome with solid surface + fade edge below */
+.y-header { position: relative; z-index: 3; background: var(--color-bg-canvas); color: var(--color-text-primary); }
+.y-header__body { padding: var(--space-8) var(--screen-gutter) 0; display: flex; flex-direction: column; gap: var(--space-8); }
+.y-header__row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); min-height: 48px; }
+.y-header__row--bar > .y-header__side { width: 104px; display: flex; gap: var(--space-8); }
+.y-header__row--bar > .y-header__side--end { justify-content: flex-end; }
+.y-header__row--bar > .y-header__center { flex: 1; display: flex; justify-content: center; }
+.y-header__title-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); min-height: 48px; }
+.y-header__back-title { margin-top: var(--space-12); }
+
+/* Bottom chrome */
+.y-bottom-nav, .y-bottom-bar { position: relative; z-index: 3; background: var(--color-bg-canvas); display: flex; align-items: center; gap: 7px; padding: 0 var(--screen-gutter) var(--space-20); }
+.y-bottom-bar { gap: var(--space-8); padding-top: 0; }
+
+/* Tab bar */
+.y-tab-bar {
+  flex: 1; display: flex; gap: 3px; padding: var(--space-4); height: 56px;
+  background: var(--tab-bar-bg); border-radius: var(--radius-bar); box-shadow: var(--shadow-floating);
+}
+.y-tab-bar__tab {
+  flex: 1; display: grid; place-items: center; border: 0; border-radius: var(--radius-xl); background: transparent;
+  color: var(--color-text-primary); cursor: pointer;
+}
+.y-tab-bar__tab[aria-current='page'] { background: var(--color-bg-subtle); }
+.y-tab-bar__avatar { width: 22px; height: 22px; border: 1.5px solid currentColor; border-radius: 50%; display: grid; place-items: center; font: 400 12px/16px var(--font-text); }
+
+/* Sheet & Dialog */
+.y-sheet {
+  width: 100%; display: flex; flex-direction: column; gap: var(--space-20);
+  padding: var(--space-8) var(--screen-gutter) var(--space-20);
+  background: var(--sheet-bg); color: var(--color-text-primary);
+  border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
+}
+.y-sheet--panel { box-shadow: var(--shadow-floating); }
+.y-sheet__handle { align-self: center; width: 48px; height: 4px; border-radius: var(--radius-xs); background: var(--color-bg-subtle); }
+.y-sheet__footer { display: flex; gap: var(--space-8); }
+.y-sheet__footer > .y-button { flex: 1; }
+.y-dialog__text { display: flex; flex-direction: column; gap: var(--space-12); }
+.y-overlay { position: absolute; inset: 0; z-index: 5; background: var(--color-bg-overlay); display: flex; align-items: flex-end; }
+
+/* Cards */
+.y-item-card {
+  position: relative; aspect-ratio: 173 / 172; width: 100%; border-radius: var(--card-radius); background: var(--card-bg);
+  display: grid; place-items: center; overflow: hidden; color: var(--color-text-primary); border: 0; padding: 0; cursor: pointer;
+}
+.y-item-card__badge { position: absolute; top: var(--space-8); left: var(--space-8); }
+.y-item-card__check { position: absolute; top: var(--space-8); right: var(--space-8); }
+.y-item-card--selected { box-shadow: inset 0 0 0 2px var(--color-accent); }
+.y-item-art { display: grid; place-items: center; position: relative; }
+.y-item-art__dot { position: absolute; right: 4px; bottom: 4px; }
+.y-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8) 7px; }
+
+.y-product-card { display: flex; flex-direction: column; gap: var(--space-8); color: var(--color-text-primary); }
+.y-product-card__meta { display: flex; flex-direction: column; }
+
+.y-collage {
+  position: relative; width: 100%; aspect-ratio: 1; border-radius: var(--card-radius); overflow: hidden;
+  background-color: var(--card-bg);
+  background-image: radial-gradient(var(--color-border-subtle) 1px, transparent 1.2px);
+  background-size: 12px 12px;
+}
+.y-collage__item { position: absolute; transform: translate(-50%, -50%); }
+
+.y-photo-area {
+  position: relative; width: 100%; aspect-ratio: 1; border-radius: var(--card-radius); background: var(--card-bg);
+  display: grid; place-items: center; overflow: hidden; color: var(--color-text-primary);
+}
+.y-photo-area__add { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); font: 500 14px/20px var(--font-text); background: none; border: 0; color: inherit; cursor: pointer; }
+.y-photo-area__close { position: absolute; top: var(--space-12); right: var(--space-12); }
+
+.y-weather {
+  display: inline-flex; flex-direction: column; gap: var(--space-8); padding: var(--space-16) var(--space-20);
+  background: var(--color-bg-inverse); color: var(--color-text-inverse); border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--space-8);
+  box-shadow: var(--shadow-floating);
+}
+.y-weather__temp { display: flex; align-items: center; gap: var(--space-8); font: 400 24px/28px var(--font-display); }
+.y-weather .y-caption { opacity: 0.7; }
+
+.y-bubble { max-width: 265px; padding: var(--space-16) var(--space-20); background: var(--card-bg); color: var(--color-text-primary); border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--space-4); }
+.y-bubble--own { background: var(--color-accent); color: var(--color-text-on-accent); border-radius: var(--radius-lg) var(--radius-lg) var(--space-4) var(--radius-lg); margin-left: auto; }

@@ -1,0 +1,75 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from '.';
+import { Matrix, Usage, UsageGrid } from '../docs/helpers';
+
+const meta = {
+  title: 'Atoms/Button',
+  component: Button,
+  tags: ['autodocs'],
+  args: { children: 'Применить', variant: 'primary', size: 'L' },
+  argTypes: {
+    variant: { control: 'inline-radio', options: ['primary', 'secondary', 'tertiary', 'inverse', 'ghost', 'soft', 'destructive'] },
+    size: { control: 'inline-radio', options: ['S', 'M', 'L', 'XL'] },
+    leftIcon: { control: 'select', options: [undefined, 'plus', 'apple', 'heart', 'camera'] },
+    rightIcon: { control: 'select', options: [undefined, 'chevron-up-down', 'cross', 'external-link'] },
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: `Кнопка-капсула с текстом. Стили названы **по роли**, а не по цвету — в тёмной теме Secondary становится светлой, и имя остаётся верным.
+
+| Стиль | Когда | Пример из флоу |
+|---|---|---|
+| **primary** | Главное действие — одно на экран / sheet | «Войти», «Применить», «Начать бесплатно» |
+| **secondary** | Сильная альтернатива | «Войти с Apple» |
+| **tertiary** | Второстепенное действие, невыбранный чипс | «Сбросить», «Выйти», «Сортировка ⌄» |
+| **inverse** | Кнопка на сером фоне, активный сегмент | активная вкладка «Вещи» |
+| **ghost** | Текстовая кнопка | «Пропустить» |
+| **soft** | Выбранная опция / чипс | «Сначала дешевле ⌄» |
+| **destructive** | Удаление и необратимые действия — всегда | «Удалить», «Очистить» |
+
+Размеры: **S 40** (чипсы, фильтры) · **M 48** (шапка, пустые состояния) · **L 52** (пары в sheet и диалогах) · **XL 56** (главный CTA).`,
+      },
+    },
+  },
+} satisfies Meta<typeof Button>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {};
+
+export const Variants: Story = {
+  name: 'Все варианты',
+  render: () => (
+    <Matrix
+      rows={['primary', 'secondary', 'tertiary', 'inverse', 'ghost', 'soft', 'destructive']}
+      cols={['S', 'M', 'L', 'XL']}
+      render={(v, s) => (
+        <div style={{ background: v === 'inverse' ? 'var(--color-bg-subtle)' : undefined, padding: 4, borderRadius: 32 }}>
+          <Button variant={v as never} size={s as never}>Название</Button>
+        </div>
+      )}
+    />
+  ),
+};
+
+export const InFlow: Story = {
+  name: 'В флоу',
+  render: () => (
+    <UsageGrid min={240}>
+      <Usage screen="Onboarding / Welcome" note="главный CTA, на всю ширину"><Button size="XL" fullWidth>Начать бесплатно</Button></Usage>
+      <Usage screen="Auth / Sign In" note="вход"><Button size="XL" fullWidth>Войти</Button></Usage>
+      <Usage screen="Auth / Sign In" note="альтернативный вход"><Button variant="secondary" size="XL" leftIcon="apple" fullWidth>Войти с Apple</Button></Usage>
+      <Usage screen="Outfits / Empty Wardrobe"><Button size="L">Добавить вещь</Button></Usage>
+      <Usage screen="Onboarding / First Item" note="в шапке"><Button variant="ghost" size="M">Пропустить</Button></Usage>
+      <Usage screen="Search / No Results" note="в пустом состоянии"><Button variant="tertiary" size="M">Сбросить поиск</Button></Usage>
+      <Usage screen="Search / Results" note="фильтр-дропдаун"><Button variant="tertiary" size="S" rightIcon="chevron-up-down">Сортировка</Button></Usage>
+      <Usage screen="Search / Results" note="активный фильтр"><Button variant="soft" size="S" rightIcon="chevron-up-down">Сначала дешевле</Button></Usage>
+      <Usage screen="Wardrobe / Items" note="фильтр со счётчиком"><Button variant="soft" size="S" rightIcon="chevron-up-down">Категория · 2</Button></Usage>
+      <Usage screen="Outfit Creation / Criteria" note="тег"><Button variant="tertiary" size="S" rightIcon="cross">Тег #1</Button></Usage>
+      <Usage screen="Stylist / Outfit of the Day" note="плавающая над контентом"><Button variant="inverse" size="L" floating>Показать ещё</Button></Usage>
+      <Usage screen="Sheet · Category" note="пара действий"><div style={{ display: 'flex', gap: 8, width: '100%' }}><Button variant="tertiary" fullWidth>Сбросить</Button><Button fullWidth>Применить</Button></div></Usage>
+      <Usage screen="Dialog · Delete Account" note="деструктивное — всегда красное"><div style={{ display: 'flex', gap: 8, width: '100%' }}><Button variant="destructive" fullWidth>Удалить</Button><Button fullWidth>Отменить</Button></div></Usage>
+    </UsageGrid>
+  ),
+};

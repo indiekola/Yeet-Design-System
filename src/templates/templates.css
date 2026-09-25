@@ -1,0 +1,24 @@
+/* ─── Templates ─────────────────────────────────────────────────────── */
+
+.y-screen {
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  width: var(--screen-width); height: var(--screen-height); border-radius: 44px;
+  background: var(--color-bg-canvas); color: var(--color-text-primary);
+  box-shadow: 0 0 0 10px #111, 0 30px 80px rgb(0 0 0 / 0.25);
+  font-family: var(--font-text);
+}
+.y-screen__content {
+  flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  padding: var(--space-8) var(--screen-gutter) var(--space-24);
+  display: flex; flex-direction: column; gap: var(--space-16);
+}
+.y-screen__content::-webkit-scrollbar { display: none; }
+.y-screen__content--center { justify-content: center; }
+.y-screen__content--flush { padding-left: 0; padding-right: 0; }
+.y-screen__floating { position: absolute; left: var(--screen-gutter); right: var(--screen-gutter); z-index: 4; display: flex; justify-content: center; }
+
+/* Scroll edges appear only when content is actually underneath */
+.y-screen .y-scroll-edge { transition: opacity var(--motion-base) var(--ease-standard); }
+.y-screen:not([data-edge-top]) .y-header .y-scroll-edge,
+.y-screen:not([data-edge-bottom]) .y-bottom-nav .y-scroll-edge,
+.y-screen:not([data-edge-bottom]) .y-bottom-bar .y-scroll-edge { opacity: 0; }
