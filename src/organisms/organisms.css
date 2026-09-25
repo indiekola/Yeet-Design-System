@@ -126,3 +126,9 @@
 .y-canvas__item:active { cursor: grabbing; }
 .y-canvas__item.is-selected { box-shadow: 0 0 0 1.5px var(--color-accent); }
 .y-canvas__hint { position: absolute; left: var(--space-16); right: var(--space-16); bottom: var(--space-16); }
+
+/* Тени закреплённой навигации рисуются поверх полосы затухания (ScrollEdge — absolute и иначе перекрывает тень) */
+.y-bottom-nav > .y-tab-bar,
+.y-bottom-nav > .y-bottom-nav__fab,
+.y-bottom-bar > .y-button,
+.y-bottom-bar > .y-icon-button { position: relative; z-index: 1; }

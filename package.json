@@ -8,7 +8,8 @@
     "tokens": "node scripts/build-tokens.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "node scripts/build-tokens.mjs && storybook build -o storybook-static && node scripts/postbuild.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "qa": "node scripts/qa/run.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -17,9 +18,15 @@
   "devDependencies": {
     "@storybook/addon-docs": "^10.0.0",
     "@storybook/react-vite": "^10.0.0",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "axe-core": "^4.13.0",
+    "pixelmatch": "^7.2.0",
+    "playwright-core": "^1.63.0",
+    "pngjs": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "storybook": "^10.0.0",
     "typescript": "^5.9.0",
