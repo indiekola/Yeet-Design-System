@@ -45,6 +45,8 @@ Figma-файл: [YeetStyle 2.0](https://www.figma.com/design/1LAkot5WySMWhwiiFJq
 
 Имена токенов в коде должны повторять имена переменных Figma (с исправлением опечаток, см. §9).
 
+Значения токенов живут в **`tokens/tokens.json`** — единый источник для web, iOS (SwiftUI) и Android (Compose); `npm run tokens` генерирует `src/tokens/tokens.generated.css`, `tokens/ios/YeetTokens.swift`, `tokens/android/YeetTokens.kt`.
+
 В коде токены разложены на **три слоя** (`src/tokens/tokens.css`). Компоненты читают только семантический и компонентный слои — тема переключается одним атрибутом `data-theme="dark"`.
 
 | Слой | Префикс | Пример | Кто использует |

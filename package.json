@@ -5,8 +5,9 @@
   "type": "module",
   "description": "YeetStyle design system: tokens, atoms, molecules, organisms, templates — with Storybook docs",
   "scripts": {
+    "tokens": "node scripts/build-tokens.mjs",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build -o storybook-static && node scripts/postbuild.mjs",
+    "build-storybook": "node scripts/build-tokens.mjs && storybook build -o storybook-static && node scripts/postbuild.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

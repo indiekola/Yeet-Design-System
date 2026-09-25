@@ -65,8 +65,8 @@ export function LoadingState({ label }: { label: string }) {
 export function PhotoTile({ source, label, onClick }: { source: 'gallery' | 'camera'; label?: string; onClick?: () => void }) {
   return (
     <button type="button" className="y-photo-tile" onClick={onClick}>
-      <span className="y-photo-tile__art">
-        <Icon name={source === 'camera' ? 'camera' : 'collage'} />
+      <span className="y-photo-tile__art" aria-hidden>
+        <Icon name={source === 'camera' ? 'camera' : 'collage'} size={48} strokeWidth={1} />
       </span>
       {label ?? (source === 'camera' ? 'Сделать фото' : 'Выбрать из галереи')}
     </button>

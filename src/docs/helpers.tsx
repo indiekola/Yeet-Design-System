@@ -61,3 +61,11 @@ function Rule({ ok, children }: { ok?: boolean; children: ReactNode }) {
     </div>
   );
 }
+
+/** Декоратор: компонент во всю ширину колонки экрана (353) или экрана (393). */
+export const withWidth = (width: number) => (Story: () => ReactNode) => <div style={{ width }}><Story /></div>;
+
+/** Декоратор: sheet / dialog на затемнении, как на экране. */
+export const onOverlay = (Story: () => ReactNode) => (
+  <div style={{ width: 393, background: 'var(--color-bg-overlay)', paddingTop: 40, borderRadius: 24, overflow: 'hidden' }}><Story /></div>
+);

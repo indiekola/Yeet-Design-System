@@ -37,19 +37,33 @@ import { ComponentRegistry } from './blocks';
 
 ## Свойства компонентов
 
+Правило: **свойство Figma = пропс кода = параметр в iOS / Android**. Имена совпадают по смыслу, варианты — по значениям в нижнем регистре.
+
 | Figma | Код |
 |---|---|
-| `button` · Style=Primary, Size=L | `<Button variant="primary" size="L">` |
+| `button` · Style=Primary, Size=L, Left Icon | `<Button variant="primary" size="L" leftIcon="plus">` |
 | `icon-button` · Style=Tertiary, Icon=more | `<IconButton variant="tertiary" icon="more" label="Ещё" />` |
+| `stamp` · Tone, State=Done, Label, Icon | `<Stamp tone="primary" done label="Надеть" />` |
+| `badge` · Style=Danger, Label | `<Badge variant="danger">-10%</Badge>` |
+| `input-group` (слот Inputs) + `input` | `<InputGroup><Field label value trailingIcon /></InputGroup>` |
+| `segment-control` · Size=L, Content=Icon | `<SegmentControl size="L" segments={[{ value, icon }]} />` |
+| `list-group` (слот Rows) + `list-group / row` · Label, Trailing | `<ListGroup><ListItem label trailing /></ListGroup>` |
 | `header` · Type=Bar, title-chip | `<Header type="bar" titleChip="Новая вещь" />` |
 | `bottom-nav` · FAB=true | `<BottomNav active="wardrobe" fab />` |
-| `sheet` · Footer=Buttons, Type=Panel | `<Sheet type="panel" footer={[…]}>` |
+| `sheet` · Footer=Buttons, Type=Panel (слот Content) | `<Sheet type="panel" footer={[…]}>…</Sheet>` |
 | `dialog` · Tone=Destructive | `<Dialog tone="destructive" …>` |
-| `list-item` · Type=Radio, State=On | `<ListItem type="radio" checked />` |
-| `chip-group` · Wrap=true | `<ChipGroup wrap chips={…} />` |
+| `product-card` · Name, Price, Discount, Show Like | `<ProductCard name price discount liked />` |
+| `chat-bubble` · From=User, Text | `<ChatBubble from="user">…</ChatBubble>` |
+| `weather-card` · Temperature, Description, Icon | `<WeatherCard temperature="20°" description icon="sun" />` |
+| `trip-card` · Type=Add / Trip, City, Meta | `<TripCard add />` / `<TripCard city items outfits />` |
+| `carousel` · Title (слот Cards) | `<Carousel title>…</Carousel>` |
+| `bar-chart` из `bar-chart / bar` · Value, Icon | `<BarChart bars={[{ value, icon }]} />` |
+| `outfit-collage` (слот Items) | `<OutfitCollage items={[{ kind, x, y, src }]} />` |
+
+**Слоты.** Там, где содержимое меняется от экрана к экрану, в Figma слот, а в коде `children`: input-group, list-group, segment-control, chip-group, sheet, dialog, carousel, outfit-collage. Внутрь слота кладутся инстансы компонентов — их свойства настраиваются прямо в панели справа, без detach.
 
 ## Как вносить изменения
 1. Изменение в Figma (компонент или переменная) → запись в Changelog на странице.
-2. То же изменение в коде + story «В флоу».
+2. Токены — в `tokens/tokens.json`, затем `npm run tokens` (обновит CSS, Swift, Kotlin). Компоненты — в коде + story «В флоу».
 3. Обновить `DESIGN.md`.
 4. Storybook публикуется на GitHub Pages автоматически после пуша.

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useArgs } from 'storybook/preview-api';
 import { Stamp } from '.';
 import { Usage, UsageGrid } from '../docs/helpers';
 
@@ -6,7 +7,12 @@ const meta = {
   title: 'Atoms/Stamp',
   component: Stamp,
   tags: ['autodocs'],
-  args: { label: 'Надеть', tone: 'primary', size: 'L', done: false },
+  args: { label: 'Надеть', tone: 'primary', size: 'L', done: false, icon: 'arrows-shuffle' },
+  argTypes: {
+    tone: { control: 'inline-radio', options: ['primary', 'secondary'] },
+    size: { control: 'inline-radio', options: ['L', 'S'] },
+    icon: { control: 'select', options: ['arrows-shuffle', 'heart', 'plus'], if: { arg: 'size', eq: 'S' } },
+  },
   parameters: {
     docs: {
       description: {
@@ -19,7 +25,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Playground: Story = {};
+export const Playground: Story = {
+  render: function Render(args) {
+    const [, update] = useArgs();
+    return <Stamp {...args} onClick={() => update({ done: !args.done })} />;
+  },
+};
 
 export const InFlow: Story = {
   name: 'В флоу',

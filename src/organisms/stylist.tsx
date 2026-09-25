@@ -1,5 +1,4 @@
-import { Icon, IconButton } from '../atoms';
-import type { IconName } from '../icons/icons';
+import { IconButton } from '../atoms';
 import { plural } from '../utils/plural';
 import { CollageLayer, type CollageItem } from './cards';
 
@@ -21,10 +20,9 @@ export function OutfitThumbnail({ items, size = 138, onClick }: { items: Collage
  * Карточка-вход в сценарий стилиста 173×173, радиус 32: подпись снизу, иллюстрация сверху.
  * **Контексты:** Стилист — «Образ дня», «Конструктор», «Для поездки», «Чат со стилистом».
  */
-export function StylistPromptCard({ label, icon, onClick }: { label: string; icon?: IconName; onClick?: () => void }) {
+export function StylistPromptCard({ label, onClick }: { label: string; onClick?: () => void }) {
   return (
     <button type="button" className="y-prompt-card" onClick={onClick}>
-      {icon && <Icon name={icon} size={40} strokeWidth={1} />}
       <span className="y-body">{label}</span>
     </button>
   );

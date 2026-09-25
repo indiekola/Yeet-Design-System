@@ -46,6 +46,7 @@ const preview: Preview = {
           'Templates',
           'Pages',
           'Процессы',
+          ['Figma ↔ код', 'iOS и Android'],
         ],
       },
     },

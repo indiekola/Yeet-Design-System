@@ -51,7 +51,7 @@ export const Today: Story = {
       <ChipGroup chips={[{ label: 'На каждый день', selected: true }, { label: 'Работа' }, { label: 'Свидание' }, { label: 'Вечеринка' }]} />
       <div style={{ position: 'relative' }}>
         <OutfitCollage items={[{ kind: 'top', x: 68, y: 32, color: 'green' }, { kind: 'bottom', x: 30, y: 58, size: 140, color: 'green' }, { kind: 'accessories', x: 32, y: 20, size: 64 }, { kind: 'shoe', x: 70, y: 76, size: 80, color: 'brown' }]} />
-        <div style={{ position: 'absolute', top: -20, left: 16 }}><WeatherCard temp="20°" description="Солнечно, ветер 14 км/ч" /></div>
+        <div style={{ position: 'absolute', top: -20, left: 16 }}><WeatherCard temperature="20°" description="Солнечно, ветер 14 км/ч" /></div>
         <div style={{ position: 'absolute', right: -8, bottom: -40 }}><Stamp label="Надеть" /></div>
       </div>
     </Screen>
@@ -168,7 +168,7 @@ export const Stylist: Story = {
     <Screen header={<Header type="large" title="Стилист" />} bottom={<div style={{ padding: '0 20px 20px' }}><InputBar placeholder="Спроси у стилиста" trailing={{ icon: 'arrow-up', label: 'Отправить', variant: 'primary' }} /></div>}>
       <div style={{ flex: 1 }} />
       <ChatBubble>Привет! Я твой ИИ-стилист. Спрашивай про образы, сочетания и что надеть сегодня</ChatBubble>
-      <ChatBubble own>Что надеть на свидание вечером?</ChatBubble>
+      <ChatBubble from="user">Что надеть на свидание вечером?</ChatBubble>
       <LoadingState label="Собираю образы из твоих вещей…" />
     </Screen>
   ),
@@ -243,10 +243,10 @@ export const StylistHome: Story = {
   render: () => (
     <Screen header={<Header type="large" title="Стилист" />} bottom={<BottomNav active="stylist" />}>
       <Grid>
-        <StylistPromptCard label="Образ дня" icon="ai" />
-        <StylistPromptCard label="Конструктор" icon="collage" />
-        <StylistPromptCard label="Для поездки" icon="bag-check" />
-        <StylistPromptCard label="Чат со стилистом" icon="arrow-up" />
+        <StylistPromptCard label="Образ дня" />
+        <StylistPromptCard label="Конструктор" />
+        <StylistPromptCard label="Для поездки" />
+        <StylistPromptCard label="Чат со стилистом" />
       </Grid>
     </Screen>
   ),

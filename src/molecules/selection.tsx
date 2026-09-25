@@ -12,17 +12,16 @@ export type Segment = { value: string; label?: string; icon?: IconName };
  * Переключатель вкладок: активный сегмент — `inverse`, остальные — `ghost`.
  * **Контексты:** «Вещи / Образы / Вишлист» в Гардеробе, «Образы · 1 / Вещи» в поездке, режимы создания образа (иконки).
  */
-export function SegmentControl({ segments, value, onChange, size = 'L' }: { segments: Segment[]; value: string; onChange?: (v: string) => void; size?: ControlSize }) {
+export function SegmentControl({ segments, value, onChange, size = 'L', fit }: { segments: Segment[]; value: string; onChange?: (v: string) => void; size?: ControlSize; /** По ширине содержимого (вложенный переключатель «Вещи / Образы» в Вишлисте). */ fit?: boolean }) {
   return (
-    <div className="y-segment" role="tablist">
+    <div className={cx('y-segment', `y-segment--${size}`, fit && 'y-segment--fit')} role="tablist">
       {segments.map((s) => {
         const active = s.value === value;
         const common = { key: s.value, role: 'tab', 'aria-selected': active, onClick: () => onChange?.(s.value) } as const;
-        const inner = size === 'XL' ? 'L' : size === 'L' ? 'M' : size === 'M' ? 'S' : 'S';
         return s.icon && !s.label ? (
-          <IconButton {...common} icon={s.icon} label={s.value} size={inner} variant={active ? 'inverse' : 'ghost'} />
+          <IconButton {...common} icon={s.icon} label={s.value} size={size} variant={active ? 'inverse' : 'ghost'} />
         ) : (
-          <Button {...common} size={inner} variant={active ? 'inverse' : 'ghost'} leftIcon={s.icon}>
+          <Button {...common} size={size} variant={active ? 'inverse' : 'ghost'} leftIcon={s.icon}>
             {s.label}
           </Button>
         );

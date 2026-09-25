@@ -12,7 +12,7 @@
 
 ```
 src/
-  tokens/      3 слоя токенов: примитивы → семантика → компонентные, + движение (--motion-*)
+  tokens/      web-обёртка токенов; значения генерируются из ../tokens/tokens.json
   icons/       линейные иконки из Figma (icons.ts) и фирменная графика (brand.ts: логотип, звезда штампа)
   atoms/       icon.tsx      Icon, Logo
                button.tsx    Button, IconButton, Stamp
@@ -48,3 +48,13 @@ npm run build-storybook  # статическая сборка в storybook-stat
 
 Workflow `.github/workflows/storybook.yml` собирает Storybook и публикует на GitHub Pages при пуше в `main`
 или `claude/figma-access-ara4o8`. Один раз нужно включить Pages: **Settings → Pages → Source: GitHub Actions**.
+
+## Токены для iOS и Android
+
+`tokens/tokens.json` — единый источник значений (цвета light/dark, отступы, радиусы, типографика, тени, анимации).
+
+```bash
+npm run tokens   # → src/tokens/tokens.generated.css, tokens/ios/YeetTokens.swift, tokens/android/YeetTokens.kt
+```
+
+Как подключить в приложения — Storybook → «Процессы / iOS и Android».

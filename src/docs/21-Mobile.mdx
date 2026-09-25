@@ -1,0 +1,68 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Процессы/iOS и Android" />
+
+# iOS и Android
+
+Приложение нативное. Storybook — **эталонная реализация и спецификация**: каждый компонент здесь показывает поведение,
+размеры, состояния и контексты. Нативные компоненты повторяют его API и берут значения из общих токенов.
+
+## Один источник токенов
+
+```
+tokens/tokens.json          ← правим только здесь (или синхронизируем из Figma «Yeet DS 2.0»)
+        │  npm run tokens
+        ├── src/tokens/tokens.generated.css     web / Storybook
+        ├── tokens/ios/YeetTokens.swift          SwiftUI
+        └── tokens/android/YeetTokens.kt         Jetpack Compose
+```
+
+Что внутри: семантические цвета со светлой и тёмной темой, цвета вещей, шкала отступов, радиусы, 5 текстовых стилей,
+тень `floating`, анимации. Сгенерированные файлы руками не правятся.
+
+## iOS · SwiftUI
+
+Скопируйте `YeetTokens.swift` в проект, добавьте шрифты Roboto Slab и Inter в `Info.plist`.
+
+```swift
+Text("Гардероб")
+  .yeetText(YeetType.h1)
+  .foregroundStyle(YeetColor.textPrimary)
+
+RoundedRectangle(cornerRadius: YeetRadius.lg)
+  .fill(YeetColor.bgSubtle)          // тёмная тема — автоматически
+
+stamp.scaleEffect(isDone ? 0.53 : 1)
+  .rotationEffect(.degrees(isDone ? -60 : 0))
+  .animation(YeetMotion.stamp, value: isDone)   // та же пружина, что в Figma (Bouncy)
+```
+
+## Android · Jetpack Compose
+
+Скопируйте `YeetTokens.kt` в модуль (`package design.yeet.tokens`), шрифты — в `res/font`.
+
+```kotlin
+val colors = if (isSystemInDarkTheme()) YeetDarkColors else YeetLightColors
+val type = YeetTypography(display = FontFamily(Font(R.font.roboto_slab)), text = FontFamily(Font(R.font.inter)))
+
+Text("Гардероб", style = type.h1, color = colors.textPrimary)
+
+val scale by animateFloatAsState(if (done) 0.53f else 1f, animationSpec = YeetMotion.stamp())
+```
+
+## Анимации на платформах
+
+Пружины Figma (Gentle, Quick, Bouncy) заданы физикой: масса, жёсткость, демпфирование. SwiftUI (`interpolatingSpring`)
+и Compose (`spring(dampingRatio, stiffness)`) используют ту же модель, поэтому движение совпадает с прототипом один в один.
+В web эти же пружины переведены в CSS `linear()`.
+
+## Правила для нативных компонентов
+
+1. **Имена свойств — как в Figma и в Storybook.** `ChatBubble(from: .user)`, `WeatherCard(temperature:description:icon:)`,
+   `Button(variant: .primary, size: .l)`. Таблица соответствий — «Процессы / Figma ↔ код».
+2. **Слоты — через content-замыкания.** Sheet, Dialog, InputGroup, ListGroup, Carousel принимают `@ViewBuilder content`
+   (SwiftUI) или `content: @Composable () -> Unit` (Compose).
+3. **Цвета — только семантические** (`YeetColor.bgSubtle`), никогда примитивы или hex.
+4. **Размеры экрана.** Макеты — iPhone 393×852, поля 20. На Android те же значения в dp.
+5. **Системные элементы** (статус-бар, клавиатура, «хоум»-индикатор) — нативные, в дизайн-системе только для макетов.
+6. **Уменьшение движения.** iOS «Reduce Motion» и Android «Remove animations» — переходы мгновенные.
