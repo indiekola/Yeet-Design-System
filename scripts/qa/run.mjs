@@ -112,12 +112,15 @@ function audit() {
           const ar = a.getBoundingClientRect();
           // прокручиваемый контент, уехавший за край, — не обрезка тени
           if (r.left < ar.left - 1 || r.right > ar.right + 1 || r.top < ar.top - 1 || r.bottom > ar.bottom + 1) break;
-          const cut = Math.max(ar.left - halo.l, halo.r - ar.right, ar.top - halo.t, halo.b - ar.bottom);
           const gaps = [r.left - ar.left, ar.right - r.right, r.top - ar.top, ar.bottom - r.bottom];
           const cuts = [ar.left - halo.l, halo.r - ar.right, ar.top - halo.t, halo.b - ar.bottom];
+          // сторона контейнера совпадает с краем экрана устройства — тень и так уходит за экран
+          const dev = el.closest('.y-screen')?.getBoundingClientRect();
+          if (dev) [ar.left - dev.left, dev.right - ar.right, ar.top - dev.top, dev.bottom - ar.bottom].forEach((d, i) => { if (Math.abs(d) <= 1) cuts[i] = 0; });
           // поверхность, прижатая к краю (панель у низа экрана), — тень с этой стороны не видна по замыслу
           if (cuts.every((c, i) => c <= 2 || gaps[i] < 1)) break;
           const gap = Math.min(...gaps.filter((g, i) => cuts[i] > 2));
+          const cut = Math.max(...cuts);
           if (cut > 2) out.push([gap < blur / 5 - 1 ? 'error' : 'warn', 'тень обрезана', `${name(el)} внутри ${name(a)} (overflow ${as.overflowX}/${as.overflowY}), зазор ${Math.round(gap)}px при blur ${blur}`]);
           break;
         }
