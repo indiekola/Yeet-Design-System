@@ -36,6 +36,8 @@ public enum YeetColor {
     public static let textInverse = dynamic(UIColor(hex: 0xFFFFFF, alpha: 1), UIColor(hex: 0x0F0F11, alpha: 1))
     /// Текст и иконки на accent / danger · Figma ui-colors/on-accent
     public static let textOnAccent = dynamic(UIColor(hex: 0xFFFFFF, alpha: 1), UIColor(hex: 0xFFFFFF, alpha: 1))
+    /// Вторичный текст на inverse-поверхности: подпись в карточке погоды · Figma ui-colors/inverse-secondary
+    public static let textInverseSecondary = dynamic(UIColor(hex: 0xA7B3BF, alpha: 1), UIColor(hex: 0x5B6470, alpha: 1))
     /// Текст на danger (бейдж скидки) — белый в любом бренде · Figma ui-colors/white
     public static let textOnDanger = dynamic(UIColor(hex: 0xFFFFFF, alpha: 1), UIColor(hex: 0xFFFFFF, alpha: 1))
     /// Акцентный текст, выбранное · Figma ui-colors/blue-text

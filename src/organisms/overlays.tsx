@@ -22,7 +22,7 @@ export function Sheet({ title, type = 'modal', footer, children }: SheetProps) {
   return (
     <section className={cx('y-sheet', type === 'panel' && 'y-sheet--panel')} role={type === 'modal' ? 'dialog' : undefined} aria-label={title}>
       <span className="y-sheet__handle" aria-hidden />
-      {title && <h3 className="y-h3">{title}</h3>}
+      {title && (type === 'panel' ? <h2 className="y-h2 y-sheet__title">{title}</h2> : <h3 className="y-h3">{title}</h3>)}
       {children}
       {footer && (
         <div className="y-sheet__footer">
@@ -62,7 +62,8 @@ export function Dialog({ tone = 'default', title, description, cancel, confirm, 
       </div>
       {children}
       <div className="y-sheet__footer">
-        <Button variant={tone === 'destructive' ? 'destructive' : 'tertiary'} size="L" onClick={tone === 'destructive' ? onConfirm : onCancel}>
+        {/* флоу (Trash / Clear Confirmation): необратимое действие — серая кнопка слева, безопасная «Отмена» — primary справа */}
+        <Button variant="tertiary" size="L" onClick={tone === 'destructive' ? onConfirm : onCancel}>
           {tone === 'destructive' ? confirm : cancel}
         </Button>
         <Button variant="primary" size="L" onClick={tone === 'destructive' ? onCancel : onConfirm}>

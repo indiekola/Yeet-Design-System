@@ -28,7 +28,14 @@ export function Avatar({ size = 'M', initial, src, alt = '' }: AvatarProps) {
 /* ─── Divider ───────────────────────────────────────────────────────── */
 
 /** Разделитель 1px `--color-border-subtle`. */
-export function Divider({ className }: { className?: string }) {
+/** Линия-разделитель. С `label` — «— или —» между способами входа (флоу Auth / Sign In). */
+export function Divider({ label, className }: { label?: string; className?: string }) {
+  if (label)
+    return (
+      <div className={cx('y-divider-label', className)} role="separator">
+        <span className="y-caption">{label}</span>
+      </div>
+    );
   return <hr className={cx('y-divider', className)} />;
 }
 

@@ -44,9 +44,10 @@ export function Logo({ height = 32, className }: { height?: number; className?: 
 const weatherFiles = import.meta.glob<string>('../icons/weather/*.svg', { eager: true, query: '?url', import: 'default' });
 
 /** Цветные иконки погоды из Figma (Design System → weather-icons): день / ночь для ясно и переменной облачности. */
-export const weatherKinds = ['clear-day', 'clear-night', 'pcloudy-day', 'pcloudy-night', 'mcloudy', 'fog', 'rain', 'shower', 'tstorm', 'snow', 'windy'] as const;
+export const weatherKinds = ['sunny', 'clear-day', 'clear-night', 'pcloudy-day', 'pcloudy-night', 'mcloudy', 'fog', 'rain', 'shower', 'tstorm', 'snow', 'windy'] as const;
 export type Weather = (typeof weatherKinds)[number];
 export const weatherNames: Record<Weather, string> = {
+  sunny: 'Солнечно, облачка (главная)',
   'clear-day': 'Ясно', 'clear-night': 'Ясно, ночь', 'pcloudy-day': 'Переменная облачность', 'pcloudy-night': 'Переменная облачность, ночь',
   mcloudy: 'Облачно', fog: 'Туман', rain: 'Дождь', shower: 'Ливень', tstorm: 'Гроза', snow: 'Снег', windy: 'Ветрено',
 };

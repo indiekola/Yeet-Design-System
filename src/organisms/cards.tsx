@@ -40,19 +40,29 @@ export type ItemCardProps = {
   /** Режим выбора (создание образа): undefined — нет чекбокса. Figma: Selected. */
   selected?: boolean;
   onClick?: () => void;
+  /** Убрать вещь из образа: «×» 20 серым в правом верхнем углу (флоу Outfit Creation / Item Selection). */
+  onRemove?: () => void;
 };
 
 const kindNames: Record<Garment, string> = { top: 'Верх', bottom: 'Низ', outerwear: 'Верхняя одежда', shoe: 'Обувь', accessories: 'Аксессуары', container: 'Сумка' };
 
-export function ItemCard({ kind, color, image, name, discount, label, selected, onClick }: ItemCardProps) {
+export function ItemCard({ kind, color, image, name, discount, label, selected, onClick, onRemove }: ItemCardProps) {
   const a11y = [name ?? kindNames[kind], discount && `скидка ${discount}`, label].filter(Boolean).join(', ');
-  return (
+  const card = (
     <button type="button" className={cx('y-item-card', selected && 'y-item-card--selected')} onClick={onClick} aria-pressed={selected} aria-label={a11y}>
       <ItemArt kind={kind} color={color} src={image} size={image ? 138 : 88} />
       {discount && <Badge variant="danger" className="y-item-card__badge">{discount}</Badge>}
       {label && !discount && <Badge variant="secondary" className="y-item-card__badge">{label}</Badge>}
       {selected && <span className="y-item-card__check" aria-hidden><Icon name="check" size={16} strokeWidth={2} /></span>}
     </button>
+  );
+  if (!onRemove) return card;
+  // «×» — отдельная кнопка рядом с карточкой, не внутри неё (вложенные кнопки ломают доступность)
+  return (
+    <div className="y-item-card-wrap">
+      {card}
+      <button type="button" className="y-item-card__remove" aria-label={`Убрать: ${a11y}`} onClick={onRemove}><Icon name="cross" size={20} /></button>
+    </div>
   );
 }
 
@@ -123,16 +133,23 @@ export function PhotoArea({ kind, image, loading, onAdd, onRemove, children }: {
 }
 
 /** Карточка погоды на экране «Сегодня»: температура + описание. Плавающая, инвертированная. */
-export function WeatherCard({ temperature, description, icon = 'sun', weather }: { temperature: string; description: string; icon?: IconName; /** Цветная иконка погоды из Figma вместо линейной. */ weather?: Weather }) {
+export function WeatherCard({ temperature, description, weather = 'sunny', icon, alert, tilt }: { temperature: string; description: string; /** Цветная иконка погоды (как во флоу). */ weather?: Weather; /** Линейная иконка вместо цветной. */ icon?: IconName; /** Предупреждение второй строкой: «Через 1 час дождь, захвати зонт». */ alert?: string; /** Наклон 10° поверх коллажа (экран «Образы дня»). */ tilt?: boolean }) {
   return (
-    <div className="y-weather">
-      <span className="y-weather__temp">{weather ? <WeatherIcon kind={weather} /> : <Icon name={icon} />}{temperature}</span>
-      <span className="y-caption">{description}</span>
+    <div className={cx('y-weather', tilt && 'y-weather--tilt')}>
+      <span className="y-weather__temp">{icon ? <Icon name={icon} /> : <WeatherIcon kind={weather} />}{temperature}</span>
+      <span className="y-caption y-weather__desc">{description}{alert && <span className="y-weather__alert">{alert}</span>}</span>
     </div>
   );
 }
 
 /** Сообщение в чате со стилистом. `from="user"` — сообщение пользователя (blue, справа). Figma: chat-bubble · From. */
-export function ChatBubble({ from = 'stylist', children }: { from?: 'stylist' | 'user'; children: ReactNode }) {
-  return <div className={cx('y-bubble', 'y-body', from === 'user' && 'y-bubble--own')}>{children}</div>;
+export function ChatBubble({ from = 'stylist', avatar, children }: { from?: 'stylist' | 'user'; /** Аватар стилиста 64 слева, выровнен по низу (флоу Stylist / Home). */ avatar?: ReactNode; children: ReactNode }) {
+  const bubble = <div className={cx('y-bubble', 'y-body', from === 'user' && 'y-bubble--own')}>{children}</div>;
+  if (!avatar) return bubble;
+  return (
+    <div className="y-bubble-row">
+      <span className="y-bubble-row__avatar" aria-hidden>{avatar}</span>
+      {bubble}
+    </div>
+  );
 }

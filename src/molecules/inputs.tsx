@@ -70,19 +70,26 @@ export type InputBarProps = {
   fieldIcon?: IconName;
   leading?: BarAction;
   trailing?: BarAction;
+  /** Чат со стилистом: кнопка отправки 44 внутри поля (primary, когда есть текст), поле 52 на подложке с тенью. */
+  send?: { label: string; onClick?: () => void };
+  /** L — 52 (поле поиска на экране), по умолчанию 48 (в шапке). */
+  size?: 'M' | 'L';
 };
 
 /**
  * Панель ввода: [кнопка] поле [кнопка].
  * **Контексты:** поиск («Назад» + поле + поиск по фото), чат со стилистом (поле + «Отправить» Primary), поиск по гардеробу.
  */
-export function InputBar({ placeholder, value, onChange, fieldIcon, leading, trailing }: InputBarProps) {
+export function InputBar({ placeholder, value, onChange, fieldIcon, leading, trailing, send, size = 'M' }: InputBarProps) {
   return (
-    <div className="y-input-bar">
+    <div className={cx('y-input-bar', send && 'y-input-bar--chat', size === 'L' && 'y-input-bar--l')}>
       {leading && <IconButton icon={leading.icon} label={leading.label} variant={leading.variant ?? 'tertiary'} onClick={leading.onClick} />}
       <label className="y-input-bar__field">
         {fieldIcon && <Icon name={fieldIcon} />}
         <input className="y-field__input" placeholder={placeholder} value={value} onChange={(e) => onChange?.(e.target.value)} readOnly={!onChange} />
+        {/* флоу Search / Text / Results: очистка «×» 20 серым, пока в поле есть текст */}
+        {value && !send && <button type="button" className="y-input-bar__clear" aria-label="Очистить" onClick={() => onChange?.('')}><Icon name="cross" size={20} /></button>}
+        {send && <IconButton className="y-input-bar__send" icon="arrow-up" label={send.label} variant={value ? 'primary' : 'tertiary'} size="S" onClick={send.onClick} disabled={!value} />}
       </label>
       {trailing && <IconButton icon={trailing.icon} label={trailing.label} variant={trailing.variant ?? 'tertiary'} onClick={trailing.onClick} />}
     </div>

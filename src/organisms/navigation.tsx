@@ -11,8 +11,8 @@ import { StatusBar } from './system';
 type Action = { icon: IconName; label: string; onClick?: () => void };
 
 export type HeaderProps =
-  | { type: 'large'; title: string; subtitle?: string; action?: Action }
-  | { type: 'bar'; titleChip?: string; /** Вместо чипа: шаги создания образа (`SegmentControl` S с иконками). */ center?: ReactNode; /** Появляется по центру, когда контент прокручен (Screen → data-collapsed): миниатюра фото вещи или образа. */ centerOnScroll?: ReactNode; onBack?: () => void; actions?: Action[] }
+  | { type: 'large'; title: string; subtitle?: ReactNode; /** Вторая строка H1 акцентом с раскрывашкой: «на каждый день ⌃» (выбор повода на главной). */ accent?: { label: string; onClick?: () => void }; action?: Action }
+  | { type: 'bar'; /** Заголовок простым текстом по центру (Настройки). */ title?: string; titleChip?: string; /** Вторая строка в пилюле заголовка: «8–13 сент · 5 ночей». */ titleChipSub?: string; /** Вместо чипа: шаги создания образа (`SegmentControl` S с иконками). */ center?: ReactNode; /** Появляется по центру, когда контент прокручен (Screen → data-collapsed): миниатюра фото вещи или образа. */ centerOnScroll?: ReactNode; onBack?: () => void; actions?: Action[] }
   | { type: 'back'; title: string; onBack?: () => void; textAction?: { label: string; onClick?: () => void } }
   | { type: 'search'; query?: string; placeholder?: string; onBack?: () => void; onQueryChange?: (v: string) => void; filters?: Chip[] };
 
@@ -40,6 +40,12 @@ export function Header(props: HeaderProps) {
               <span className="y-header__pill" aria-hidden>{props.title}</span>
               {props.action && <IconButton icon={props.action.icon} label={props.action.label} onClick={props.action.onClick} />}
             </div>
+            {props.accent && (
+              <button type="button" className="y-header__accent y-h1" onClick={props.accent.onClick}>
+                {props.accent.label}
+                <Icon name="chevron-up-down" size={20} />
+              </button>
+            )}
             {props.subtitle && <p className="y-body y-text--secondary">{props.subtitle}</p>}
           </>
         )}
@@ -49,7 +55,7 @@ export function Header(props: HeaderProps) {
               <IconButton icon="chevron-left" label="Назад" onClick={props.onBack} />
             </div>
             <div className="y-header__center">
-              {props.center ?? (props.titleChip && <Button variant="tertiary" size="M" tabIndex={-1}>{props.titleChip}</Button>)}
+              {props.center ?? (props.titleChip ? (props.titleChipSub ? <span className="y-header__chip2"><span className="y-body">{props.titleChip}</span><span className="y-caption y-text--secondary">{props.titleChipSub}</span></span> : <Button variant="tertiary" size="M" tabIndex={-1}>{props.titleChip}</Button>) : props.title && <span className="y-body">{props.title}</span>)}
               {props.centerOnScroll && <span className="y-header__on-scroll" aria-hidden>{props.centerOnScroll}</span>}
             </div>
             <div className="y-header__side y-header__side--end">
@@ -79,7 +85,7 @@ export function Header(props: HeaderProps) {
               onChange={props.onQueryChange}
               fieldIcon="search"
               leading={{ icon: 'chevron-left', label: 'Назад', onClick: props.onBack }}
-              trailing={{ icon: 'search-by-image', label: 'Поиск по фото' }}
+              trailing={{ icon: 'image-add', label: 'Поиск по фото' }}
             />
             {props.filters && <ChipGroup chips={props.filters.map((f) => ({ ...f, dropdown: true }))} />}
           </>
@@ -142,10 +148,24 @@ export function BottomBar({ label, onClick, secondary, disabled }: { label: stri
   return (
     <div className="y-bottom-bar">
       <ScrollEdge position="bottom" size={24} />
-      <Button variant="primary" size="XL" fullWidth onClick={onClick} disabled={disabled}>
+      <Button variant="primary" size="L" fullWidth onClick={onClick} disabled={disabled}>
         {label}
       </Button>
-      {secondary && <IconButton icon={secondary.icon} label={secondary.label} variant="secondary" size="XL" onClick={secondary.onClick} />}
+      {secondary && <IconButton icon={secondary.icon} label={secondary.label} variant="secondary" size="L" onClick={secondary.onClick} />}
+    </div>
+  );
+}
+
+/**
+ * Нижняя панель стилиста (флоу Stylist / Catalog, Home): белая подложка со скруглением 32 сверху и тенью,
+ * хэндл, поле «Спроси у стилиста» и таб-бар.
+ */
+export function StylistDock({ value, onChange, active = 'stylist', onTabChange }: { value?: string; onChange?: (v: string) => void; active?: Tab; onTabChange?: (t: Tab) => void }) {
+  return (
+    <div className="y-dock">
+      <span className="y-sheet__handle" aria-hidden />
+      <InputBar placeholder="Спроси у стилиста" value={value} onChange={onChange} send={{ label: 'Отправить' }} />
+      <TabBar active={active} onChange={onTabChange} />
     </div>
   );
 }

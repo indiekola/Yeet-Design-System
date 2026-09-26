@@ -42,6 +42,8 @@ data class YeetColorScheme(
     val textInverse: Color,
     /** Текст и иконки на accent / danger · Figma ui-colors/on-accent */
     val textOnAccent: Color,
+    /** Вторичный текст на inverse-поверхности: подпись в карточке погоды · Figma ui-colors/inverse-secondary */
+    val textInverseSecondary: Color,
     /** Текст на danger (бейдж скидки) — белый в любом бренде · Figma ui-colors/white */
     val textOnDanger: Color,
     /** Акцентный текст, выбранное · Figma ui-colors/blue-text */
@@ -75,6 +77,7 @@ val YeetLightColors = YeetColorScheme(
     textSecondary = Color(0xFF6E6E6E),
     textInverse = Color(0xFFFFFFFF),
     textOnAccent = Color(0xFFFFFFFF),
+    textInverseSecondary = Color(0xFFA7B3BF),
     textOnDanger = Color(0xFFFFFFFF),
     textAccent = Color(0xFF0100F4),
     textDanger = Color(0xFFCC291B),
@@ -97,6 +100,7 @@ val YeetDarkColors = YeetColorScheme(
     textSecondary = Color(0xFF8E8E93),
     textInverse = Color(0xFF0F0F11),
     textOnAccent = Color(0xFFFFFFFF),
+    textInverseSecondary = Color(0xFF5B6470),
     textOnDanger = Color(0xFFFFFFFF),
     textAccent = Color(0xFF8A8AFF),
     textDanger = Color(0xFFFF6B5C),

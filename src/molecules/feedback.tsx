@@ -17,10 +17,15 @@ export function Hint({ icon = 'fingers-pinch', children }: { icon?: IconName; ch
 /* ─── Snackbar ──────────────────────────────────────────────────────── */
 
 /** Тост-подтверждение над нижней навигацией. Инвертированный фон, исчезает сам. */
-export function Snackbar({ children, onClose }: { children: ReactNode; onClose?: () => void }) {
+export function Snackbar({ children, onClose, onUndo }: { children: ReactNode; onClose?: () => void; /** «Отменить» — изогнутая стрелка справа (флоу: «Вещь перемещена в архив»). */ onUndo?: () => void }) {
   return (
     <div className="y-snackbar" role="status">
       <span>{children}</span>
+      {onUndo && (
+        <button type="button" aria-label="Отменить" onClick={onUndo}>
+          <Icon name="undo" />
+        </button>
+      )}
       {onClose && (
         <button type="button" aria-label="Закрыть" onClick={onClose}>
           <Icon name="cross" />
@@ -33,10 +38,10 @@ export function Snackbar({ children, onClose }: { children: ReactNode; onClose?:
 /* ─── EmptyState ────────────────────────────────────────────────────── */
 
 /** Пустое состояние и «ничего не найдено». Ставится по центру свободной области экрана. */
-export function EmptyState({ title, description, action }: { title: string; description: string; action?: { label: string; onClick?: () => void } }) {
+export function EmptyState({ title, description, action }: { title: string; description: ReactNode; action?: { label: string; onClick?: () => void } }) {
   return (
     <div className="y-empty">
-      <h2 className="y-h2 y-text--primary">{title}</h2>
+      <h2 className="y-h1 y-text--primary">{title}</h2>
       <p className="y-body y-text--secondary">{description}</p>
       {action && (
         <Button variant="tertiary" size="M" onClick={action.onClick}>
@@ -68,7 +73,7 @@ export function PhotoTile({ source, label, onClick }: { source: 'gallery' | 'cam
       <span className="y-photo-tile__art" aria-hidden>
         <Icon name={source === 'camera' ? 'camera' : 'collage'} size={48} strokeWidth={1} />
       </span>
-      {label ?? (source === 'camera' ? 'Сделать фото' : 'Выбрать из галереи')}
+      {label ?? (source === 'camera' ? <>Сделать<br />фото</> : <>Выбрать<br />из галереи</>)}
     </button>
   );
 }

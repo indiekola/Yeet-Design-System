@@ -111,12 +111,12 @@
       }
     },
     {
-      "figma": "input-bar · поле (input-group M)",
+      "figma": "input-bar · поле (флоу: капсула)",
       "story": "molecules-inputbar--playground",
       "selector": ".y-input-bar__field",
       "expect": {
         "height": 48,
-        "borderRadius": 20
+        "borderRadius": 32
       }
     },
     {
@@ -147,12 +147,12 @@
       }
     },
     {
-      "figma": "chip-group · чипс (button S)",
+      "figma": "chip-group · чипс (флоу: 40, отступ 16)",
       "story": "molecules-chipgroup--playground",
       "selector": ".y-chip-group .y-button",
       "expect": {
         "height": 40,
-        "paddingLeft": 12
+        "paddingLeft": 16
       }
     },
     {
@@ -179,14 +179,14 @@
       }
     },
     {
-      "figma": "snackbar",
+      "figma": "snackbar (флоу Toast: 52, r12)",
       "story": "molecules-snackbar--playground",
       "selector": ".y-snackbar",
       "expect": {
-        "height": 56,
+        "height": 52,
         "paddingLeft": 20,
         "gap": 12,
-        "borderRadius": 16
+        "borderRadius": 12
       }
     },
     {
@@ -202,12 +202,12 @@
       }
     },
     {
-      "figma": "empty-state · Title (H2)",
+      "figma": "empty-state · Title (флоу: H1)",
       "story": "molecules-emptystate--playground",
-      "selector": ".y-empty .y-h2",
+      "selector": ".y-empty .y-h1",
       "expect": {
-        "fontSize": 24,
-        "lineHeight": 28,
+        "fontSize": 32,
+        "lineHeight": 36,
         "fontFamily": "Roboto Slab"
       }
     },
@@ -216,7 +216,7 @@
       "story": "molecules-emptystate--playground",
       "selector": ".y-empty",
       "expect": {
-        "gap": 8
+        "gap": 16
       }
     },
     {
@@ -278,19 +278,19 @@
       }
     },
     {
-      "figma": "bottom-bar · Button XL",
+      "figma": "bottom-bar · Button L (флоу: 52, y780)",
       "story": "organisms-bottombar--playground",
       "selector": ".y-bottom-bar .y-button",
       "expect": {
-        "height": 56
+        "height": 52
       }
     },
     {
-      "figma": "header · Large (без полосы затухания)",
+      "figma": "header · Large без кнопки (флоу: заголовок y70, шапка 106)",
       "story": "organisms-header--playground",
       "selector": ".y-header",
       "expect": {
-        "height": 118
+        "height": 106
       }
     },
     {
@@ -437,22 +437,24 @@
       }
     },
     {
-      "figma": "stylist-prompt-card",
+      "figma": "stylist-prompt-card (флоу Catalog: половина)",
       "story": "organisms-stylistpromptcard--playground",
       "selector": ".y-prompt-card",
       "expect": {
         "width": 173,
-        "height": 173,
-        "paddingLeft": 24,
-        "borderRadius": 32
+        "height": 220,
+        "paddingLeft": 20,
+        "paddingTop": 20,
+        "gap": 8,
+        "borderRadius": 20
       }
     },
     {
-      "figma": "trip-card",
+      "figma": "trip-card (флоу Trips: 220)",
       "story": "organisms-tripcard--playground",
       "selector": ".y-trip-card",
       "expect": {
-        "height": 210,
+        "height": 220,
         "paddingLeft": 16,
         "gap": 4,
         "borderRadius": 20
@@ -525,9 +527,9 @@
       }
     },
     {
-      "figma": "weather-card · иконка",
+      "figma": "weather-card · цветная иконка 24 (флоу)",
       "story": "organisms-weathercard--playground",
-      "selector": ".y-weather__temp .y-icon",
+      "selector": ".y-weather__temp .y-weather-icon",
       "expect": {
         "width": 24,
         "height": 24

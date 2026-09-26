@@ -9,8 +9,9 @@
 }
 .y-screen__content {
   flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
-  padding: var(--space-8) var(--screen-gutter) var(--space-24);
-  display: flex; flex-direction: column; gap: var(--space-16);
+  /* Figma (флоу): контент начинается на 20 ниже шапки, блоки идут с шагом 20 */
+  padding: var(--space-20) var(--screen-gutter) var(--space-24);
+  display: flex; flex-direction: column; gap: var(--space-20);
 }
 .y-screen__content::-webkit-scrollbar { display: none; }
 /* Контент скроллится, а не сжимается: иначе segment-control и кнопки сплющиваются по высоте */
@@ -31,9 +32,9 @@
 
 /* Липкая полоса фильтров (Sticky): прижимается под шапку; content padding-top 8 → top −8 */
 .y-sticky {
-  /* top −8: sticky отсчитывается от content-box, а у контента padding-top 8; z-index над затуханием шапки */
-  position: sticky; top: calc(var(--space-8) * -1); z-index: 4; flex-shrink: 0;
-  margin: calc(var(--space-8) * -1) calc(var(--screen-gutter) * -1) 0; padding: var(--space-8) var(--screen-gutter);
+  /* top −20: sticky отсчитывается от content-box, а у контента padding-top 20; z-index над затуханием шапки */
+  position: sticky; top: calc(var(--space-20) * -1); z-index: 4; flex-shrink: 0;
+  margin: calc(var(--space-8) * -1) calc(var(--screen-gutter) * -1) 0; padding: var(--space-8) var(--screen-gutter) 0;
   background: var(--color-bg-canvas); display: flex; flex-direction: column; gap: var(--space-16);
 }
 .y-sticky::after {
@@ -42,3 +43,15 @@
 }
 .y-screen[data-collapsed] .y-sticky::after { opacity: 1; }
 .y-screen__content--flush .y-sticky { margin-left: 0; margin-right: 0; }
+
+/* Пара блоков, идущих вплотную (группы в Настройках): 8 вместо шага экрана 20 */
+.y-stack-8 { display: flex; flex-direction: column; gap: var(--space-8); }
+/* Подвал Настроек (Figma: логотип 40 серым, ссылки и версия Caption, «Удалить аккаунт») */
+.y-settings-footer { display: flex; flex-direction: column; align-items: center; gap: var(--space-12); color: var(--color-text-secondary); text-align: center; padding-bottom: var(--space-20); }
+.y-settings-footer .y-caption { margin: 0; }
+.y-settings-footer .y-button { margin-top: var(--space-20); }
+/* Юридическая подпись внизу экрана входа: 3 строки по центру, ссылки подчёркнуты */
+.y-legal { margin: auto 0 0; text-align: center; }
+.y-legal a { color: inherit; text-decoration: underline; text-underline-offset: 2px; display: inline-block; padding: 4px 0; margin: -4px 0; }
+/* Панель последним блоком на flush-экране доходит до низа экрана */
+.y-screen__content--flush:has(> .y-sheet--panel:last-child) { padding-bottom: 0; }

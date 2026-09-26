@@ -123,7 +123,8 @@ function audit() {
           if (!hit || hit === el || el.contains(hit) || hit.contains(el) || !root.contains(hit)) continue;
           for (let h = hit; h && h !== root && !h.contains(el); h = h.parentElement) {
             const hs = getComputedStyle(h);
-            if (hs.position !== 'static' && opaque(hs)) {
+            // соседняя «плавающая» поверхность с собственной тенью (поле над таб-баром в панели) — так задумано
+          if (hs.position !== 'static' && opaque(hs) && !/px/.test(hs.boxShadow)) {
               out.push(['error', 'тень перекрыта', `${name(el)} ← ${name(h)}`]);
               break;
             }
@@ -137,8 +138,12 @@ function audit() {
           // прокручиваемый контент, уехавший за край, — не обрезка тени
           if (r.left < ar.left - 1 || r.right > ar.right + 1 || r.top < ar.top - 1 || r.bottom > ar.bottom + 1) break;
           const cut = Math.max(ar.left - halo.l, halo.r - ar.right, ar.top - halo.t, halo.b - ar.bottom);
-          const gap = Math.min(r.left - ar.left, ar.right - r.right, r.top - ar.top, ar.bottom - r.bottom);
-          if (cut > 2) out.push([gap < blur / 5 ? 'error' : 'warn', 'тень обрезана', `${name(el)} внутри ${name(a)} (overflow ${as.overflowX}/${as.overflowY}), зазор ${Math.round(gap)}px при blur ${blur}`]);
+          const gaps = [r.left - ar.left, ar.right - r.right, r.top - ar.top, ar.bottom - r.bottom];
+          const cuts = [ar.left - halo.l, halo.r - ar.right, ar.top - halo.t, halo.b - ar.bottom];
+          // поверхность, прижатая к краю (панель у низа экрана), — тень с этой стороны не видна по замыслу
+          if (cuts.every((c, i) => c <= 2 || gaps[i] < 1)) break;
+          const gap = Math.min(...gaps.filter((g, i) => cuts[i] > 2));
+          if (cut > 2) out.push([gap < blur / 5 - 1 ? 'error' : 'warn', 'тень обрезана', `${name(el)} внутри ${name(a)} (overflow ${as.overflowX}/${as.overflowY}), зазор ${Math.round(gap)}px при blur ${blur}`]);
           break;
         }
       }

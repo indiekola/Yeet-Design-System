@@ -128,6 +128,7 @@
   --color-text-secondary: var(--yeet-neutral-600); /* ui-colors/grey */
   --color-text-inverse: var(--yeet-neutral-0); /* ui-colors/white */
   --color-text-on-accent: var(--yeet-neutral-0); /* ui-colors/on-accent */
+  --color-text-inverse-secondary: #a7b3bf; /* ui-colors/inverse-secondary */
   --color-text-on-danger: var(--yeet-neutral-0); /* ui-colors/white */
   --color-text-accent: var(--yeet-blue-500); /* ui-colors/blue-text */
   --color-text-danger: var(--yeet-red-600); /* ui-colors/red-text */
@@ -152,6 +153,7 @@
   --color-text-secondary: var(--yeet-graphite-400); /* ui-colors/grey */
   --color-text-inverse: var(--yeet-graphite-950); /* ui-colors/white */
   --color-text-on-accent: var(--yeet-neutral-0); /* ui-colors/on-accent */
+  --color-text-inverse-secondary: #5b6470; /* ui-colors/inverse-secondary */
   --color-text-on-danger: var(--yeet-neutral-0); /* ui-colors/white */
   --color-text-accent: var(--yeet-blue-200); /* ui-colors/blue-text */
   --color-text-danger: var(--yeet-red-400); /* ui-colors/red-text */

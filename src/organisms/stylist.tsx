@@ -1,4 +1,6 @@
-import { IconButton } from '../atoms';
+import type { ReactNode } from 'react';
+import { Badge, IconButton } from '../atoms';
+import { cx } from '../utils/cx';
 import { plural } from '../utils/plural';
 import { CollageLayer, type CollageItem } from './cards';
 
@@ -17,19 +19,24 @@ export function OutfitThumbnail({ items, size = 138, onClick }: { items: Collage
 }
 
 /**
- * Карточка-вход в сценарий стилиста 173×173, радиус 32: подпись снизу, иллюстрация сверху.
- * **Контексты:** Стилист — «Образ дня», «Конструктор», «Для поездки», «Чат со стилистом».
+ * Карточка функции стилиста (флоу Stylist / Catalog): H3 + описание Caption сверху, паддинг 20, радиус 20.
+ * `wide` — на всю ширину 353×172, иначе половина 173×220. `soon` — функция ещё недоступна: текст серым, бейдж «Скоро».
+ * `art` — иллюстрация в правом нижнем углу (чемодан у «Для поездок»).
+ * **Контексты:** Стилист — Конструктор, Удиви меня, С чем носить, Для поездок, Оживи гардероб, Докупить, Оцени лук.
  */
-export function StylistPromptCard({ label, onClick }: { label: string; onClick?: () => void }) {
+export function StylistPromptCard({ title, description, wide, soon, art, onClick }: { title: string; description?: string; wide?: boolean; soon?: boolean; art?: ReactNode; onClick?: () => void }) {
   return (
-    <button type="button" className="y-prompt-card" onClick={onClick}>
-      <span className="y-body">{label}</span>
+    <button type="button" className={cx('y-prompt-card', wide && 'y-prompt-card--wide', soon && 'y-prompt-card--soon')} onClick={onClick} disabled={soon} aria-label={soon ? `${title} — скоро` : undefined}>
+      <span className="y-h3">{title}</span>
+      {description && <span className="y-caption y-text--secondary">{description}</span>}
+      {soon && <Badge variant="muted" className="y-prompt-card__soon">Скоро</Badge>}
+      {art && <span className="y-prompt-card__art" aria-hidden>{art}</span>}
     </button>
   );
 }
 
 export type TripCardProps =
-  | { add: true; label?: string; onClick?: () => void }
+  | { add: true; label?: ReactNode; onClick?: () => void }
   | { add?: false; city: string; items: number; outfits: number; art?: CollageItem[]; onClick?: () => void };
 
 /**
@@ -42,13 +49,13 @@ export function TripCard(props: TripCardProps) {
     return (
       <button type="button" className="y-trip-card y-trip-card--add" onClick={props.onClick}>
         <IconButton icon="plus" label="Новая поездка" variant="primary" size="L" decorative />
-        <span className="y-body">{props.label ?? 'Собрать новый чемодан'}</span>
+        <span className="y-body">{props.label ?? <>Собрать<br />новый чемодан</>}</span>
       </button>
     );
   return (
     <button type="button" className="y-trip-card" onClick={props.onClick}>
       <span className="y-h3">{props.city}</span>
-      <span className="y-caption y-text--secondary">
+      <span className="y-body y-text--secondary">
         {plural(props.items, ['вещь', 'вещи', 'вещей'])}
         <br />
         {plural(props.outfits, ['образ', 'образа', 'образов'])}

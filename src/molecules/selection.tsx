@@ -41,9 +41,9 @@ export type Chip = { label: string; selected?: boolean; removable?: boolean; col
  * Группа чипсов на базе `Button S`: не выбран — `tertiary`, выбран — `soft`.
  * `wrap` — перенос строк (теги, цвета), иначе горизонтальный скролл (фильтры, поводы).
  */
-export function ChipGroup({ chips, onToggle, onAdd, wrap = false }: { chips: Chip[]; onToggle?: (label: string) => void; onAdd?: () => void; wrap?: boolean }) {
+export function ChipGroup({ chips, onToggle, onAdd, wrap = false, center }: { chips: Chip[]; onToggle?: (label: string) => void; onAdd?: () => void; wrap?: boolean; /** Подсказки по центру (Поиск в сторах). */ center?: boolean }) {
   return (
-    <div className={cx('y-chip-group', wrap ? 'y-chip-group--wrap' : 'y-chip-group--scroll')}>
+    <div className={cx('y-chip-group', wrap ? 'y-chip-group--wrap' : 'y-chip-group--scroll', center && 'y-chip-group--center')}>
       {onAdd && <IconButton icon="plus" label="Добавить" variant="primary" size="S" onClick={onAdd} />}
       {chips.map((c) => (
         <Button
@@ -51,6 +51,7 @@ export function ChipGroup({ chips, onToggle, onAdd, wrap = false }: { chips: Chi
           size="S"
           variant={c.selected ? 'soft' : 'tertiary'}
           rightIcon={c.removable ? 'cross' : c.dropdown ? 'chevron-up-down' : undefined}
+          className={cx((c.removable || c.dropdown) && 'y-chip--trailing', c.removable && 'y-chip--removable')}
           aria-pressed={c.selected}
           onClick={() => onToggle?.(c.label)}
         >
@@ -72,6 +73,10 @@ export type ListItemProps = {
   expanded?: boolean;
   /** radio: выбрана ли строка */
   checked?: boolean;
+  /** Вторая строка Caption: почта в профиле. */
+  description?: string;
+  /** Элемент слева вместо иконки: аватар 40. */
+  leading?: ReactNode;
   /** Элемент справа: флаг страны, счётчик. */
   trailing?: ReactNode;
   onClick?: () => void;
@@ -82,13 +87,18 @@ export type ListItemProps = {
  * **action** — действие с вещью (создать образ, редактировать, удалить), **expandable** — категории одежды,
  * **radio** — одиночный выбор (год рождения, страна, пол).
  */
-export function ListItem({ type = 'action', label, icon, expanded, checked, trailing, onClick }: ListItemProps) {
+export function ListItem({ type = 'action', label, description, icon, leading, expanded, checked, trailing, onClick }: ListItemProps) {
+  const text = description ? (
+    <span className="y-list-item__text"><span className="y-list-item__label">{label}</span><span className="y-caption y-text--secondary">{description}</span></span>
+  ) : (
+    <span className="y-list-item__label">{label}</span>
+  );
   // Строка без действия (например, с кнопкой «Выйти» в trailing) — не кнопка: вложенный интерактив ломает скринридеры
   if (type === 'action' && !onClick)
     return (
       <div className="y-list-item">
-        {icon && <Icon name={icon} />}
-        <span className="y-list-item__label">{label}</span>
+        {leading ?? (icon && <Icon name={icon} />)}
+        {text}
         {trailing}
       </div>
     );
@@ -101,8 +111,8 @@ export function ListItem({ type = 'action', label, icon, expanded, checked, trai
       aria-checked={type === 'radio' ? !!checked : undefined}
       aria-expanded={type === 'expandable' ? !!expanded : undefined}
     >
-      {type === 'radio' ? <span className={cx('y-radio', checked && 'y-radio--on')} /> : icon && <Icon name={icon} />}
-      <span className="y-list-item__label">{label}</span>
+      {type === 'radio' ? <span className={cx('y-radio', checked && 'y-radio--on')} /> : leading ?? (icon && <Icon name={icon} />)}
+      {text}
       {type === 'expandable' ? <Icon name={expanded ? 'chevron-up' : 'chevron-down'} /> : trailing}
     </button>
   );

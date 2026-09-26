@@ -12,12 +12,14 @@
 .y-header__row--bar > .y-header__side { width: 104px; display: flex; gap: var(--space-8); }
 .y-header__row--bar > .y-header__side--end { justify-content: flex-end; }
 .y-header__row--bar > .y-header__center { flex: 1; display: flex; justify-content: center; }
-.y-header__title-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); min-height: 48px; }
+.y-header__title-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); min-height: 36px; }
+/* с кнопкой справа строка 48 и заголовок по центру (DS header Large: title y76); без кнопки — заголовок на y70, как во флоу */
+.y-header__title-row:has(> .y-icon-button) { min-height: 48px; }
 .y-header__back-title { margin-top: var(--space-12); }
 
 /* Bottom chrome */
 .y-bottom-nav, .y-bottom-bar { position: relative; z-index: 3; background: var(--color-bg-canvas); display: flex; align-items: center; gap: 7px; padding: 0 var(--screen-gutter) var(--space-20); }
-.y-bottom-bar { gap: var(--space-8); padding-top: 0; }
+.y-bottom-bar { gap: 7px; padding-top: 0; } /* флоу: кнопки L 52 на y780, между ними 7 */
 
 /* Tab bar */
 .y-tab-bar {
@@ -36,7 +38,7 @@
 
 /* Sheet & Dialog */
 .y-sheet {
-  width: 100%; display: flex; flex-direction: column; gap: var(--space-20);
+  position: relative; width: 100%; display: flex; flex-direction: column; gap: var(--space-20);
   padding: var(--space-8) var(--screen-gutter) var(--space-20);
   background: var(--sheet-bg); color: var(--color-text-primary);
   border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
@@ -87,13 +89,19 @@
   display: inline-flex; flex-direction: column; gap: var(--space-8); padding: var(--space-16) var(--space-20);
   background: var(--color-bg-inverse); color: var(--color-text-inverse); border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--space-8);
 }
-.y-weather__temp { display: flex; align-items: center; gap: var(--space-8); font: 400 24px/28px var(--font-display); }
-.y-weather .y-caption { opacity: 0.7; }
+.y-weather__temp { display: flex; align-items: center; gap: var(--space-8); font: 400 24px/24px var(--font-display); }
+/* Figma: Inter 460 12/16, #A7B3BF; предупреждение — белым второй строкой */
+.y-weather__desc { font-weight: var(--font-weight-body); color: var(--color-text-inverse-secondary); }
+.y-weather__alert { display: block; color: var(--color-text-inverse); }
+.y-weather--tilt { transform: rotate(-10deg); transform-origin: left top; }
 
 .y-bubble { max-width: 265px; padding: var(--space-16) var(--space-20); background: var(--card-bg); color: var(--color-text-primary); border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--space-8); }
-.y-bubble--own { background: var(--color-accent); color: var(--color-text-on-accent); border-radius: var(--radius-lg) var(--radius-lg) var(--space-8) var(--radius-lg); margin-left: auto; }
+/* флоу: ответ пользователя — светлый акцент, текст обычный, хвост справа снизу */
+.y-bubble--own { background: var(--color-accent-soft); color: var(--color-text-primary); border-radius: var(--radius-lg) var(--radius-lg) var(--space-8) var(--radius-lg); margin-left: auto; max-width: 265px; width: fit-content; }
+.y-bubble-row { display: flex; align-items: flex-end; gap: var(--space-4); }
+.y-bubble-row__avatar { flex: none; width: 64px; height: 64px; display: grid; place-items: center; }
 
-.y-collage__label { position: absolute; top: var(--space-16); left: var(--space-16); z-index: 1; }
+.y-collage__label { position: absolute; top: var(--space-20); left: var(--space-20); z-index: 1; } /* флоу Trip Details: 20/20 */
 .y-collage__footer {
   position: absolute; left: var(--space-8); right: var(--space-8); bottom: var(--space-8); z-index: 1;
   display: flex; align-items: center; justify-content: space-between; gap: var(--space-12);
@@ -104,13 +112,18 @@
 .y-outfit-thumb { position: relative; flex: none; padding: 0; border: 0; cursor: pointer; background: var(--card-bg); border-radius: var(--radius-lg); overflow: hidden; }
 
 .y-prompt-card {
-  width: 100%; aspect-ratio: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
-  padding: var(--space-24); background: var(--card-bg); border: 0; border-radius: var(--radius-xl); cursor: pointer;
-  color: var(--color-text-primary); text-align: center;
+  position: relative; overflow: hidden; width: 100%; height: 220px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-8);
+  padding: var(--space-20); background: var(--card-bg); border: 0; border-radius: var(--radius-lg); cursor: pointer;
+  color: var(--color-text-primary); text-align: left;
 }
+.y-prompt-card--wide { grid-column: 1 / -1; height: 172px; }
+.y-prompt-card--soon { cursor: default; }
+.y-prompt-card--soon > .y-h3 { color: var(--color-text-secondary); }
+.y-prompt-card__soon { position: absolute; left: var(--space-20); bottom: var(--space-20); }
+.y-prompt-card__art { position: absolute; right: 0; bottom: -40px; }
 
 .y-trip-card {
-  position: relative; min-height: 210px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4);
+  position: relative; min-height: 220px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4);
   padding: var(--space-16); background: var(--card-bg); border: 0; border-radius: var(--radius-lg); cursor: pointer;
   color: var(--color-text-primary); text-align: left; overflow: hidden;
 }
@@ -183,3 +196,46 @@
   opacity: 0; transform: translateY(12px) scale(0.6); transition: opacity var(--motion-fade), transform var(--motion-collapse);
 }
 .y-screen[data-collapsed] .y-header__on-scroll { opacity: 1; transform: none; }
+
+/* Главная: вторая строка заголовка — повод акцентом с раскрывашкой (Figma: Outfits / Everyday) */
+.y-header__accent { align-self: flex-start; display: inline-flex; align-items: center; gap: var(--space-8); margin-top: calc(var(--space-8) * -1); padding: 0; border: 0; background: none; color: var(--color-text-accent); cursor: pointer; text-align: left; }
+.y-screen[data-collapsed] .y-header__accent { display: none; }
+/* Превью соседнего образа — тоже точечный фон */
+.y-outfit-thumb { background-color: var(--card-bg); background-image: radial-gradient(circle, var(--color-pattern-dot) 1px, transparent 1.2px); background-size: 10px 10px; }
+/* Главная: превью ↑ коллаж ↓ превью, погода и штамп поверх */
+.y-today { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--space-20); padding-top: 3px; }
+.y-today__weather { position: absolute; left: 20px; top: 41px; z-index: 2; }
+.y-today__stamp { position: absolute; left: 185px; top: 396px; z-index: 2; }
+/* Пилюля заголовка в шапке-баре: боковой отступ 20 (флоу: «Архив вещей» 131×48) */
+.y-header__center > .y-button { padding: 0 var(--space-20); }
+/* Панель деталей (флоу Item / Outfit Details): заголовок H2, до строки мета — 12 */
+.y-sheet--panel > .y-sheet__title + * { margin-top: calc(var(--space-8) * -1); }
+/* Поиск: фильтры на 20 ниже поля (флоу Search / Text / Results) */
+.y-header__body:has(> .y-input-bar + .y-chip-group) { gap: var(--space-20); }
+/* Лайкнутое — залитое сердце */
+.y-product-card__like.is-on .y-icon path { fill: currentColor; }
+/* Нижняя панель стилиста: хэндл, поле, таб-бар (y1194 → поле +34, таб-бар +8) */
+.y-dock {
+  position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: var(--space-8);
+  padding: var(--space-8) var(--screen-gutter) var(--space-20); background: var(--color-bg-elevated);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0; box-shadow: var(--shadow-floating);
+}
+.y-dock > .y-sheet__handle { margin-bottom: 14px; }
+.y-dock > .y-tab-bar { width: 100%; flex: none; }
+/* Панель внизу экрана (детали, чат) тянется до низа */
+.y-screen__content > .y-sheet--panel:last-child { flex: 1 0 auto; }
+/* Аватар стилиста в чате (во флоу — 3D-персонаж 64; здесь заглушка) */
+.y-stylist-avatar { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--card-bg); color: var(--color-text-primary); }
+/* Пилюля заголовка в две строки (флоу Trip Details): 48, паддинг 20, Body + Caption по центру */
+.y-header__chip2 { height: 48px; padding: 0 var(--space-20); border-radius: var(--radius-xl); background: var(--button-tertiary-bg); display: inline-flex; flex-direction: column; align-items: center; justify-content: center; white-space: nowrap; }
+/* Вещь с «×» (создание образа) */
+.y-item-card-wrap { position: relative; }
+.y-item-card__remove { position: absolute; top: 4px; right: 4px; width: 44px; height: 44px; padding: 0; border: 0; background: none; color: var(--color-text-secondary); display: grid; place-items: center; cursor: pointer; }
+/* Создание образа · выбор вещей: разделы с H2, карусель по центру, соседние карточки выглядывают, разделители во всю ширину */
+.y-slots { display: flex; flex-direction: column; gap: var(--space-20); padding-top: var(--space-20); background: var(--color-bg-elevated); border-radius: var(--radius-xl) var(--radius-xl) 0 0; box-shadow: var(--shadow-floating); flex: 1 0 auto; overflow: hidden; }
+.y-slot { display: flex; flex-direction: column; gap: var(--space-16); padding: 0 var(--screen-gutter); }
+.y-slot + .y-slot { border-top: 1px solid var(--color-divider); padding-top: var(--space-20); }
+.y-slot__row { display: flex; justify-content: center; align-items: center; gap: var(--space-8); height: 172px; }
+.y-slot__row > * { flex: none; width: 173px; }
+.y-slot__add { height: 172px; display: grid; place-items: center; }
+.y-slot__row > .y-slot__add:not(:only-child) { justify-items: start; padding-left: 22px; } /* флоу: «+» в 22 от края слота, рядом с карточкой */
