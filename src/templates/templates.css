@@ -46,12 +46,15 @@
 
 /* Пара блоков, идущих вплотную (группы в Настройках): 8 вместо шага экрана 20 */
 .y-stack-8 { display: flex; flex-direction: column; gap: var(--space-8); }
+/* Раздел экрана или панели (флоу): заголовок H3 и контент через 16, до раздела 24 */
+.y-section { display: flex; flex-direction: column; gap: var(--space-16); }
+* + .y-section { margin-top: var(--space-4); }
 /* Подвал Настроек (Figma: логотип 40 серым, ссылки и версия Caption, «Удалить аккаунт») */
 .y-settings-footer { display: flex; flex-direction: column; align-items: center; gap: var(--space-12); color: var(--color-text-secondary); text-align: center; padding-bottom: var(--space-20); }
 .y-settings-footer .y-caption { margin: 0; }
 .y-settings-footer .y-button { margin-top: var(--space-20); }
 /* Юридическая подпись внизу экрана входа: 3 строки по центру, ссылки подчёркнуты */
-.y-legal { margin: auto 0 0; text-align: center; }
+.y-legal { margin: auto 0 -4px; text-align: center; } /* флоу: 20 от низа экрана */
 .y-legal a { color: inherit; text-decoration: underline; text-underline-offset: 2px; display: inline-block; padding: 4px 0; margin: -4px 0; }
 /* Панель последним блоком на flush-экране доходит до низа экрана */
 .y-screen__content--flush:has(> .y-sheet--panel:last-child) { padding-bottom: 0; }

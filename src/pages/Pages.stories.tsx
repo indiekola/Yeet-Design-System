@@ -40,7 +40,7 @@ export const SignIn: Story = {
         <Field label="Пароль" input={{ type: 'password' }} trailingIcon="eye" />
       </InputGroup>
       <Button size="L" fullWidth>Войти</Button>
-      <Button variant="ghost" size="M" style={{ alignSelf: 'center', marginTop: -10 }}>Забыли пароль?</Button>
+      <Button variant="ghost" size="L" style={{ alignSelf: 'center', marginTop: -12 }}>Забыли пароль?</Button>
       <Divider label="или" />
       <Button variant="secondary" size="L" leftIcon="apple" fullWidth>Войти с Apple</Button>
       <p className="y-caption y-text--secondary y-legal">Продолжая, вы соглашаетесь <br />с <a href="#">политикой конфиденциальности</a> <br />и <a href="#">условиями использования</a></p>
@@ -92,7 +92,7 @@ export const WardrobeEmpty: Story = {
   render: () => (
     <Screen header={<Header type="large" title="Гардероб" />} bottom={<BottomNav active="wardrobe" fab />}>
       <SegmentControl value="items" segments={[{ value: 'items', label: 'Вещи' }, { value: 'o', label: 'Образы' }, { value: 'w', label: 'Вишлист' }]} />
-      <div style={{ flex: 1, display: 'grid', placeItems: 'center', paddingBottom: 120 }}>
+      <div style={{ flex: 1, display: 'grid', placeItems: 'center', paddingBottom: 98 }}>
         <EmptyState title="Гардероб пуст" description={<>Добавь первую вещь,<br />чтобы начать создавать образы</>} />
       </div>
     </Screen>
@@ -107,9 +107,11 @@ export const ItemDetails: Story = {
       <div style={{ padding: '0 20px' }}><PhotoArea kind="container" /></div>
       <Sheet type="panel" title="Сумка">
         <p className="y-body y-text--secondary">10 000 ₽ · Sander · Чёрный<br />Аксессуары · Все сезоны</p>
-        <p className="y-body" style={{ background: 'var(--color-bg-subtle)', borderRadius: 20, padding: '16px 20px' }}>Мягкая сумка округлой формы с логотипом и кожаным ремешком</p>
-        <h3 className="y-h3">Образы с этой вещью</h3>
-        <OutfitCollage items={[{ kind: 'bottom', x: 28, y: 56, size: 150, color: 'black' }, { kind: 'top', x: 64, y: 36, size: 120, color: 'brown' }, { kind: 'container', x: 76, y: 70, size: 64, color: 'black' }]} />
+        <p className="y-body" style={{ background: 'var(--color-bg-subtle)', borderRadius: 20, padding: 20 }}>Мягкая сумка округлой формы с логотипом и кожаным ремешком</p>
+        <section className="y-section" style={{ gap: 20 }}>
+          <h3 className="y-h3">Образы с этой вещью</h3>
+          <OutfitCollage items={[{ kind: 'bottom', x: 28, y: 56, size: 150, color: 'black' }, { kind: 'top', x: 64, y: 36, size: 120, color: 'brown' }, { kind: 'container', x: 76, y: 70, size: 64, color: 'black' }]} />
+        </section>
       </Sheet>
     </Screen>
   ),
@@ -126,12 +128,16 @@ export const OutfitDetails: Story = {
       <Sheet type="panel" title="На каждый день">
         <p className="y-body y-text--secondary">Все сезоны</p>
         <StatRow><StatTile label="Надето раз" value={8} /><StatTile label="Д. простоя" value={1} /><StatTile label="Вещи" value={4} /></StatRow>
-        <h3 className="y-h3">Теги</h3>
-        <ChipGroup wrap chips={[{ label: 'Тег #1' }, { label: 'Тег #2' }, { label: 'Тег #3' }, { label: 'Тег #4' }]} />
-        <h3 className="y-h3">Вещи из образа</h3>
-        <Grid><ItemCard kind="top" color="green" /><ItemCard kind="bottom" color="green" /><ItemCard kind="shoe" color="brown" /><ItemCard kind="accessories" /></Grid>
-        {/* штамп «Надеть» заходит на статистику и теги, как во флоу (x230, y680 экрана) */}
-        <div style={{ position: 'absolute', top: 169, right: 23, zIndex: 2 }}><Stamp label="Надеть" /></div>
+        <section className="y-section">
+          <h3 className="y-h3">Теги</h3>
+          <ChipGroup wrap chips={[{ label: 'Тег #1' }, { label: 'Тег #2' }, { label: 'Тег #3' }, { label: 'Тег #4' }]} />
+        </section>
+        <section className="y-section">
+          <h3 className="y-h3">Вещи из образа</h3>
+          <Grid><ItemCard kind="top" color="green" /><ItemCard kind="bottom" color="green" /><ItemCard kind="shoe" color="brown" /><ItemCard kind="accessories" /></Grid>
+        </section>
+        {/* штамп «Надеть» заходит на статистику и теги, как во флоу (x225, y676 экрана) */}
+        <div style={{ position: 'absolute', top: 160, right: 20, zIndex: 2 }}><Stamp label="Надеть" /></div>
       </Sheet>
     </Screen>
   ),
@@ -143,8 +149,8 @@ export const SearchResults: Story = {
   render: () => (
     <Screen header={<Header type="search" query="Белые кроссовки" filters={[{ label: 'Сортировка' }, { label: 'Цена' }]} />}>
       <Grid rowGap={16}>
-        {['Nike Air Force 1 ’07', 'Nike Ava Edge', 'Adidas Samba', 'New Balance 550', 'Puma Palermo', 'Vans Old Skool'].map((n, i) => (
-          <ProductCard key={n} kind="shoe" name={n} price={`${(10400 + i * 1300).toLocaleString('ru-RU')} ₽`} discount={i % 2 ? undefined : '-10%'} liked={i === 1} />
+        {["Nike Air Force 1 '07 Edge", 'Nike Ava Edge', 'Adidas Samba', 'New Balance 550', 'Puma Palermo', 'Vans Old Skool'].map((n, i) => (
+          <ProductCard key={n} kind="shoe" name={n} price={`${[10400, 14300, 11900, 13500, 9900, 7600][i].toLocaleString('ru-RU')} ₽`} discount={i % 2 ? undefined : '-10%'} liked={i === 1} />
         ))}
       </Grid>
     </Screen>
@@ -156,7 +162,8 @@ export const SearchEmpty: Story = {
   name: 'Search / Text / No Results Filtered',
   render: () => (
     <Screen header={<Header type="search" query="asdasd" filters={[{ label: 'Сначала дешевле', selected: true }, { label: 'до 60 000 ₽', selected: true }]} />} center>
-      <EmptyState title="Упс, не нашли" description="Измени запрос или попробуй поискать что-то другое" action={{ label: 'Сбросить поиск' }} />
+      {/* флоу: блок ниже центра — текст на y460 */}
+      <div style={{ marginTop: 66 }}><EmptyState title="Упс, не нашли" description="Измени запрос или попробуй поискать что-то другое" action={{ label: 'Сбросить поиск' }} /></div>
     </Screen>
   ),
 };
@@ -170,7 +177,7 @@ export const NewItem: Story = {
       {/* как во флоу: детали в панели под фото, заголовок H2 */}
       <Sheet type="panel" title="Детали новой вещи">
         <InputGroup><Field label="Название" input={{}} /><Field label="Стоимость" input={{ inputMode: 'numeric' }} /></InputGroup>
-        <InputGroup><Field label="Категория" value="Аксессуары" trailingIcon="chevron-up-down" /><Field label="Цвет" value="Чёрный" colorDot="black" trailingIcon="chevron-up-down" /><Field label="Сезон" value="Все сезоны" trailingIcon="chevron-up-down" /></InputGroup>
+        <InputGroup><Field label="Категория" value="Аксессуары" trailingIcon="chevron-up-down" /><Field label="Цвет" value="Чёрный" colorDot="black" trailingIcon="chevron-up-down" /><Field label="Сезон" value="Все" trailingIcon="chevron-up-down" /></InputGroup>
       </Sheet>
     </Screen>
   ),
@@ -285,14 +292,14 @@ export const SearchDiscover: Story = {
   render: () => (
     <Screen header={<Header type="large" title="Поиск в сторах" subtitle={<>Нашли классную вещь?<br />Покажем, где купить такую же или похожую.</>} />} bottom={<BottomNav active="search" />}>
       {/* флоу: блоки через 32, поле 52, подсказки по центру */}
-      <div style={{ marginTop: 12 }}>
+      <div style={{ marginTop: 8 }}>
         <Row gap={7}>
           <PhotoTile source="gallery" />
           <PhotoTile source="camera" />
         </Row>
       </div>
       <div style={{ marginTop: 12 }}><InputBar size="L" placeholder="Белые кроссовки Nike" fieldIcon="search" /></div>
-      <ChipGroup wrap center chips={['Nike', 'Crocs', 'Marine Serre', 'Белое платье с красными вкраплениями', 'JACQUEMUS', 'Обувь для бега'].map((label) => ({ label }))} />
+      <ChipGroup wrap center chips={['Nike', 'Crocs', 'Marine Serre', 'Белое платье с красными вкраплениями', 'Marine Serre', 'JAC58S Pina Jacquard', 'Обувь для бега'].map((label) => ({ label }))} />
     </Screen>
   ),
 };
@@ -340,8 +347,10 @@ export const TripDetails: Story = {
   render: () => (
     <Screen header={<Header type="bar" titleChip="Бразилиа" titleChipSub="8–13 сент · 5 ночей" actions={[{ icon: 'more', label: 'Ещё' }]} />}>
       <SegmentControl value="outfits" segments={[{ value: 'outfits', label: 'Образы · 1' }, { value: 'items', label: 'Вещи · 4' }]} />
+      <div className="y-stack-8">
       <OutfitCollage label="Прогулка" items={[{ kind: 'accessories', x: 34, y: 18, size: 56 }, { kind: 'top', x: 66, y: 34, color: 'green' }, { kind: 'bottom', x: 30, y: 60, size: 130, color: 'green' }, { kind: 'shoe', x: 72, y: 76, size: 72, color: 'brown' }]} />
       <OutfitCollage label="Ужин" items={[{ kind: 'bottom', x: 28, y: 58, size: 140, color: 'black' }, { kind: 'top', x: 64, y: 40, color: 'brown' }, { kind: 'container', x: 76, y: 78, size: 64, color: 'black' }]} />
+      </div>
     </Screen>
   ),
 };
@@ -433,7 +442,7 @@ export const ProfileAnalytics: Story = {
 
 /* ─── Вишлист, архив, создание образа, профиль ────────────────────────── */
 
-const shoes = ['Nike Air Force 1 ’07', 'Nike Ava Edge', 'Nike Ava Edge', 'Nike Ava Edge'];
+const shoes = ["Nike Air Force 1 '07 Edge", 'Nike Ava Edge', 'Nike Ava Edge', 'Nike Ava Edge'];
 
 export const Wishlist: Story = {
   parameters: { controls: { disable: true } },
@@ -479,8 +488,10 @@ export const OutfitCriteria: Story = {
         <Field label="Повод" value="Все" trailingIcon="chevron-up-down" />
         <Field label="Сезон" value="Все" trailingIcon="chevron-up-down" />
       </InputGroup>
-      <h3 className="y-h3">Теги</h3>
-      <ChipGroup wrap onAdd={() => {}} chips={['Тег #1', 'Тег #2', 'Тег #3', 'Тег #4', 'Тег #5', 'Тег #6'].map((label) => ({ label, removable: true }))} />
+      <section className="y-section">
+        <h3 className="y-h3">Теги</h3>
+        <ChipGroup wrap onAdd={() => {}} chips={['Тег #1', 'Тег #2', 'Тег #3', 'Тег #4', 'Тег #5', 'Тег #6'].map((label) => ({ label, removable: true }))} />
+      </section>
     </Screen>
   ),
 };

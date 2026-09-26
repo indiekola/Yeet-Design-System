@@ -190,13 +190,13 @@
       }
     },
     {
-      "figma": "stat-tile",
+      "figma": "stat-tile (флоу Outfit Details: 80, 16/20)",
       "story": "molecules-stattile--playground",
       "selector": ".y-stat",
       "expect": {
-        "height": 72,
-        "paddingLeft": 16,
-        "paddingTop": 12,
+        "height": 80,
+        "paddingLeft": 20,
+        "paddingTop": 16,
         "gap": 4,
         "borderRadius": 20
       }
@@ -456,7 +456,7 @@
       "expect": {
         "height": 220,
         "paddingLeft": 16,
-        "gap": 4,
+        "gap": 8,
         "borderRadius": 20
       }
     },

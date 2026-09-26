@@ -1,0 +1,157 @@
+/**
+ * Сверка экранов Storybook с флоу Figma по текстовым якорям (design/figma-flows.json).
+ * node scripts/qa/flow-diff.mjs [slug ...] [--tol=2] [--strict]
+ * Требует собранный storybook-static. Отчёт: qa/out/flow-diff.md. --strict — код выхода 1 при расхождениях.
+ */
+import { createServer } from 'node:http';
+import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { extname, join, resolve } from 'node:path';
+import { chromium } from 'playwright-core';
+
+const args = process.argv.slice(2);
+const tol = Number(args.find((a) => a.startsWith('--tol='))?.slice(6) ?? 2);
+const strict = args.includes('--strict');
+const only = args.filter((a) => !a.startsWith('--'));
+const root = resolve(import.meta.dirname, '../..');
+const dir = join(root, 'storybook-static');
+const { frames, known = {} } = JSON.parse(readFileSync(join(root, 'design/figma-flows.json'), 'utf8'));
+
+// Осознанные замены цветов (контраст AA): цвет флоу → цвет кода.
+const colorAlias = { '777777': '6e6e6e', ff4230: 'cc291b' };
+
+const norm = (s) => s.toLowerCase().replace(/ё/g, 'е').replace(/[«»"“”„]/g, '"').replace(/[ \s]+/g, ' ').trim();
+const lev = (a, b) => {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++)
+    for (let j = 1; j <= b.length; j++)
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+};
+const sim = (a, b) => 1 - lev(a, b) / Math.max(a.length, b.length, 1);
+
+const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.woff2': 'font/woff2' };
+const server = createServer((req, res) => {
+  const p = join(dir, decodeURIComponent(new URL(req.url, 'http://x').pathname));
+  if (!existsSync(p)) return res.writeHead(404).end();
+  res.writeHead(200, { 'content-type': types[extname(p)] ?? 'application/octet-stream' }).end(readFileSync(p));
+});
+await new Promise((r) => server.listen(0, r));
+const exe = [process.env.CHROME_PATH, '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'].find((p) => p && existsSync(p));
+const browser = await chromium.launch(exe ? { executablePath: exe } : {});
+const page = await browser.newPage({ viewport: { width: 1000, height: 1000 }, deviceScaleFactor: 1 });
+
+const lines = ['# Сверка экранов с флоу Figma', '', `Допуск ${tol} px. Цвета ${Object.entries(colorAlias).map(([a, b]) => `#${a}→#${b}`).join(', ')} считаются совпадающими (контраст).`, ''];
+let total = 0, bad = 0, missing = 0, accepted = 0;
+const summary = [];
+
+for (const [slug, frame] of Object.entries(frames)) {
+  if (only.length && !only.includes(slug)) continue;
+  await page.goto(`http://localhost:${server.address().port}/iframe.html?id=${encodeURIComponent(`pages-экраны-флоу--${slug}`)}&viewMode=story&globals=theme:light`, { waitUntil: 'networkidle' });
+  await page.evaluate(() => document.fonts.ready);
+  await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}' });
+  await page.waitForTimeout(150);
+  const texts = await page.evaluate(() => {
+    const screen = document.querySelector('.y-screen');
+    if (!screen) return null;
+    const o = screen.getBoundingClientRect();
+    const hex = (c) => { const m = c.match(/[\d.]+/g); return m ? m.slice(0, 3).map((v) => (+v).toString(16).padStart(2, '0')).join('') : ''; };
+    const out = [];
+    const walker = document.createTreeWalker(screen, NodeFilter.SHOW_TEXT);
+    const seen = new Set();
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      if (!n.textContent.trim()) continue;
+      // Текстовый блок: поднимаемся через строчные элементы (ссылки, span) до блока — как текстовый слой Figma
+      let el = n.parentElement;
+      const inline = (e) => { const d = getComputedStyle(e).display; return d === 'inline' || (d === 'inline-block' && e.tagName === 'A'); };
+      while (el.parentElement && el !== screen && inline(el)) el = el.parentElement;
+      if (seen.has(el)) continue;
+      seen.add(el);
+      const cs = getComputedStyle(el);
+      if (cs.visibility === 'hidden' || +cs.opacity === 0) continue;
+      // Диапазон только по тексту блока — без иконок и вложенных блоков
+      const nodes = [];
+      const w2 = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      for (let t = w2.nextNode(); t; t = w2.nextNode()) {
+        let p = t.parentElement;
+        while (p !== el && inline(p)) p = p.parentElement;
+        if (p === el && t.textContent.trim()) nodes.push(t);
+      }
+      const range = document.createRange();
+      range.setStart(nodes[0], 0);
+      range.setEnd(nodes.at(-1), nodes.at(-1).textContent.length);
+      const r = range.getBoundingClientRect();
+      const first = range.getClientRects()[0];
+      if (!r.width || !first) continue;
+      // Бокс Figma = строка с line-height; range даёт область глифов, поэтому поднимаем на половину интерлиньяжа
+      const lh = parseFloat(cs.lineHeight) || first.height;
+      push(el, nodes.map((c) => c.textContent.trim()).join(' '), r.left, first.top - (lh - first.height) / 2, r.width, cs);
+    }
+    function push(el, text, x, y, w, cs) {
+      out.push({ text, x: x - o.left, y: y - o.top, w, size: parseFloat(cs.fontSize), slab: /slab/i.test(cs.fontFamily), color: hex(cs.color) });
+    }
+    // Поля ввода: значение или плейсхолдер
+    for (const el of screen.querySelectorAll('input, textarea')) {
+      const text = el.value || el.placeholder;
+      if (!text || el.type === 'range' || el.type === 'checkbox' || el.type === 'radio') continue;
+      const cs = getComputedStyle(el);
+      const r = el.getBoundingClientRect();
+      const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.43;
+      const inner = r.height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - parseFloat(cs.borderTopWidth) - parseFloat(cs.borderBottomWidth);
+      const top = el.tagName === 'TEXTAREA' ? r.top + parseFloat(cs.paddingTop) + parseFloat(cs.borderTopWidth) : r.top + parseFloat(cs.paddingTop) + parseFloat(cs.borderTopWidth) + (inner - lh) / 2;
+      const color = el.value ? cs.color : getComputedStyle(el, '::placeholder').color;
+      out.push({ text, x: r.left + parseFloat(cs.paddingLeft) + parseFloat(cs.borderLeftWidth) - o.left, y: top - o.top, w: r.width, size: parseFloat(cs.fontSize), slab: /slab/i.test(cs.fontFamily), color: hex(color) });
+    }
+    return out;
+  });
+  if (!texts) { lines.push(`## ${slug}`, '', 'Нет `.y-screen` — история не найдена.', ''); continue; }
+  const used = new Set();
+  const rows = [], okRows = [];
+  let screenBad = 0;
+  for (const [text, x, y, w, h, size, fam, color] of frame.t) {
+    total++;
+    const t = norm(text);
+    let best = null, score = 0;
+    for (const [i, c] of texts.entries()) {
+      if (used.has(i)) continue;
+      const ct = norm(c.text);
+      let s = sim(t, ct);
+      if (s < 0.8 && t.length > 6 && (ct.startsWith(t) || t.startsWith(ct))) s = 0.8;
+      // При равных текстах берём ближайший
+      if (s > score || (s === score && best && Math.hypot(c.x - x, c.y - y) < Math.hypot(best.x - x, best.y - y))) { best = { ...c, i }; score = s; }
+    }
+    const reason = known[slug]?.[text];
+    if (!best || score < 0.8) {
+      if (reason) { accepted++; okRows.push(`| «${text}» | не найден | ${reason} |`); continue; }
+      missing++; screenBad++; rows.push(`| «${text}» | — | не найден в Storybook |`); continue;
+    }
+    used.add(best.i);
+    // Выравнивание текста в Figma неизвестно: берём лучшее из совпадения левого края, центра и правого края
+    const dxs = [best.x - x, best.x + best.w / 2 - (x + w / 2), best.x + best.w - (x + w)];
+    const dx = Math.round(dxs.reduce((a, b) => (Math.abs(b) < Math.abs(a) ? b : a))), dy = Math.round(best.y - y);
+    const issues = [];
+    if (Math.abs(dx) > tol) issues.push(`x ${dx > 0 ? '+' : ''}${dx}`);
+    if (Math.abs(dy) > tol) issues.push(`y ${dy > 0 ? '+' : ''}${dy}`);
+    if (Math.abs(best.size - size) > 0.5) issues.push(`кегль ${best.size}≠${size}`);
+    if (best.slab !== (fam === 'S')) issues.push(best.slab ? 'Slab вместо Inter' : 'Inter вместо Slab');
+    const fc = colorAlias[color] ?? color;
+    if (best.color !== fc) issues.push(`цвет #${best.color}≠#${color}`);
+    if (score < 1) issues.push(`текст «${best.text.trim().slice(0, 40)}»`);
+    if (issues.length && reason) { accepted++; okRows.push(`| «${text}» | ${issues.join(', ')} | ${reason} |`); }
+    else if (issues.length) { bad++; screenBad++; rows.push(`| «${text}» | ${x},${y} → ${Math.round(best.x)},${Math.round(best.y)} | ${issues.join(', ')} |`); }
+  }
+  summary.push(`${slug.padEnd(20)} ${screenBad ? `${screenBad}/${frame.t.length} расхождений` : 'ок'}`);
+  lines.push(`## ${slug} (${frame.id})`, '');
+  if (rows.length) lines.push('| Текст | Figma → Storybook | Расхождение |', '|---|---|---|', ...rows, '');
+  else lines.push('Совпадает.', '');
+  if (okRows.length) lines.push('Осознанные расхождения:', '', '| Текст | Расхождение | Причина |', '|---|---|---|', ...okRows, '');
+}
+
+await browser.close();
+server.close();
+lines.splice(4, 0, `Итого якорей ${total}: расхождений ${bad}, не найдено ${missing}, осознанных ${accepted}.`, '');
+mkdirSync(join(root, 'qa/out'), { recursive: true });
+writeFileSync(join(root, 'qa/out/flow-diff.md'), lines.join('\n'));
+console.log(summary.join('\n'));
+console.log(`\nЯкорей ${total}: расхождений ${bad}, не найдено ${missing}, осознанных ${accepted}. Отчёт: qa/out/flow-diff.md`);
+if (strict && (bad || missing)) process.exit(1);

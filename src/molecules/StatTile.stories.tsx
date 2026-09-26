@@ -8,7 +8,7 @@ const meta = {
   tags: ['autodocs'],
   args: { label: 'Надето раз', value: 8 },
   decorators: [(Story) => <div style={{ width: 112 }}><Story /></div>],
-  parameters: { docs: { description: { component: 'Плитка статистики: Caption grey + H2, паддинг 12/16, радиус 20. В ряду `StatRow` по 3. Figma: `stat-tile` · Label, Value.' } } },
+  parameters: { docs: { description: { component: 'Плитка статистики: Caption grey + H2 через 4, паддинг 16/20, высота 80, радиус 20 (флоу Outfit Details). В ряду `StatRow` по 3. Figma: `stat-tile` · Label, Value.' } } },
 } satisfies Meta<typeof StatTile>;
 export default meta;
 type Story = StoryObj<typeof meta>;

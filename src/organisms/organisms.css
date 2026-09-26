@@ -9,13 +9,18 @@
 .y-header { position: relative; z-index: 3; background: var(--color-bg-canvas); color: var(--color-text-primary); }
 .y-header__body { padding: var(--space-8) var(--screen-gutter) 0; display: flex; flex-direction: column; gap: var(--space-8); }
 .y-header__row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); min-height: 48px; }
-.y-header__row--bar > .y-header__side { width: 104px; display: flex; gap: var(--space-8); }
+/* три колонки: боковые поровну, центр по ширине содержимого — заголовок не переносится (флоу Profile / Edit) */
+.y-header__row--bar { display: grid; grid-template-columns: minmax(48px, 1fr) minmax(0, auto) minmax(48px, 1fr); }
+.y-header__row--bar > .y-header__side { display: flex; gap: var(--space-8); }
 .y-header__row--bar > .y-header__side--end { justify-content: flex-end; }
 .y-header__row--bar > .y-header__center { flex: 1; display: flex; justify-content: center; }
 .y-header__title-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); min-height: 36px; }
 /* с кнопкой справа строка 48 и заголовок по центру (DS header Large: title y76); без кнопки — заголовок на y70, как во флоу */
 .y-header__title-row:has(> .y-icon-button) { min-height: 48px; }
 .y-header__back-title { margin-top: var(--space-12); }
+/* флоу: подзаголовок через 12 от заголовка; после подзаголовка и крупного заголовка у «назад» контент через 24 */
+.y-header__subtitle { margin: var(--space-4) 0; }
+.y-header__body:has(.y-header__back-title) { padding-bottom: var(--space-4); }
 
 /* Bottom chrome */
 .y-bottom-nav, .y-bottom-bar { position: relative; z-index: 3; background: var(--color-bg-canvas); display: flex; align-items: center; gap: 7px; padding: 0 var(--screen-gutter) var(--space-20); }
@@ -34,7 +39,9 @@
 .y-tab-bar__tab { position: relative; z-index: 1; }
 /* Пилюля выбранной вкладки переезжает между вкладками */
 .y-tab-bar__pill { position: absolute; top: 0; left: 0; border-radius: var(--radius-xl); background: var(--color-bg-subtle); transition: transform var(--motion-nav), width var(--motion-nav); pointer-events: none; }
-.y-tab-bar__avatar { width: 22px; height: 22px; border: 1.5px solid currentColor; border-radius: 50%; display: grid; place-items: center; font: 400 12px/16px var(--font-text); }
+/* флоу: кружок 20 с обводкой 1.3 и буквой Roboto Slab 14 серым; у активной вкладки — основным цветом */
+.y-tab-bar__avatar { width: 20px; height: 20px; border: 1.3px solid currentColor; border-radius: 50%; display: grid; place-items: center; font: 450 14px/20px var(--font-display); color: var(--color-text-secondary); }
+.y-tab-bar__tab[aria-current='page'] > .y-tab-bar__avatar { color: var(--color-text-primary); }
 
 /* Sheet & Dialog */
 .y-sheet {
@@ -123,11 +130,11 @@
 .y-prompt-card__art { position: absolute; right: 0; bottom: -40px; }
 
 .y-trip-card {
-  position: relative; min-height: 220px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4);
+  position: relative; min-height: 220px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-8);
   padding: var(--space-16); background: var(--card-bg); border: 0; border-radius: var(--radius-lg); cursor: pointer;
   color: var(--color-text-primary); text-align: left; overflow: hidden;
 }
-.y-trip-card--add { align-items: center; justify-content: center; gap: var(--space-16); text-align: center; }
+.y-trip-card--add { align-items: center; justify-content: center; gap: var(--space-12); text-align: center; }
 .y-trip-card__art { position: absolute; left: 0; right: 0; bottom: 0; height: 55%; }
 
 /* FAB slot: таб-бар сжимается, «+» выезжает справа (--motion-nav) */
@@ -204,12 +211,14 @@
 .y-outfit-thumb { background-color: var(--card-bg); background-image: radial-gradient(circle, var(--color-pattern-dot) 1px, transparent 1.2px); background-size: 10px 10px; }
 /* Главная: превью ↑ коллаж ↓ превью, погода и штамп поверх */
 .y-today { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--space-20); padding-top: 3px; }
-.y-today__weather { position: absolute; left: 20px; top: 41px; z-index: 2; }
+.y-today__weather { position: absolute; left: 20px; top: 76px; z-index: 2; }
 .y-today__stamp { position: absolute; left: 185px; top: 396px; z-index: 2; }
 /* Пилюля заголовка в шапке-баре: боковой отступ 20 (флоу: «Архив вещей» 131×48) */
 .y-header__center > .y-button { padding: 0 var(--space-20); }
 /* Панель деталей (флоу Item / Outfit Details): заголовок H2, до строки мета — 12 */
-.y-sheet--panel > .y-sheet__title + * { margin-top: calc(var(--space-8) * -1); }
+/* флоу: заголовок панели → контент 16, → подпись (сезон, цена) 12 */
+.y-sheet--panel > .y-sheet__title + * { margin-top: calc(var(--space-4) * -1); }
+.y-sheet--panel > .y-sheet__title + .y-text--secondary { margin-top: calc(var(--space-8) * -1); }
 /* Поиск: фильтры на 20 ниже поля (флоу Search / Text / Results) */
 .y-header__body:has(> .y-input-bar + .y-chip-group) { gap: var(--space-20); }
 /* Лайкнутое — залитое сердце */
@@ -227,7 +236,7 @@
 /* Аватар стилиста в чате (во флоу — 3D-персонаж 64; здесь заглушка) */
 .y-stylist-avatar { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--card-bg); color: var(--color-text-primary); }
 /* Пилюля заголовка в две строки (флоу Trip Details): 48, паддинг 20, Body + Caption по центру */
-.y-header__chip2 { height: 48px; padding: 0 var(--space-20); border-radius: var(--radius-xl); background: var(--button-tertiary-bg); display: inline-flex; flex-direction: column; align-items: center; justify-content: center; white-space: nowrap; }
+.y-header__chip2 { height: 48px; padding: 0 var(--space-20); border-radius: var(--radius-xl); background: var(--button-tertiary-bg); display: inline-flex; flex-direction: column; align-items: flex-start; justify-content: center; white-space: nowrap; } /* флоу: город и даты по левому краю */
 /* Вещь с «×» (создание образа) */
 .y-item-card-wrap { position: relative; }
 .y-item-card__remove { position: absolute; top: 4px; right: 4px; width: 44px; height: 44px; padding: 0; border: 0; background: none; color: var(--color-text-secondary); display: grid; place-items: center; cursor: pointer; }

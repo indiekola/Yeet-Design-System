@@ -25,8 +25,11 @@ jobs:
       - run: npm run contrast
       - name: QA (тени, края, спеки Figma, доступность, скриншоты)
         run: npm run qa
+      - name: Сверка экранов с флоу Figma (тексты, позиции, шрифты, цвета)
+        if: always()
+        run: npm run flow-diff -- --strict
       - if: always()
-        run: cat qa/out/report.md >> "$GITHUB_STEP_SUMMARY"
+        run: cat qa/out/report.md qa/out/flow-diff.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
       - if: always()
         uses: actions/upload-artifact@v4
         with:

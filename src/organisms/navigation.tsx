@@ -46,7 +46,7 @@ export function Header(props: HeaderProps) {
                 <Icon name="chevron-up-down" size={20} />
               </button>
             )}
-            {props.subtitle && <p className="y-body y-text--secondary">{props.subtitle}</p>}
+            {props.subtitle && <p className="y-body y-text--secondary y-header__subtitle">{props.subtitle}</p>}
           </>
         )}
         {props.type === 'bar' && (
