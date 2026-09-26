@@ -9,7 +9,6 @@
 .y-input-group--M .y-field { min-height: 48px; }
 .y-input-group--L .y-field { min-height: 52px; }
 .y-field__label { color: var(--color-text-secondary); flex: none; }
-.y-field__label--value { color: var(--color-text-primary); }
 .y-field__main { flex: 1; display: flex; align-items: center; gap: var(--space-12); min-width: 0; }
 .y-field__value { margin-left: auto; display: inline-flex; align-items: center; gap: var(--space-8); }
 .y-field__input {

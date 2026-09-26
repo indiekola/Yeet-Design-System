@@ -48,7 +48,7 @@ const dampingRatio = ({ mass, stiffness, damping }) => damping / (2 * Math.sqrt(
 function css() {
   const L = [`/* ${HEADER} */`, ''];
   for (const f of Object.values(t.font))
-    L.push(`@font-face { font-family: '${f.family}'; src: url('../../tokens/fonts/${f.file}') format('truetype'); font-weight: 100 900; font-style: normal; font-display: swap; }`);
+    L.push(`@font-face { font-family: '${f.family}'; src: url('../../tokens/fonts/${f.file.replace(/\.ttf$/, '.woff2')}') format('woff2'), url('../../tokens/fonts/${f.file}') format('truetype'); font-weight: 100 900; font-style: normal; font-display: swap; }`);
   L.push('', ':root {');
   for (const [k, v] of Object.entries(t.primitive)) L.push(`  --yeet-${k}: ${cssColor(v)};`);
   for (const [k, v] of Object.entries(t.item)) L.push(`  --yeet-item-${k}: ${cssColor(v.value)};`);

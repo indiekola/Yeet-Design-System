@@ -9,47 +9,22 @@
  * перекрытая или обрезанная тень, текст вылез из блока, элемент вылез за экран, визуальная
  * разница с эталоном выше порога. Предупреждение: мелкая зона нажатия, замечания axe.
  */
-import { createServer } from 'node:http';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
-import { extname, join, resolve } from 'node:path';
-import { chromium } from 'playwright-core';
+import { join } from 'node:path';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
+import { root, startStorybook, storyIndex } from './lib.mjs';
 
-const root = resolve(import.meta.dirname, '../..');
-const staticDir = join(root, 'storybook-static');
 const outDir = join(root, 'qa/out');
 const baseDir = join(root, 'qa/baseline');
 const args = Object.fromEntries(process.argv.slice(2).map((a) => a.replace(/^--/, '').split('=')).map(([k, v]) => [k, v ?? true]));
 const THEMES = ['light', 'dark'];
 const DIFF_LIMIT = 0.001; // 0.1 % пикселей
 
-if (!existsSync(join(staticDir, 'index.json'))) {
-  console.error('Нет storybook-static — сначала `npm run build-storybook`.');
-  process.exit(2);
-}
+/* ─── Сервер и браузер (scripts/qa/lib.mjs) ─────────────────────────── */
+const { origin, browser, close } = await startStorybook();
 
-/* ─── Статический сервер ─────────────────────────────────────────────── */
-const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.ttf': 'font/ttf', '.woff2': 'font/woff2' };
-const server = createServer((req, res) => {
-  const path = join(staticDir, decodeURIComponent(new URL(req.url, 'http://x').pathname));
-  if (!path.startsWith(staticDir) || !existsSync(path)) return res.writeHead(404).end();
-  const file = path.endsWith('/') ? join(path, 'index.html') : path;
-  res.writeHead(200, { 'content-type': types[extname(file)] ?? 'application/octet-stream' }).end(readFileSync(file));
-});
-await new Promise((r) => server.listen(0, r));
-const origin = `http://localhost:${server.address().port}`;
-
-/* ─── Браузер ────────────────────────────────────────────────────────── */
-const candidates = [process.env.CHROME_PATH, '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', '/opt/pw-browsers/chromium'].filter(Boolean);
-let browser;
-for (const executablePath of [...candidates, undefined]) {
-  try { browser = await chromium.launch(executablePath && existsSync(executablePath) ? { executablePath } : {}); break; } catch { /* следующий */ }
-}
-if (!browser) { console.error('Chromium не найден: `npx playwright-core install chromium` или CHROME_PATH.'); process.exit(2); }
-
-const index = JSON.parse(readFileSync(join(staticDir, 'index.json'), 'utf8')).entries;
-const stories = Object.values(index).filter((e) => e.type === 'story' && (!args.only || e.id.startsWith(args.only)));
+const stories = storyIndex().filter((e) => !args.only || e.id.startsWith(args.only));
 const specs = JSON.parse(readFileSync(join(root, 'design/figma-specs.json'), 'utf8'));
 const axeSource = readFileSync(join(root, 'node_modules/axe-core/axe.min.js'), 'utf8');
 
@@ -271,8 +246,7 @@ for (const story of stories) {
     }
   }
 }
-await browser.close();
-server.close();
+await close();
 
 /* ─── Отчёт ──────────────────────────────────────────────────────────── */
 // одинаковые замечания в светлой и тёмной теме сливаем

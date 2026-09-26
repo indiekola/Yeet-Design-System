@@ -3,17 +3,14 @@
  * node scripts/qa/flow-diff.mjs [slug ...] [--tol=2] [--strict]
  * Требует собранный storybook-static. Отчёт: qa/out/flow-diff.md. --strict — код выхода 1 при расхождениях.
  */
-import { createServer } from 'node:http';
-import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs';
-import { extname, join, resolve } from 'node:path';
-import { chromium } from 'playwright-core';
+import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { openStory, root, startStorybook } from './lib.mjs';
 
 const args = process.argv.slice(2);
 const tol = Number(args.find((a) => a.startsWith('--tol='))?.slice(6) ?? 2);
 const strict = args.includes('--strict');
 const only = args.filter((a) => !a.startsWith('--'));
-const root = resolve(import.meta.dirname, '../..');
-const dir = join(root, 'storybook-static');
 const { frames, known = {} } = JSON.parse(readFileSync(join(root, 'design/figma-flows.json'), 'utf8'));
 
 // Осознанные замены цветов (контраст AA): цвет флоу → цвет кода.
@@ -30,16 +27,8 @@ const lev = (a, b) => {
 };
 const sim = (a, b) => 1 - lev(a, b) / Math.max(a.length, b.length, 1);
 
-const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.woff2': 'font/woff2' };
-const server = createServer((req, res) => {
-  const p = join(dir, decodeURIComponent(new URL(req.url, 'http://x').pathname));
-  if (!existsSync(p)) return res.writeHead(404).end();
-  res.writeHead(200, { 'content-type': types[extname(p)] ?? 'application/octet-stream' }).end(readFileSync(p));
-});
-await new Promise((r) => server.listen(0, r));
-const exe = [process.env.CHROME_PATH, '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'].find((p) => p && existsSync(p));
-const browser = await chromium.launch(exe ? { executablePath: exe } : {});
-const page = await browser.newPage({ viewport: { width: 1000, height: 1000 }, deviceScaleFactor: 1 });
+const sb = await startStorybook();
+const page = await sb.browser.newPage({ viewport: { width: 1000, height: 1000 }, deviceScaleFactor: 1 });
 
 const lines = ['# Сверка экранов с флоу Figma', '', `Допуск ${tol} px. Цвета ${Object.entries(colorAlias).map(([a, b]) => `#${a}→#${b}`).join(', ')} считаются совпадающими (контраст).`, ''];
 let total = 0, bad = 0, missing = 0, accepted = 0;
@@ -47,9 +36,7 @@ const summary = [];
 
 for (const [slug, frame] of Object.entries(frames)) {
   if (only.length && !only.includes(slug)) continue;
-  await page.goto(`http://localhost:${server.address().port}/iframe.html?id=${encodeURIComponent(`pages-экраны-флоу--${slug}`)}&viewMode=story&globals=theme:light`, { waitUntil: 'networkidle' });
-  await page.evaluate(() => document.fonts.ready);
-  await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}' });
+  await openStory(page, sb.origin, `pages-экраны-флоу--${slug}`);
   await page.waitForTimeout(150);
   const texts = await page.evaluate(() => {
     const screen = document.querySelector('.y-screen');
@@ -147,8 +134,7 @@ for (const [slug, frame] of Object.entries(frames)) {
   if (okRows.length) lines.push('Осознанные расхождения:', '', '| Текст | Расхождение | Причина |', '|---|---|---|', ...okRows, '');
 }
 
-await browser.close();
-server.close();
+await sb.close();
 lines.splice(4, 0, `Итого якорей ${total}: расхождений ${bad}, не найдено ${missing}, осознанных ${accepted}.`, '');
 mkdirSync(join(root, 'qa/out'), { recursive: true });
 writeFileSync(join(root, 'qa/out/flow-diff.md'), lines.join('\n'));

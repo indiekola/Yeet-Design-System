@@ -2,24 +2,12 @@
  * Координаты блоков экрана для ручной сверки с Figma: node scripts/qa/boxes.mjs <slug> [selector] [depth]
  * Печатает дерево элементов внутри `.y-screen` (x,y от левого верхнего угла экрана, размеры, класс).
  */
-import { createServer } from 'node:http';
-import { existsSync, readFileSync } from 'node:fs';
-import { extname, join, resolve } from 'node:path';
-import { chromium } from 'playwright-core';
+import { openStory, startStorybook } from './lib.mjs';
 
 const [slug, selector = '.y-screen', depth = '5'] = process.argv.slice(2);
-const dir = join(resolve(import.meta.dirname, '../..'), 'storybook-static');
-const server = createServer((req, res) => {
-  const p = join(dir, decodeURIComponent(new URL(req.url, 'http://x').pathname));
-  if (!existsSync(p)) return res.writeHead(404).end();
-  res.writeHead(200, { 'content-type': { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml' }[extname(p)] ?? 'application/octet-stream' }).end(readFileSync(p));
-});
-await new Promise((r) => server.listen(0, r));
-const exe = [process.env.CHROME_PATH, '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'].find((p) => p && existsSync(p));
-const browser = await chromium.launch(exe ? { executablePath: exe } : {});
-const page = await browser.newPage({ viewport: { width: 1000, height: 1000 } });
-await page.goto(`http://localhost:${server.address().port}/iframe.html?id=${encodeURIComponent(`pages-экраны-флоу--${slug}`)}&viewMode=story`, { waitUntil: 'networkidle' });
-await page.evaluate(() => document.fonts.ready);
+const sb = await startStorybook();
+const page = await sb.browser.newPage({ viewport: { width: 1000, height: 1000 } });
+await openStory(page, sb.origin, `pages-экраны-флоу--${slug}`);
 console.log(await page.evaluate(([sel, max]) => {
   const o = document.querySelector('.y-screen').getBoundingClientRect();
   const rows = [];
@@ -32,5 +20,4 @@ console.log(await page.evaluate(([sel, max]) => {
   walk(document.querySelector(sel), 0);
   return rows.join('\n');
 }, [selector, +depth]));
-await browser.close();
-server.close();
+await sb.close();

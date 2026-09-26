@@ -104,10 +104,10 @@ export const ItemDetails: Story = {
   name: 'Wishlist / Item Details',
   render: () => (
     <Screen header={<Header type="bar" actions={[{ icon: 'more', label: 'Ещё' }]} centerOnScroll={<ItemArt kind="container" color="black" size={36} />} />} bottom={<BottomBar label="Переместить в гардероб" secondary={{ icon: 'external-link', label: 'Открыть в магазине' }} />} flush>
-      <div style={{ padding: '0 20px' }}><PhotoArea kind="container" /></div>
+      <div className="y-gutter"><PhotoArea kind="container" /></div>
       <Sheet type="panel" title="Сумка">
         <p className="y-body y-text--secondary">10 000 ₽ · Sander · Чёрный<br />Аксессуары · Все сезоны</p>
-        <p className="y-body" style={{ background: 'var(--color-bg-subtle)', borderRadius: 20, padding: 20 }}>Мягкая сумка округлой формы с логотипом и кожаным ремешком</p>
+        <p className="y-body y-note">Мягкая сумка округлой формы с логотипом и кожаным ремешком</p>
         <section className="y-section" style={{ gap: 20 }}>
           <h3 className="y-h3">Образы с этой вещью</h3>
           <OutfitCollage items={[{ kind: 'bottom', x: 28, y: 56, size: 150, color: 'black' }, { kind: 'top', x: 64, y: 36, size: 120, color: 'brown' }, { kind: 'container', x: 76, y: 70, size: 64, color: 'black' }]} />
@@ -122,7 +122,7 @@ export const OutfitDetails: Story = {
   name: 'Wardrobe / Outfit Details',
   render: () => (
     <Screen header={<Header type="bar" actions={[{ icon: 'more', label: 'Ещё' }]} centerOnScroll={<ItemArt kind="top" color="green" size={36} />} />} flush>
-      <div style={{ padding: '0 20px' }}>
+      <div className="y-gutter">
         <OutfitCollage items={[{ kind: 'accessories', x: 32, y: 20, size: 64 }, { kind: 'top', x: 68, y: 34, size: 120, color: 'green' }, { kind: 'bottom', x: 30, y: 60, size: 150, color: 'green' }, { kind: 'shoe', x: 72, y: 74, size: 80, color: 'brown' }]} />
       </div>
       <Sheet type="panel" title="На каждый день">
@@ -173,7 +173,7 @@ export const NewItem: Story = {
   name: 'New Item / Removing Background',
   render: () => (
     <Screen header={<Header type="bar" titleChip="Новая вещь" />} flush>
-      <div style={{ padding: '0 20px' }}><PhotoArea><LoadingState label="Удаляем фон" /></PhotoArea></div>
+      <div className="y-gutter"><PhotoArea><LoadingState label="Удаляем фон" /></PhotoArea></div>
       {/* как во флоу: детали в панели под фото, заголовок H2 */}
       <Sheet type="panel" title="Детали новой вещи">
         <InputGroup><Field label="Название" input={{}} /><Field label="Стоимость" input={{ inputMode: 'numeric' }} /></InputGroup>
