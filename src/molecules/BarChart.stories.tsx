@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BarChart, type Bar } from '.';
-import { Usage, UsageGrid, withWidth } from '../docs/helpers';
+import { unlessBare, Usage, UsageGrid, withWidth } from '../docs/helpers';
 
 const categories: Bar[] = [{ label: 'Верхняя одежда', icon: 'outerwear', value: 5 }, { label: 'Верх', icon: 'top', value: 50 }, { label: 'Обувь', icon: 'shoe', value: 10 }, { label: 'Аксессуары', icon: 'accessories', value: 30 }, { label: 'Низ', icon: 'bottom', value: 5 }];
 
@@ -10,7 +10,7 @@ const meta = {
   tags: ['autodocs'],
   args: { bars: categories, height: 300 },
   argTypes: { height: { control: { type: 'range', min: 160, max: 360, step: 4 } } },
-  decorators: [withWidth(353)],
+  decorators: [unlessBare(withWidth(353))],
   parameters: { docs: { description: { component: '«Палитра» аналитики как во флоу Profile / Overview / Analytics: капсулы на всю ширину (gap 7), центрированы по вертикали, высота 100…300 по значению; белая пилюля 44 с иконкой или точкой цвета, число H2 24/28.' } } },
 } satisfies Meta<typeof BarChart>;
 export default meta;
@@ -21,7 +21,7 @@ export const Playground: Story = {};
 export const InFlow: Story = {
   parameters: { controls: { disable: true } },
   name: 'В флоу',
-  decorators: [],
+  tags: ['bare'],
   render: () => (
     <UsageGrid min={353}>
       <Usage screen="Profile / Analytics" note="по категориям"><BarChart bars={categories} /></Usage>

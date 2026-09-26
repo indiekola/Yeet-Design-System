@@ -22,7 +22,7 @@ export function Sheet({ title, type = 'modal', footer, children }: SheetProps) {
   return (
     <section className={cx('y-sheet', type === 'panel' && 'y-sheet--panel')} role={type === 'modal' ? 'dialog' : undefined} aria-label={title}>
       <span className="y-sheet__handle" aria-hidden />
-      {title && (type === 'panel' ? <h2 className="y-h2 y-sheet__title">{title}</h2> : <h3 className="y-h3">{title}</h3>)}
+      {title && (type === 'panel' ? <h2 className="y-h2 y-sheet__title">{title}</h2> : <h2 className="y-h3">{title}</h2>)}
       {children}
       {footer && (
         <div className="y-sheet__footer">
@@ -57,7 +57,7 @@ export function Dialog({ tone = 'default', title, description, cancel, confirm, 
     <section className="y-sheet" role="alertdialog" aria-label={title}>
       <span className="y-sheet__handle" aria-hidden />
       <div className="y-dialog__text">
-        <h3 className="y-h3">{title}</h3>
+        <h2 className="y-h3">{title}</h2>
         {description && <p className="y-body y-text--secondary">{description}</p>}
       </div>
       {children}

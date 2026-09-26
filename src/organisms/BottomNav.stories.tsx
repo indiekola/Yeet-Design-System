@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useArgs } from 'storybook/preview-api';
 import { BottomNav, TabBar, type Tab } from '.';
-import { Usage, UsageGrid } from '../docs/helpers';
+import { unlessBare, Usage, UsageGrid } from '../docs/helpers';
 
 const tabs: Tab[] = ['today', 'search', 'wardrobe', 'stylist', 'profile'];
 
@@ -11,7 +11,7 @@ const meta = {
   tags: ['autodocs'],
   args: { active: 'wardrobe', fab: true },
   argTypes: { active: { control: 'inline-radio', options: tabs } },
-  decorators: [(Story) => <div style={{ width: 393, paddingTop: 40 }}><Story /></div>],
+  decorators: [unlessBare((Story) => <div style={{ width: 393, paddingTop: 40 }}><Story /></div>)],
   parameters: { docs: { description: { component: 'Нижняя навигация 116: полоса затухания 40 + таб-бар 56 (радиус 48, тень), FAB «+» XL на Гардеробе и Вишлисте — таб-бар сжимается до 290 (`--motion-nav`). Figma: `bottom-nav` · FAB, `tab-bar` · Active, Initial.' } } },
 } satisfies Meta<typeof BottomNav>;
 export default meta;
@@ -27,14 +27,14 @@ export const Playground: Story = {
 export const TabBars: Story = {
   parameters: { controls: { disable: true } },
   name: 'TabBar · все вкладки',
-  decorators: [],
+  tags: ['bare'],
   render: () => <div style={{ display: 'grid', gap: 12, width: 353 }}>{tabs.map((t) => <TabBar key={t} active={t} />)}</div>,
 };
 
 export const InFlow: Story = {
   parameters: { controls: { disable: true } },
   name: 'В флоу',
-  decorators: [],
+  tags: ['bare'],
   render: () => (
     <UsageGrid min={393}>
       <Usage screen="Outfits (Сегодня)"><div style={{ width: 393, paddingTop: 40 }}><BottomNav active="today" /></div></Usage>

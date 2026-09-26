@@ -96,14 +96,15 @@ function SwapDemo() {
   return (
     <div className="y-motion-phone">
       <StatusBar />
-      <div className="y-swap" onClick={() => setI((v) => v + 1)} role="button" tabIndex={0} aria-label="Следующий образ">
+      {/* нажатие на экран мышью; с клавиатуры — штамп (кнопка) */}
+      <div className="y-swap" onClick={() => setI((v) => v + 1)}>
         {looks.map((items, k) => (
           <div key={k} className={cx3(pos(k))}>
             <OutfitCollage items={items} />
           </div>
         ))}
         <span className="y-swap__stamp" style={{ transform: `rotate(${i * 180}deg)` }}>
-          <Stamp label="Надеть" tabIndex={-1} />
+          <Stamp label="Надеть" aria-label="Следующий образ" />
         </span>
       </div>
       <p className="y-caption y-text--secondary" style={{ padding: '0 20px 20px', textAlign: 'center' }}>Нажми на экран: следующий образ вырастает из превью снизу.</p>

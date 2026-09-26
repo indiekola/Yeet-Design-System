@@ -169,7 +169,10 @@ function audit() {
     if (el.matches('button, a[href], input:not([type=hidden]), [role=button], [role=tab], [role=switch], [role=radio], [role=checkbox], [role=slider]') && !el.closest('[aria-hidden="true"]')) {
       // поле ввода нажимается всей обёрткой
       const hit = el.matches('input') ? (el.closest('label, .y-field, .y-input-group, .y-input-bar__field') ?? el).getBoundingClientRect() : r;
-      const size = Math.min(hit.width, hit.height);
+      // невидимое расширение зоны нажатия через ::after (atoms.css)
+      const after = getComputedStyle(el, '::after');
+      const grow = after.content !== 'none' && after.position === 'absolute' ? { w: -parseFloat(after.left) - parseFloat(after.right), h: -parseFloat(after.top) - parseFloat(after.bottom) } : { w: 0, h: 0 };
+      const size = Math.min(hit.width + Math.max(0, grow.w || 0), hit.height + Math.max(0, grow.h || 0));
       if (size < 24) out.push(['error', 'зона нажатия', `${name(el)} ${Math.round(r.width)}×${Math.round(r.height)} < 24`]);
       else if (size < 40) out.push(['warn', 'зона нажатия', `${name(el)} ${Math.round(r.width)}×${Math.round(r.height)} < 40 — расширить hit-area в нативе`]);
     }
@@ -228,7 +231,8 @@ for (const story of stories) {
 
     if (!args['no-axe']) {
       await page.addScriptTag({ content: axeSource });
-      const axe = await page.evaluate(async () => (await window.axe.run('#storybook-root', { resultTypes: ['violations'], rules: { region: { enabled: false }, 'page-has-heading-one': { enabled: false }, 'landmark-one-main': { enabled: false } } })).violations.map((v) => [v.id, v.impact, v.nodes.length, v.nodes[0]?.target.join(' ')]));
+      // Витрина из нескольких экранов (шапки, таб-бары рядом) — уникальность ориентиров проверяется только на одиночном экране
+      const axe = await page.evaluate(async () => { const many = document.querySelectorAll('#storybook-root header, #storybook-root nav').length > 1 && document.querySelectorAll('#storybook-root .y-screen').length !== 1; return (await window.axe.run('#storybook-root', { resultTypes: ['violations'], rules: { region: { enabled: false }, 'page-has-heading-one': { enabled: false }, 'landmark-one-main': { enabled: false }, 'landmark-unique': { enabled: !many }, 'landmark-no-duplicate-banner': { enabled: !many } } })).violations.map((v) => [v.id, v.impact, v.nodes.length, v.nodes[0]?.target.join(' ')]); });
       for (const [id, impact, n, target] of axe) add(impact === 'critical' ? 'error' : 'warn', `axe: ${id}`, story.id, theme, `${impact} ×${n} ${target}`);
     }
 

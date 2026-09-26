@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Field, InputGroup } from '.';
-import { Usage, UsageGrid, withWidth } from '../docs/helpers';
+import { unlessBare, Usage, UsageGrid, withWidth } from '../docs/helpers';
 import { itemColors } from '../tokens/tokens';
 
 const meta = {
@@ -13,7 +13,7 @@ const meta = {
     colorDot: { control: 'select', options: [undefined, ...itemColors.map(([id]) => id)] },
     value: { control: 'text' },
   },
-  decorators: [(Story) => withWidth(353)(() => <InputGroup><Story /></InputGroup>)],
+  decorators: [unlessBare((Story) => withWidth(353)(() => <InputGroup><Story /></InputGroup>))],
   parameters: {
     docs: {
       description: {
@@ -33,7 +33,7 @@ export const TextInput: Story = { name: 'Ввод текста', args: { label: 
 export const InFlow: Story = {
   parameters: { controls: { disable: true } },
   name: 'В флоу',
-  decorators: [],
+  tags: ['bare'],
   render: () => (
     <UsageGrid min={353}>
       <Usage screen="Auth / Sign In"><InputGroup><Field label="E-mail" input={{ type: 'email', defaultValue: 'sima@space.com' }} /><Field label="Пароль" input={{ type: 'password', defaultValue: 'yeet-2026' }} trailingIcon="eye" /></InputGroup></Usage>

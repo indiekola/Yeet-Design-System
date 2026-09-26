@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ItemCard } from '.';
-import { Usage, UsageGrid } from '../docs/helpers';
+import { unlessBare, Usage, UsageGrid } from '../docs/helpers';
 import { itemColors } from '../tokens/tokens';
 
 const kinds = ['top', 'bottom', 'outerwear', 'shoe', 'accessories', 'container'] as const;
@@ -11,7 +11,7 @@ const meta = {
   tags: ['autodocs'],
   args: { kind: 'top', color: 'green', discount: '', label: '', selected: undefined },
   argTypes: { kind: { control: 'select', options: kinds }, color: { control: 'select', options: [undefined, ...itemColors.map(([id]) => id)] }, selected: { control: 'select', options: [undefined, false, true] } },
-  decorators: [(Story) => <div style={{ width: 173 }}><Story /></div>],
+  decorators: [unlessBare((Story) => <div style={{ width: 173 }}><Story /></div>)],
   parameters: { docs: { description: { component: 'Карточка вещи 173×172, радиус 20, фото без фона на light-grey. Бейдж и галочка — отступ 16. Figma: `item-card` · Show Discount, Discount, Selected.' } } },
 } satisfies Meta<typeof ItemCard>;
 export default meta;
@@ -22,7 +22,7 @@ export const Playground: Story = { render: (args) => <ItemCard {...args} discoun
 export const InFlow: Story = {
   parameters: { controls: { disable: true } },
   name: 'В флоу',
-  decorators: [],
+  tags: ['bare'],
   render: () => (
     <UsageGrid min={173}>
       <Usage screen="Wardrobe / Items" width={173}><ItemCard kind="top" color="green" /></Usage>

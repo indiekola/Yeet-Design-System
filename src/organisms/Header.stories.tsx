@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Header } from '.';
-import { Usage, UsageGrid, withWidth } from '../docs/helpers';
+import { unlessBare, Usage, UsageGrid, withWidth } from '../docs/helpers';
 
 type Args = { type: 'large' | 'bar' | 'back' | 'search'; title: string; subtitle: string; titleChip: string; query: string; withAction: boolean };
 
@@ -15,7 +15,7 @@ const meta: Meta<Args> = {
     titleChip: { if: { arg: 'type', eq: 'bar' } },
     query: { if: { arg: 'type', eq: 'search' } },
   },
-  decorators: [withWidth(393)],
+  decorators: [unlessBare(withWidth(393))],
   parameters: {
     docs: {
       description: {
@@ -44,7 +44,7 @@ export const Playground: Story = {};
 export const InFlow: Story = {
   parameters: { controls: { disable: true } },
   name: 'В флоу',
-  decorators: [],
+  tags: ['bare'],
   render: () => (
     <UsageGrid min={393}>
       <Usage screen="Wardrobe" note="корневая вкладка"><div style={{ width: 393 }}><Header type="large" title="Гардероб" /></div></Usage>

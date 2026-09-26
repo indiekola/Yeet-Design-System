@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useArgs } from 'storybook/preview-api';
 import { SegmentControl } from '.';
-import { Matrix, Usage, UsageGrid, withWidth } from '../docs/helpers';
+import { Matrix, unlessBare, Usage, UsageGrid, withWidth } from '../docs/helpers';
 
 const meta = {
   title: 'Molecules/SegmentControl',
@@ -9,7 +9,7 @@ const meta = {
   tags: ['autodocs'],
   args: { segments: [{ value: 'items', label: 'Вещи' }, { value: 'outfits', label: 'Образы' }, { value: 'wishlist', label: 'Вишлист' }], value: 'items', size: 'L', fit: false },
   argTypes: { size: { control: 'inline-radio', options: ['S', 'M', 'L', 'XL'] }, value: { control: 'inline-radio', options: ['items', 'outfits', 'wishlist'] } },
-  decorators: [withWidth(353)],
+  decorators: [unlessBare(withWidth(353))],
   parameters: { docs: { description: { component: 'Переключатель вкладок: высота = размер (S 40 · M 48 · L 52 · XL 56), паддинг 4, активный сегмент — Inverse. Figma: `segment-control` · Size, Content (Text/Icon), слот Buttons.' } } },
 } satisfies Meta<typeof SegmentControl>;
 export default meta;
@@ -25,7 +25,7 @@ export const Playground: Story = {
 export const Sizes: Story = {
   parameters: { controls: { disable: true } },
   name: 'Все варианты',
-  decorators: [],
+  tags: ['bare'],
   render: () => (
     <Matrix rows={['S', 'M', 'L', 'XL']} cols={['Текст', 'Иконки']} render={(s, c) => (
       <div style={{ width: 353 }}>
@@ -40,7 +40,7 @@ export const Sizes: Story = {
 export const InFlow: Story = {
   parameters: { controls: { disable: true } },
   name: 'В флоу',
-  decorators: [],
+  tags: ['bare'],
   render: () => (
     <UsageGrid min={353}>
       <Usage screen="Wardrobe"><SegmentControl value="items" segments={[{ value: 'items', label: 'Вещи' }, { value: 'o', label: 'Образы' }, { value: 'w', label: 'Вишлист' }]} /></Usage>

@@ -58,3 +58,4 @@
 .y-legal a { color: inherit; text-decoration: underline; text-underline-offset: 2px; display: inline-block; padding: 4px 0; margin: -4px 0; }
 /* Панель последним блоком на flush-экране доходит до низа экрана */
 .y-screen__content--flush:has(> .y-sheet--panel:last-child) { padding-bottom: 0; }
+.y-screen__content:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }

@@ -1,3 +1,4 @@
+import type { Decorator } from '@storybook/react-vite';
 import type { CSSProperties, ReactNode } from 'react';
 
 /** Карточка «В флоу»: где в приложении встречается вариант компонента. */
@@ -25,7 +26,7 @@ export function Matrix({ rows, cols, render }: { rows: string[]; cols: string[];
     <table style={{ borderCollapse: 'collapse' }}>
       <thead>
         <tr>
-          <th style={cell} />
+          <th style={cell}>Вариант</th>
           {cols.map((c) => (
             <th key={c} style={cell}>{c}</th>
           ))}
@@ -63,6 +64,12 @@ function Rule({ ok, children }: { ok?: boolean; children: ReactNode }) {
 }
 
 /** Декоратор: компонент во всю ширину колонки экрана (353) или экрана (393). */
+/**
+ * Обёртка файла историй, которую история с тегом `bare` пропускает.
+ * `decorators: []` в истории обёртку файла НЕ отменяет (Storybook складывает декораторы), поэтому «В флоу» используют `tags: ['bare']`.
+ */
+export const unlessBare = (decorator: Decorator): Decorator => (Story, ctx) => (ctx.tags.includes('bare') ? <Story /> : decorator(Story, ctx));
+
 export const withWidth = (width: number) => (Story: () => ReactNode) => <div style={{ width }}><Story /></div>;
 
 /** Декоратор: sheet / dialog на затемнении, как на экране. */

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PhotoTile } from '.';
-import { Usage, UsageGrid } from '../docs/helpers';
+import { unlessBare, Usage, UsageGrid } from '../docs/helpers';
 
 const meta = {
   title: 'Molecules/PhotoTile',
@@ -8,7 +8,7 @@ const meta = {
   tags: ['autodocs'],
   args: { source: 'gallery' },
   argTypes: { source: { control: 'inline-radio', options: ['gallery', 'camera'] }, label: { control: 'text' } },
-  decorators: [(Story) => <div style={{ width: 173, display: 'flex' }}><Story /></div>],
+  decorators: [unlessBare((Story) => <div style={{ width: 173, display: 'flex' }}><Story /></div>)],
   parameters: { docs: { description: { component: 'Плитка источника фото 173×173: иллюстрация сверху (паддинг 28), подпись Body, gap 24. Figma: `photo-tile` · Label.' } } },
 } satisfies Meta<typeof PhotoTile>;
 export default meta;
@@ -19,7 +19,7 @@ export const Playground: Story = {};
 export const InFlow: Story = {
   parameters: { controls: { disable: true } },
   name: 'В флоу',
-  decorators: [],
+  tags: ['bare'],
   render: () => (
     <UsageGrid min={353}>
       <Usage screen="Photo sheet / Search / Discover"><div style={{ display: 'flex', gap: 8, width: 353 }}><PhotoTile source="gallery" /><PhotoTile source="camera" /></div></Usage>

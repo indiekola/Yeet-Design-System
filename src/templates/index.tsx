@@ -48,7 +48,7 @@ export function Screen({ header, bottom, overlay, floating, floatingOffset = 132
   return (
     <div className="y-screen" data-edge-top={edges.top || undefined} data-edge-bottom={edges.bottom || undefined} data-collapsed={edges.collapsed || undefined}>
       {header ?? <StatusBar />}
-      <main ref={ref} onScroll={update} className={cx('y-screen__content', center && 'y-screen__content--center', flush && 'y-screen__content--flush')}>
+      <main ref={ref} onScroll={update} tabIndex={0} /* прокрутка с клавиатуры */ className={cx('y-screen__content', center && 'y-screen__content--center', flush && 'y-screen__content--flush')}>
         {children}
       </main>
       {bottom}

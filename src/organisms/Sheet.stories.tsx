@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Sheet } from '.';
 import { Button } from '../atoms';
-import { onOverlay, Usage, UsageGrid } from '../docs/helpers';
+import { onOverlay, unlessBare, Usage, UsageGrid } from '../docs/helpers';
 import { ChipGroup, InputBar, List, ListItem, PhotoTile } from '../molecules';
 
 type Args = { title: string; type: 'modal' | 'panel'; footer: boolean; content: 'actions' | 'chips' | 'photo' };
@@ -17,7 +17,7 @@ const meta: Meta<Args> = {
   tags: ['autodocs'],
   args: { title: 'Название вещи', type: 'modal', footer: false, content: 'actions' },
   argTypes: { type: { control: 'inline-radio', options: ['modal', 'panel'] }, content: { control: 'inline-radio', options: ['actions', 'chips', 'photo'] } },
-  decorators: [onOverlay],
+  decorators: [unlessBare(onOverlay)],
   parameters: { docs: { description: { component: 'Bottom sheet: хэндл 48×4 → H3 → слот Content → пара кнопок L (Tertiary + Primary). Паддинг 8/20/20, gap 20, радиус 32 сверху. **Всё временное — sheet, а не новый экран.** Figma: `sheet` · Type, Footer, Title, слот Content.' } } },
   render: ({ title, type, footer, content: c }) => <Sheet title={title || undefined} type={type} footer={footer ? [{ label: 'Сбросить' }, { label: 'Применить' }] : undefined}>{content[c]}</Sheet>,
 };
@@ -29,7 +29,7 @@ export const Playground: Story = {};
 export const InFlow: Story = {
   parameters: { controls: { disable: true } },
   name: 'В флоу',
-  decorators: [],
+  tags: ['bare'],
   render: () => (
     <UsageGrid min={393}>
       <Usage screen="Filter" note="сезон">{onOverlay(() => <Sheet title="Сезон">{content.chips}</Sheet>)}</Usage>

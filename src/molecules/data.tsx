@@ -29,7 +29,7 @@ export function StatRow({ children }: { children: ReactNode }) {
 export function Carousel({ title, itemWidth = 173, children }: { title?: string; itemWidth?: number; children: ReactNode }) {
   return (
     <section className="y-carousel" style={{ ['--carousel-item' as string]: `${itemWidth}px` }}>
-      {title && <h3 className="y-h3">{title}</h3>}
+      {title && <h2 className="y-h3">{title}</h2>}
       <div className="y-carousel__track">{children}</div>
     </section>
   );
