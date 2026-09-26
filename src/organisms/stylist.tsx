@@ -13,7 +13,7 @@ import { CollageLayer, type CollageItem } from './cards';
 export function OutfitThumbnail({ items, size = 138, onClick }: { items: CollageItem[]; size?: number; onClick?: () => void }) {
   return (
     <button type="button" className="y-outfit-thumb" style={{ width: size, height: size }} onClick={onClick} aria-label="Открыть образ">
-      <CollageLayer items={items} defaultSize={size * 0.4} />
+      <CollageLayer items={items} defaultSize={size * 0.4} base={size} />
     </button>
   );
 }
@@ -62,7 +62,7 @@ export function TripCard(props: TripCardProps) {
       </span>
       {props.art && (
         <span className="y-trip-card__art">
-          <CollageLayer items={props.art} defaultSize={64} />
+          <CollageLayer items={props.art} defaultSize={64} base={173} />
         </span>
       )}
     </button>

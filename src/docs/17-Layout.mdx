@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as Pages from '../pages/Pages.stories';
+import { AtWidths } from './blocks';
+
+<Meta title="Foundations/Резиновая вёрстка" />
+
+# Резиновая вёрстка
+
+Макеты Figma нарисованы на **393 × 852** (iPhone 15). Приложение живёт на экранах от **320** (маленький Android, iPhone SE 1)
+до **430** (Pro Max) и больше. Правило одно: **поля 20 постоянные, всё между ними делится по ширине.**
+Размеры в Figma — это значения при 393; в коде и в нативе они считаются от ширины экрана.
+
+Переключить размер в Storybook — кнопка **«Экран»** в тулбаре (320, 360, 375, 393, 430).
+QA (`npm run qa`) прогоняет все экраны ещё и на 320 и 430: вылезание за край, обрезанный текст, зоны нажатия.
+
+<AtWidths render={Pages.Today.render} />
+
+## Три поведения
+
+| Поведение | Что это | Figma (Auto layout) | CSS | SwiftUI / Compose |
+|---|---|---|---|---|
+| **Fill** — тянется | Занимает всю доступную ширину | Fill container | `width: 100%` / `flex: 1` / `1fr` | `.frame(maxWidth: .infinity)` / `Modifier.fillMaxWidth()` |
+| **Hug** — по содержимому | Ширина = текст + отступы | Hug contents | `width: auto` / `inline-flex` | без frame / `wrapContentWidth()` |
+| **Fixed** — постоянный | Не зависит от экрана | Fixed | `width: 48px` | `.frame(width: 48)` / `Modifier.size(48.dp)` |
+| **Scale** — пропорционально | Растёт вместе с контейнером | Scale (K) | `useFitScale`: размер × ширина / база | `GeometryReader` / `BoxWithConstraints` |
+
+## Кто как себя ведёт
+
+| Компонент | Ширина | Высота | Настройка |
+|---|---|---|---|
+| `Screen` | Fill (экран) | Fill | поля `--screen-gutter` 20 |
+| `Header` | Fill; заголовок-бар Hug, в одну строку с «…» | Fixed 48 / по заголовку | `type` |
+| `BottomNav`, `TabBar` | Fill; вкладки делят поровну | Fixed 56 | `fab` — «+» справа, бар сжимается; на 320 вкладки без зазора |
+| `BottomBar` | Fill; кнопки делят поровну | Fixed 52 | `secondary` — квадратная кнопка 52 справа (Fixed) |
+| `Button` | **Hug** | Fixed по размеру (40 / 48 / 52 / 56) | `fullWidth` → Fill; в `Row`, `BottomBar`, футере шторки делят ряд поровну |
+| `IconButton`, `Stamp`, `Avatar` | Fixed | Fixed | `size` |
+| `Field`, `InputGroup`, `InputBar` | Fill | Fixed 48 / 52 / 56 | `size` |
+| `SegmentControl` | Fill, сегменты поровну | Fixed | `fit` → Hug (иконки в шапке) |
+| `ChipGroup` | Fill; чипсы Hug | Fixed 40 | без `wrap` — лента со скроллом за край экрана; `wrap` — перенос; `center` |
+| `ListGroup`, `ListItem` | Fill | по содержимому (мин. 56) | — |
+| `Grid` | Fill, 2 колонки `1fr`, зазор 7 | по карточкам | `rowGap` |
+| `ItemCard`, `ProductCard` | Fill колонки | соотношение 173 : 172 | вещь внутри — Scale (88 при 173) |
+| `PhotoTile` | Fill колонки | квадрат | иконка Fixed 63 |
+| `StylistPromptCard` | Fill колонки / `wide` — обе колонки | Fixed 220 / 172 | `wide` |
+| `TripCard` | Fill колонки | мин. 220 | коллаж внизу — Scale (база 173) |
+| `OutfitCollage`, `OutfitCanvas`, `PhotoArea` | Fill | квадрат | вещи — Scale (база 353), позиции в % |
+| `OutfitThumbnail` | Fixed | Fixed | `size` (96, 138) |
+| `Carousel` | Fill, выходит за поля | по карточкам | `itemWidth` (173) — Fixed, соседняя карточка выглядывает |
+| `StatRow` / `StatTile` | Fill, плитки поровну | Fixed 80 | — |
+| `BarChart` | Fill, столбцы поровну | Fixed | `height` (300) |
+| `Sheet`, `Dialog` | Fill | по содержимому | — |
+| `Snackbar` | Fill | Fixed 52 | — |
+| `EmptyState` | Fill, не шире 353 | по содержимому | — |
+| `ChatBubble` | Hug, не шире 265 | по тексту | `avatar` 64 Fixed |
+| `WeatherCard` | Hug | по содержимому | `tilt` |
+
+## Правила
+
+- **Поля экрана не растут.** 20 слева и справа на любой ширине.
+- **Текст не сжимается.** Длинный текст переносится (карточки, списки) или обрезается «…» в одну строку (заголовок в шапке, чипсы).
+- **Ряды, которые не помещаются, прокручиваются**, а не сжимаются: чипсы, карусели. Лента уходит за правый край экрана — видно, что есть продолжение.
+- **Кнопки и иконки — постоянного размера.** Зона нажатия не меньше 44 (iOS) / 48 (Android), даже если кнопка меньше.
+- **Картинки масштабируются пропорционально**, позиции вещей в коллаже — в процентах, размеры — в единицах макета.
+- **Абсолютные элементы привязываются к углу**, к которому они относятся (штамп «Надеть» — к правому нижнему углу коллажа), а не к левому краю в пикселях.

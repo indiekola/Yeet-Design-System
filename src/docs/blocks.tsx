@@ -245,3 +245,18 @@ export function HapticTable() {
     />
   );
 }
+
+/** Один экран на нескольких ширинах: проверка резиновой вёрстки. `render` — функция истории экрана (Pages). */
+export function AtWidths({ render, widths = [[320, 568], [393, 852], [430, 932]] }: { render: () => ReactNode; widths?: [number, number][] }) {
+  const Screen = () => <>{render()}</>;
+  return (
+    <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', overflowX: 'auto', padding: '8px 0' }}>
+      {widths.map(([w, h]) => (
+        <figure key={w} style={{ margin: 0, display: 'flex', flexDirection: 'column', gap: 8, ['--screen-width' as string]: `${w}px`, ['--screen-height' as string]: `${Math.min(h, 760)}px` }}>
+          <Screen />
+          <figcaption style={{ font: '400 12px/16px var(--font-text)', color: 'var(--color-text-secondary)', textAlign: 'center' }}>{w} × {h}</figcaption>
+        </figure>
+      ))}
+    </div>
+  );
+}

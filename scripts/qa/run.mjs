@@ -249,6 +249,21 @@ for (const story of stories) {
     }
   }
 }
+
+/* ─── Резиновая вёрстка: экраны на 320 и 430 (края, вылезший текст, зоны нажатия; без эталона и спек) ── */
+const DEVICES = { s320: '320', m430: '430' };
+if (!args['no-devices']) {
+  for (const story of stories.filter((s) => s.id.startsWith('pages-'))) {
+    for (const [device, label] of Object.entries(DEVICES)) {
+      current = { story: story.id, theme: `light · ${label}` };
+      await page.goto(`${origin}/iframe.html?id=${encodeURIComponent(story.id)}&viewMode=story&globals=theme:light;device:${device}`, { waitUntil: 'networkidle' });
+      await page.evaluate(() => document.fonts.ready);
+      await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}' });
+      await page.waitForTimeout(80);
+      for (const [level, check, detail] of await page.evaluate(audit)) add(level, check, story.id, current.theme, detail);
+    }
+  }
+}
 await close();
 
 /* ─── Отчёт ──────────────────────────────────────────────────────────── */

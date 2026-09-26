@@ -1,6 +1,7 @@
 import { useRef, type PointerEvent, type ReactNode, type WheelEvent } from 'react';
 import { ItemArt, type CollageItem } from './cards';
 import { cx } from '../utils/cx';
+import { useFitScale } from '../utils/useFitScale';
 
 export type CanvasItem = CollageItem & { id: string };
 
@@ -24,6 +25,8 @@ const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
  */
 export function OutfitCanvas({ items, onChange, selectedId, onSelect, hint }: OutfitCanvasProps) {
   const board = useRef<HTMLDivElement>(null);
+  // размеры вещей хранятся в единицах макета 353, на экране — × ширина холста / 353
+  const k = useFitScale(board, 353);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const gesture = useRef<{ id: string; start: CanvasItem; dist?: number; origin: { x: number; y: number } } | null>(null);
 
@@ -47,7 +50,7 @@ export function OutfitCanvas({ items, onChange, selectedId, onSelect, hint }: Ou
     const pts = [...pointers.current.values()];
     if (pts.length > 1 && g.dist) {
       const d = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
-      update(g.id, { size: clamp((g.start.size ?? 96) * (d / g.dist), MIN, MAX) });
+      update(g.id, { size: clamp((g.start.size ?? 96) * (d / g.dist), MIN, MAX) }); // отношение расстояний — не зависит от масштаба
     } else {
       const dx = ((pts[0].x - g.origin.x) / rect.width) * 100, dy = ((pts[0].y - g.origin.y) / rect.height) * 100;
       update(g.id, { x: clamp(g.start.x + dx, 0, 100), y: clamp(g.start.y + dy, 0, 100) });
@@ -78,7 +81,7 @@ export function OutfitCanvas({ items, onChange, selectedId, onSelect, hint }: Ou
           style={{ left: `${it.x}%`, top: `${it.y}%` }}
           onPointerDown={down(it.id)}
         >
-          <ItemArt kind={it.kind} color={it.color} src={it.src} size={it.size ?? 96} />
+          <ItemArt kind={it.kind} color={it.color} src={it.src} size={(it.size ?? 96) * k} />
         </span>
       ))}
       {hint && <div className="y-canvas__hint">{hint}</div>}

@@ -33,9 +33,9 @@ export async function startStorybook() {
   return { origin: `http://localhost:${server.address().port}`, browser, close: async () => { await browser.close(); server.close(); } };
 }
 
-/** Открывает историю: шрифты загружены, анимации выключены. */
-export async function openStory(page, origin, id, theme = 'light') {
-  await page.goto(`${origin}/iframe.html?id=${encodeURIComponent(id)}&viewMode=story&globals=theme:${theme}`, { waitUntil: 'networkidle' });
+/** Открывает историю: шрифты загружены, анимации выключены. device — размер экрана из тулбара (s320, a360, s375, i393, m430). */
+export async function openStory(page, origin, id, theme = 'light', device = 'i393') {
+  await page.goto(`${origin}/iframe.html?id=${encodeURIComponent(id)}&viewMode=story&globals=theme:${theme};device:${device}`, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
   await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}' });
 }

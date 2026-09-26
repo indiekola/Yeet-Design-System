@@ -1,8 +1,9 @@
-import type { ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { Badge, ColorDot, Icon, IconButton, WeatherIcon, type Weather } from '../atoms';
 import type { IconName } from '../icons/icons';
 import type { ItemColor } from '../tokens/tokens';
 import { cx } from '../utils/cx';
+import { useFitScale } from '../utils/useFitScale';
 
 /* ─── Cards ─────────────────────────────────────────────────────────── */
 
@@ -48,9 +49,12 @@ const kindNames: Record<Garment, string> = { top: 'Верх', bottom: 'Низ', 
 
 export function ItemCard({ kind, color, image, name, discount, label, selected, onClick, onRemove }: ItemCardProps) {
   const a11y = [name ?? kindNames[kind], discount && `скидка ${discount}`, label].filter(Boolean).join(', ');
+  // карточка резиновая (ширина колонки), вещь в ней — пропорционально: 88 (фото 138) при ширине 173
+  const ref = useRef<HTMLButtonElement>(null);
+  const k = useFitScale(ref, 173);
   const card = (
-    <button type="button" className={cx('y-item-card', selected && 'y-item-card--selected')} onClick={onClick} aria-pressed={selected} aria-label={a11y}>
-      <ItemArt kind={kind} color={color} src={image} size={image ? 138 : 88} />
+    <button ref={ref} type="button" className={cx('y-item-card', selected && 'y-item-card--selected')} onClick={onClick} aria-pressed={selected} aria-label={a11y}>
+      <ItemArt kind={kind} color={color} src={image} size={(image ? 138 : 88) * k} />
       {discount && <Badge variant="danger" className="y-item-card__badge">{discount}</Badge>}
       {label && !discount && <Badge variant="secondary" className="y-item-card__badge">{label}</Badge>}
       {selected && <span className="y-item-card__check" aria-hidden><Icon name="check" size={16} strokeWidth={2} /></span>}
@@ -90,15 +94,18 @@ export function ProductCard({ kind, image, name, price, discount, liked, showLik
 export type CollageItem = { kind: Garment; x: number; y: number; size?: number; color?: ItemColor; /** Фото вещи без фона. */ src?: string };
 
 /** Вещи, свободно разложенные по площадке (x, y — центр в %). Общий слой коллажа, превью образа и карточки поездки. */
-export function CollageLayer({ items, defaultSize = 96 }: { items: CollageItem[]; defaultSize?: number }) {
+/** Слой вещей коллажа. `base` — ширина макета, в которой заданы размеры вещей: слой растягивается по контейнеру и масштабирует вещи. */
+export function CollageLayer({ items, defaultSize = 96, base = 353 }: { items: CollageItem[]; defaultSize?: number; base?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const k = useFitScale(ref, base);
   return (
-    <>
+    <span ref={ref} className="y-collage__layer">
       {items.map((it, i) => (
         <span key={i} className="y-collage__item" style={{ left: `${it.x}%`, top: `${it.y}%` }}>
-          <ItemArt kind={it.kind} color={it.color} src={it.src} size={it.size ?? defaultSize} />
+          <ItemArt kind={it.kind} color={it.color} src={it.src} size={(it.size ?? defaultSize) * k} />
         </span>
       ))}
-    </>
+    </span>
   );
 }
 

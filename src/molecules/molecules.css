@@ -90,6 +90,7 @@
 .y-snackbar button { background: none; border: 0; color: inherit; padding: 0; cursor: pointer; display: inline-flex; }
 
 /* EmptyState / LoadingState */
+.y-row > .y-chip-group--scroll { flex: 1; min-width: 0; margin-left: 0; padding-left: 0; } /* в ряду с кнопками выход за край только справа */
 .y-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-16); /* флоу: заголовок H1, отступ 16 */ max-width: 353px; margin: 0 auto; }
 .y-empty > .y-button { margin-top: var(--space-16); } /* флоу: кнопка через 32 от текста */
 .y-loading { display: inline-flex; flex-direction: column; align-items: center; gap: var(--space-8); color: var(--color-text-primary); font: var(--font-weight-body) 14px/20px var(--font-text); }

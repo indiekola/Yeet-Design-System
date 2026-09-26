@@ -83,6 +83,8 @@
   background-size: 10px 10px, auto; background-position: 0 0;
   background-origin: content-box, border-box; background-clip: content-box, border-box;
 }
+.y-collage__layer { position: absolute; inset: 0; pointer-events: none; } /* слой вещей: по нему считается масштаб (useFitScale) */
+.y-collage__layer > .y-collage__item { pointer-events: auto; }
 .y-collage__item { position: absolute; transform: translate(-50%, -50%); }
 
 .y-photo-area {
@@ -129,7 +131,7 @@
 .y-prompt-card__art { position: absolute; right: 0; bottom: -40px; }
 
 .y-trip-card {
-  position: relative; min-height: 220px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-8);
+  position: relative; width: 100%; min-height: 220px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-8);
   padding: var(--space-16); background: var(--card-bg); border: 0; border-radius: var(--radius-lg); cursor: pointer;
   color: var(--color-text-primary); text-align: left; overflow: hidden;
 }
@@ -211,7 +213,9 @@
 /* Главная: превью ↑ коллаж ↓ превью, погода и штамп поверх */
 .y-today { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--space-20); padding-top: 3px; }
 .y-today__weather { position: absolute; left: 20px; top: 76px; z-index: 2; }
-.y-today__stamp { position: absolute; left: 185px; top: 396px; z-index: 2; }
+/* штамп у правого нижнего угла коллажа на любой ширине: коллаж квадратный (100cqw), над ним превью 96 + отступы 3 + 20; штамп заходит на 73 выше низа коллажа */
+.y-today { container-type: inline-size; }
+.y-today__stamp { position: absolute; right: 20px; top: calc(119px + 100cqw - 73px); z-index: 2; }
 /* Пилюля заголовка в шапке-баре: боковой отступ 20 (флоу: «Архив вещей» 131×48) */
 .y-header__center > .y-button { padding: 0 var(--space-20); }
 /* Панель деталей (флоу Item / Outfit Details): заголовок H2, до строки мета — 12 */
@@ -243,7 +247,13 @@
 .y-slots { display: flex; flex-direction: column; gap: var(--space-20); padding-top: var(--space-20); background: var(--color-bg-elevated); border-radius: var(--radius-xl) var(--radius-xl) 0 0; box-shadow: var(--shadow-floating); flex: 1 0 auto; overflow: hidden; }
 .y-slot { display: flex; flex-direction: column; gap: var(--space-16); padding: 0 var(--screen-gutter); }
 .y-slot + .y-slot { border-top: 1px solid var(--color-divider); padding-top: var(--space-20); }
-.y-slot__row { display: flex; justify-content: center; align-items: center; gap: var(--space-8); height: 172px; }
-.y-slot__row > * { flex: none; width: 173px; }
-.y-slot__add { height: 172px; display: grid; place-items: center; }
+.y-slot__row { display: flex; justify-content: center; align-items: center; gap: var(--space-8); }
+.y-slot__row > * { flex: none; width: calc((100% - 7px) / 2); } /* ширина колонки сетки: 173 при 393 */
+.y-slot__add { aspect-ratio: 173 / 172; display: grid; place-items: center; }
 .y-slot__row > .y-slot__add:not(:only-child) { justify-items: start; padding-left: 22px; } /* флоу: «+» в 22 от края слота, рядом с карточкой */
+/* Узкий экран: заголовок в шапке-баре в одну строку с многоточием (как в iOS), не переносится */
+.y-header__row--bar > .y-header__center { min-width: 0; }
+.y-header__row--bar > .y-header__center > .y-body { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Узкий экран (320) с «+»: вкладки без зазора, чтобы каждая была ≥ 40 по ширине */
+.y-bottom-nav { container-type: inline-size; }
+@container (max-width: 300px) { .y-tab-bar { gap: 0; } }
