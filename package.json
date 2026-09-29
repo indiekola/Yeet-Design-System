@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit",
     "qa": "node scripts/qa/run.mjs",
     "contrast": "node scripts/check-contrast.mjs",
+    "brand": "node scripts/tokens/brand.mjs",
     "flow-diff": "node scripts/qa/flow-diff.mjs",
     "assets": "node scripts/build-assets.mjs",
     "team": "node scripts/team/status.mjs",

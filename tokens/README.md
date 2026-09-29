@@ -39,3 +39,23 @@
 - `scripts/tokens/transforms.mjs` — трансформы: пружина → CSS `linear()`, px → pt / dp / sp, цвета под платформы, имена с экранированием ключевых слов Swift / Kotlin.
 - `scripts/tokens/formats.mjs` — форматы CSS / Swift / Kotlin.
 - `src/tokens/model.js` — чтение токенов из кода (Storybook, утилиты, скрипты контраста и DESIGN.md) в плоской форме: `tokens.color`, `tokens.brand`, `tokens.motion.gesture`… Типы — `model.d.ts`.
+
+## Быстрая замена и подстройка бренд-палитры
+
+Пока палитра не выбрана, её меняют одной командой, без ручной правки `tokens.json` (`scripts/tokens/brand.mjs`):
+
+```bash
+# новая или пересобранная палитра из акцента (+ по желанию чернила и холст)
+npm run brand -- new coral --accent "#FF5A4A" --name "Коралл"
+npm run brand -- new coral --accent "#FF5A4A" --ink "#1D1716" --canvas "#F9F4F3"   # свои цвета поверхностей
+npm run brand -- new coral --accent "#FF5A4A" --fit    # сдвинуть акцент к ближайшему, где проходит контраст
+npm run brand -- list                                  # палитры и акценты
+npm run brand -- remove coral
+npm run brand -- promote coral                         # палитра становится основной темой (color.*), brand.coral удаляется
+```
+
+- `new` собирает все 14 семантических цветов (светлая и тёмная тема), подгоняет `text-secondary`, `text-accent`, `text-on-accent`, `text-danger` под контраст WCAG (текст 4.5:1) и сразу запускает `npm run tokens` и `npm run contrast -- --set=<id> --brands=error`. Провалы печатаются вместе с ближайшим цветом акцента, который проходит. Повторный запуск с тем же id заменяет палитру.
+- Файл правится точечно и в формате самого `tokens.json` (сериализатор проверен тестом на существующих палитрах); остальные токены не меняются. Сгенерированные CSS / Swift / Kotlin обновляются через `npm run tokens`.
+- `promote` переносит цвета бренда в `color.*`, не трогая роли Figma. Дальше вручную: новая ADR вместо [0002](../design/adr/0002-brand-palettes-experiment.md), переменные «Yeet DS 2.0» в Figma (замок в #6), эталоны QA в закреплённом образе, чистка `KNOWN` в `check-contrast.mjs`.
+- Бренды по-прежнему только web (`data-brand`) и Android (`YeetBrand`); iOS их не получает (ADR 0002).
+- Тесты: `node --test scripts/tokens/brand.test.mjs`.
