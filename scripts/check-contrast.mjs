@@ -4,6 +4,7 @@
 //   npm run contrast -- --brands=error  — провалы бренд-палитр тоже ошибка (по умолчанию предупреждение:
 //                                         бренды — эксперимент, решение 28.09, issue #13)
 //   npm run contrast -- --all           — показать все пары, а не только провалы и итог
+//   npm run contrast -- --set=lime      — показать только палитру lime (id из brand.*), код выхода — по ней одной
 //
 // Пары не перечисляются руками, а собираются из токенов:
 //   · текст 4.5:1 — каждая пара component `*-fg` × `*-bg` и каждый `text-*` × каждая поверхность;
@@ -12,6 +13,7 @@
 // Полупрозрачный фон кладётся на каждую поверхность, где компонент может стоять; берётся худший случай.
 const { tokens: t } = await import('../src/tokens/model.js'); // tokens/tokens.json (DTCG) → удобная форма
 const args = new Set(process.argv.slice(2));
+const onlySet = process.argv.slice(2).find((a) => a.startsWith('--set='))?.slice(6); // --set=lime — только палитра lime
 const brandsAreErrors = args.has('--brands=error');
 
 const TEXT = 4.5;
@@ -32,11 +34,11 @@ const TEXT_ON = {
 const EXTRA_TEXT = [['text-accent', 'accent-soft']];
 
 /**
- * Не-текст 3:1. Первый ключ, который есть в токенах, — тот, что проверяется:
- * отдельного `focus-ring` пока нет (issue #13), фокус рисуется `accent`. Как только токен появится, проверка перейдёт на него.
+ * Не-текст 3:1. Первый ключ, который есть в токенах, — тот, что проверяется.
+ * Кольцо фокуса рисуется цветом `focus-ring.color` = `text-accent` (не `accent`), индикатор выбранного — `accent`.
  */
 const NON_TEXT = [
-  { what: 'фокус-кольцо', keys: ['focus-ring', 'accent'] },
+  { what: 'фокус-кольцо', keys: ['text-accent'] }, // tokens.json → focus-ring.color = {color.content.text-accent}
   { what: 'индикатор выбранного', keys: ['accent'] },
 ];
 // danger не в списке: бейдж и Destructive-кнопка опознаются по тексту (4.5:1 проверен выше), иконки ошибки — text-danger.
@@ -185,7 +187,8 @@ for (const [k, v] of Object.entries(t.item)) {
 
 /* ─── Вывод ─────────────────────────────────────────────────────────── */
 const LABEL = { ok: 'ok', known: 'известно', warn: 'предупр.', error: 'FAIL' };
-const shown = args.has('--all') ? rows : rows.filter((r) => r.level !== 'ok');
+const scoped = onlySet ? rows.filter((r) => r.set.startsWith(`${onlySet} ·`)) : rows;
+const shown = args.has('--all') ? scoped : scoped.filter((r) => r.level !== 'ok');
 if (shown.length) {
   const w = { set: Math.max(...shown.map((r) => r.set.length), 5), pair: Math.max(...shown.map((r) => r.pair.length), 4), kind: Math.max(...shown.map((r) => r.kind.length), 3) };
   console.log(`${'Набор'.padEnd(w.set)}  ${'Что'.padEnd(w.kind)}  ${'Пара'.padEnd(w.pair)}  Контраст  Норма  Итог`);
@@ -199,10 +202,10 @@ if (shown.length) {
 }
 for (const note of nonTextSkipped) console.log(`ℹ ${note}`);
 
-const count = (l) => rows.filter((r) => r.level === l).length;
+const count = (l) => (onlySet ? scoped : rows).filter((r) => r.level === l).length;
 const stale = Object.keys(KNOWN).filter((k) => !rows.some((r) => `${r.set}|${r.pair}` === k && r.level === 'known'));
 for (const k of stale) console.error(`✗ Известное исключение больше не нужно или не найдено — уберите из KNOWN: ${k}`);
 
-console.log(`Контраст: ${rows.length} пар (${pairs.length} на набор × ${sets.length} наборов + аватары) · ошибок ${count('error')} · известных ${count('known')} · предупреждений по брендам ${count('warn')}`);
+console.log(`Контраст${onlySet ? ` «${onlySet}»` : ''}: ${scoped.length} пар (${pairs.length} на набор × ${onlySet ? 2 : sets.length} наборов${onlySet ? '' : ' + аватары'}) · ошибок ${count('error')} · известных ${count('known')} · предупреждений по брендам ${count('warn')}`);
 if (count('warn')) console.log('Бренд-палитры — эксперимент: их провалы не валят проверку (--brands=error, чтобы валили).');
-process.exit(count('error') || stale.length ? 1 : 0);
+process.exit((onlySet ? scoped.some((r) => r.level === 'error') : count('error')) || (!onlySet && stale.length) ? 1 : 0);
